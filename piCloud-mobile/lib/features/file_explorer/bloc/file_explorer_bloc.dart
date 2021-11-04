@@ -8,9 +8,9 @@ part 'file_explorer_state.dart';
 
 class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
   DirectoryManager _directoryManager = DirectoryManager();
-  final String path;
 
   List<FileExplorerItem>? directoryContent;
+  final String path;
 
   FileExplorerBloc({
     required this.path,
@@ -22,7 +22,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
       yield FileExplorerInitialState();
     } else if (event is FetchDataFileExplorerEvent) {
       yield* _fetchPathDataEvent(event);
-    } else if (event is FetchDataErrorFileExplorerEvent) {
+    } else if (event is FetchDataErrorOccuredFileExplorerEvent) {
       yield* _fetchPathDataErrorEvent(event);
     } else if (event is FetchingDataFinishedFileExplorerEvent) {
       yield* _fetchPathDataSuccessEvent(event);
@@ -40,7 +40,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
 
       this.directoryContent =
           _directoryManager.getCurrentDirectoryItems(this.path);
-      yield FetchedDataFileExplorerState(data: this.directoryContent!);
+      yield FetchedDataFileExplorerState();
     } catch (exception) {
       yield FetchingDataErrorFileExplorerState(
         errorMessage: "Failed to fetch data.",
@@ -49,7 +49,7 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
   }
 
   Stream<FileExplorerState> _fetchPathDataErrorEvent(
-    FetchDataErrorFileExplorerEvent event,
+    FetchDataErrorOccuredFileExplorerEvent event,
   ) async* {
     yield FetchingDataErrorFileExplorerState(
       errorMessage: "Failed to fetch data.",
@@ -59,6 +59,6 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
   Stream<FileExplorerState> _fetchPathDataSuccessEvent(
     FetchingDataFinishedFileExplorerEvent event,
   ) async* {
-    yield FetchedDataFileExplorerState(data: this.directoryContent!);
+    yield FetchedDataFileExplorerState();
   }
 }

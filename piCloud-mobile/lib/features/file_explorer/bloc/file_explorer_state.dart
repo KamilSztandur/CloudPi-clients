@@ -18,12 +18,6 @@ class FetchningDataFileExplorerState extends FileExplorerState {
 }
 
 class FetchedDataFileExplorerState extends FileExplorerState {
-  final Object data; // to be replaced with data class
-
-  const FetchedDataFileExplorerState({
-    required this.data,
-  });
-
   @override
   List<Object> get props => [];
 }

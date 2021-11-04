@@ -135,7 +135,7 @@ class _FileExplorerViewState extends State<FileExplorerView> {
             );
       } else if (state is FetchingDataErrorFileExplorerState) {
         context.read<FileExplorerBloc>().add(
-              FetchDataErrorFileExplorerEvent(
+              FetchDataErrorOccuredFileExplorerEvent(
                 errorMessage: state.errorMessage,
               ),
             );

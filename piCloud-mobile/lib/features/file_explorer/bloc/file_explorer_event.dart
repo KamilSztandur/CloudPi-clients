@@ -23,10 +23,10 @@ class FetchDataFileExplorerEvent extends FileExplorerEvent {
   List<Object> get props => [this.path];
 }
 
-class FetchDataErrorFileExplorerEvent extends FileExplorerEvent {
+class FetchDataErrorOccuredFileExplorerEvent extends FileExplorerEvent {
   final String errorMessage;
 
-  FetchDataErrorFileExplorerEvent({
+  FetchDataErrorOccuredFileExplorerEvent({
     required this.errorMessage,
   });
 
