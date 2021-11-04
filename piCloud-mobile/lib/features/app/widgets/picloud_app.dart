@@ -9,7 +9,6 @@ class PICloudApp extends StatelessWidget {
       title: 'PICloud App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.grey.shade100,
       ),
       home: Scaffold(
         bottomNavigationBar: PICloudBottomNavigationBar(),

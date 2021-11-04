@@ -16,7 +16,9 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PICloudAppBar(height: 50.0),
-      body: FileExplorerView(),
+      body: FileExplorerView(
+        path: 'blablablabla',
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           //TODO
