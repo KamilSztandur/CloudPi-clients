@@ -67,10 +67,9 @@ class _FileExplorerViewState extends State<FileExplorerView> {
   Widget _buildFileExplorerView() {
     List<FileExplorerItem> directoryContent = _getSortedDirectoryContent();
 
-    return RawScrollbar(
+    return Scrollbar(
       thickness: 7.5,
       isAlwaysShown: true,
-      thumbColor: Theme.of(context).primaryColor.withOpacity(0.5),
       radius: Radius.circular(5.0),
       controller: _scrollController,
       child: DragSelectGridView(
