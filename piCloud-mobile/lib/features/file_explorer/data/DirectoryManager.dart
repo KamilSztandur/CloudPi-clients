@@ -5,8 +5,10 @@ import 'package:app/features/file_explorer/presentation/widgets/file_explorer_it
 
 class DirectoryManager {
   // WARNING: Mock
-  List<FileExplorerItem> getCurrentDirectoryItems(String path) {
+  Future<List<FileExplorerItem>> getCurrentDirectoryItems(String path) async {
     List<FileExplorerItem> items = <FileExplorerItem>[];
+
+    await Future.delayed(Duration(seconds: 5));
 
     for (int i = 0; i < 20; i++) {
       items.add(

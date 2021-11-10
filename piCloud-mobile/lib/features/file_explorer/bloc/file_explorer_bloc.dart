@@ -35,11 +35,10 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
     yield FetchningDataFileExplorerState();
 
     try {
-      //TODO
-      await Future.delayed(Duration(seconds: 5));
+      this.directoryContent = await _directoryManager.getCurrentDirectoryItems(
+        this.path,
+      );
 
-      this.directoryContent =
-          _directoryManager.getCurrentDirectoryItems(this.path);
       yield FetchedDataFileExplorerState();
     } catch (exception) {
       yield FetchingDataErrorFileExplorerState(

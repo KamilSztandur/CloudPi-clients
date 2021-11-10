@@ -1,4 +1,5 @@
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
+import 'package:app/features/file_explorer/presentation/widgets/file_explorer_add_button.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_view.dart';
 import 'package:flutter/material.dart';
 
@@ -16,19 +17,8 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PICloudAppBar(height: 50.0),
-      body: FileExplorerView(
-        path: 'blablablabla',
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          //TODO
-        },
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 30.0,
-        ),
-      ),
+      body: FileExplorerView(path: 'blablablabla'),
+      floatingActionButton: AddMediaButton(),
     );
   }
 }
