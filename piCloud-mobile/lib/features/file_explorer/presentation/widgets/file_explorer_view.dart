@@ -1,3 +1,4 @@
+import 'package:app/features/file_explorer/data/models/file_item.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_error.dart';
 import 'package:app/features/file_explorer/bloc/file_explorer_bloc.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
@@ -65,14 +66,51 @@ class _FileExplorerViewState extends State<FileExplorerView> {
   }
 
   Widget _buildFileExplorerView() {
-    List<FileExplorerItem> directoryContent = _getSortedDirectoryContent();
-
     return Scrollbar(
       thickness: 7.5,
       isAlwaysShown: true,
       radius: Radius.circular(5.0),
       controller: _scrollController,
-      child: DragSelectGridView(
+      child: _buildItemsDisplay(),
+    );
+  }
+
+  Widget _buildItemsDisplay() {
+    List<FileExplorerItem> directoryContent = _sortDirectoryItems(
+      _getItemWidgetsList(),
+    );
+
+    bool listView = false;
+
+    if (listView) {
+      return ListView.builder(
+        shrinkWrap: true,
+        itemCount: 10,
+        itemBuilder: (context, index) => Padding(
+          padding: EdgeInsets.all(15.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Icon(
+                Icons.file_copy,
+                color: Colors.black,
+                size: 40.0,
+              ),
+              Text(
+                "Testowy dokument",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text("20 Mb"),
+              Text(
+                "10 nov",
+                style: TextStyle(color: Colors.grey),
+              ),
+            ],
+          ),
+        ),
+      );
+    } else {
+      return DragSelectGridView(
         triggerSelectionOnTap: true,
         dragStartBehavior: DragStartBehavior.down,
         gridController: this._gridViewController,
@@ -84,40 +122,51 @@ class _FileExplorerViewState extends State<FileExplorerView> {
           crossAxisSpacing: 8,
           mainAxisSpacing: 8,
         ),
-      ),
-    );
+      );
+    }
   }
 
-  List<FileExplorerItem> _getSortedDirectoryContent() => _sortDirectoryItems(
-        this._bloc.directoryContent ?? <FileExplorerItem>[],
-      );
+  List<FileExplorerItem> _getItemWidgetsList() {
+    List<FileExplorerItem> items = <FileExplorerItem>[];
+
+    if (this._bloc.directoryContent == null) {
+      return items;
+    } else {
+      this._bloc.directoryContent!.forEach(
+            (FileItem item) => items.add(FileExplorerItem(file: item)),
+          );
+
+      return items;
+    }
+  }
 
   //TODO: Refactor
   List<FileExplorerItem> _sortDirectoryItems(List<FileExplorerItem> items) {
     List<FileExplorerItem> sortedList = <FileExplorerItem>[];
 
     items.forEach((FileExplorerItem item) {
-      if (item.type == FileExplorerItemType.DIRECTORY) sortedList.add(item);
+      if (item.file.type == FileExplorerItemType.DIRECTORY)
+        sortedList.add(item);
     });
 
     items.forEach((FileExplorerItem item) {
-      if (item.type == FileExplorerItemType.IMAGE) sortedList.add(item);
+      if (item.file.type == FileExplorerItemType.IMAGE) sortedList.add(item);
     });
 
     items.forEach((FileExplorerItem item) {
-      if (item.type == FileExplorerItemType.VIDEO) sortedList.add(item);
+      if (item.file.type == FileExplorerItemType.VIDEO) sortedList.add(item);
     });
 
     items.forEach((FileExplorerItem item) {
-      if (item.type == FileExplorerItemType.MUSIC) sortedList.add(item);
+      if (item.file.type == FileExplorerItemType.MUSIC) sortedList.add(item);
     });
 
     items.forEach((FileExplorerItem item) {
-      if (item.type == FileExplorerItemType.TEXT) sortedList.add(item);
+      if (item.file.type == FileExplorerItemType.TEXT) sortedList.add(item);
     });
 
     items.forEach((FileExplorerItem item) {
-      if (item.type == FileExplorerItemType.FILE) sortedList.add(item);
+      if (item.file.type == FileExplorerItemType.FILE) sortedList.add(item);
     });
 
     return sortedList;

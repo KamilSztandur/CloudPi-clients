@@ -1,17 +1,14 @@
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
+import 'package:app/features/file_explorer/data/models/file_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FileExplorerItem extends StatelessWidget {
-  final String title;
-  final DateTime lastModifiedOn;
-  final FileExplorerItemType type;
+  final FileItem file;
 
   FileExplorerItem({
     Key? key,
-    required this.title,
-    required this.lastModifiedOn,
-    required this.type,
+    required this.file,
   }) : super(key: key);
 
   @override
@@ -29,12 +26,12 @@ class FileExplorerItem extends StatelessWidget {
   }
 
   String _getDateLabelText() {
-    String day = "${lastModifiedOn.day}";
-    String month = _getMonthAcronym(lastModifiedOn.month);
-    String year = "${lastModifiedOn.year}";
+    String day = "${this.file.lastModifiedOn.day}";
+    String month = _getMonthAcronym(this.file.lastModifiedOn.month);
+    String year = "${this.file.lastModifiedOn.year}";
     year = year.substring(year.length - 2);
 
-    if (DateTime.now().year == lastModifiedOn.year) {
+    if (DateTime.now().year == this.file.lastModifiedOn.year) {
       return "$day $month";
     } else {
       return "$day $month $year";
@@ -75,7 +72,7 @@ class FileExplorerItem extends StatelessWidget {
   Icon _getIcon() {
     final double iconSize = 80.0;
 
-    switch (this.type) {
+    switch (this.file.type) {
       case FileExplorerItemType.DIRECTORY:
         return Icon(
           Icons.folder,
@@ -129,7 +126,7 @@ class FileExplorerItem extends StatelessWidget {
 
   Text _getTitle() {
     return Text(
-      "$title",
+      "${this.file.title}",
       style: TextStyle(
         fontWeight: FontWeight.bold,
       ),

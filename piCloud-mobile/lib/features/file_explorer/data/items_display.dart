@@ -1,0 +1,4 @@
+enum ItemsDisplay {
+  TILES,
+  LIST,
+}
