@@ -1,4 +1,4 @@
-import 'package:app/features/file_explorer/data/file_explorer_item_type.dart';
+import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -32,6 +32,7 @@ class FileExplorerItem extends StatelessWidget {
     String day = "${lastModifiedOn.day}";
     String month = _getMonthAcronym(lastModifiedOn.month);
     String year = "${lastModifiedOn.year}";
+    year = year.substring(year.length - 2);
 
     if (DateTime.now().year == lastModifiedOn.year) {
       return "$day $month";
