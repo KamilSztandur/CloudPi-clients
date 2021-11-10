@@ -11,7 +11,11 @@ class PICloudApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
-        bottomNavigationBar: PICloudBottomNavigationBar(),
+        bottomNavigationBar: PICloudBottomNavigationBar(
+          pageSwitched: (int index) {
+            //TODO
+          },
+        ),
         body: FileExplorerPage(),
       ),
     );
