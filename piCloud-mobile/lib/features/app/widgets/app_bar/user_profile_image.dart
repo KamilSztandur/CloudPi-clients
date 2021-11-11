@@ -9,8 +9,9 @@ class UserProfileImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(7.5),
+    return SizedBox(
+      height: size,
+      width: size,
       child: ClipOval(
         child: Image(
           fit: BoxFit.scaleDown,
