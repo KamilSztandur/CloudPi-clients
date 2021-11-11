@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BackupDisplay extends StatelessWidget {
-  final double size;
+  final double? size;
 
   BackupDisplay({
     required this.size,
