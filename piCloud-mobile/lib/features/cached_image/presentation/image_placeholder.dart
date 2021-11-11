@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 
 // ignore: must_be_immutable
 class ImagePlaceholder extends StatelessWidget {
-  double? height, width;
+  int? height, width;
 
   ImagePlaceholder({
     this.height,
@@ -11,10 +11,35 @@ class ImagePlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      "assets/placeholder.png",
-      height: this.height,
-      width: this.width,
+    return Expanded(
+      child: FittedBox(
+        fit: BoxFit.fill,
+        child: Image.asset(
+          "assets/placeholder.jpg",
+          height: _getSize(),
+          width: _getSize(),
+        ),
+      ),
     );
+  }
+
+  double _getSize() {
+    double? size;
+
+    if (height != null && width == null) {
+      size = height!.toDouble();
+    } else if (height == null && width != null) {
+      size = height!.toDouble();
+    } else if (height != null && width != null) {
+      if (height! < width!) {
+        size = height!.toDouble();
+      } else {
+        size = width!.toDouble();
+      }
+    } else {
+      size = 40.0;
+    }
+
+    return size;
   }
 }

@@ -1,14 +1,11 @@
-import 'package:app/features/cached_image/bloc/cached_image_bloc.dart';
 import 'package:app/features/cached_image/presentation/backup_display.dart';
 import 'package:app/features/cached_image/presentation/image_placeholder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-// ignore: must_be_immutable
 class BackendCachedImage extends StatefulWidget {
   final String url;
-  int? customHeight, customWidth;
+  final int? customHeight, customWidth;
 
   BackendCachedImage({
     Key? key,
@@ -22,16 +19,14 @@ class BackendCachedImage extends StatefulWidget {
 }
 
 class _BackendCachedImageState extends State<BackendCachedImage> {
-  late CachedImageBloc _bloc;
+  Image? image;
+  bool? _isImageFetched;
 
   @override
   void initState() {
-    this._bloc = CachedImageBloc(
-      url: widget.url,
-      height: widget.customHeight,
-      width: widget.customWidth,
-    );
-    this._bloc.add(FetchCachedImageEvent());
+    if (this.image == null) {
+      _initializeImage();
+    }
 
     super.initState();
   }
@@ -39,46 +34,34 @@ class _BackendCachedImageState extends State<BackendCachedImage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: BlocProvider.value(
-        value: this._bloc,
-        child: BlocListener<CachedImageBloc, CachedImageState>(
-          listener: _cachedImageBlocListener,
-          child: BlocBuilder<CachedImageBloc, CachedImageState>(
-            builder: (context, state) {
-              if (state is CachedImageFetchedState) {
-                return state.image;
-              } else if (state is CachedImageFetchingFailureState) {
-                return BackupDisplay(
-                  size: (this.widget.customHeight != null)
-                      ? this.widget.customHeight!.toDouble()
-                      : (this.widget.customWidth != null)
-                          ? this.widget.customWidth!.toDouble()
-                          : null,
-                );
-              } else {
-                return ImagePlaceholder(
-                  height: this.widget.customHeight != null
-                      ? this.widget.customHeight!.toDouble()
-                      : null,
-                  width: this.widget.customWidth != null
-                      ? this.widget.customWidth!.toDouble()
-                      : null,
-                );
-              }
-            },
-          ),
-        ),
-      ),
+      child: _isImageFetched == true
+          ? image
+          : ImagePlaceholder(
+              height: widget.customHeight,
+              width: widget.customWidth,
+            ),
     );
   }
 
-  void _cachedImageBlocListener(BuildContext context, CachedImageState state) {
-    setState(() {
-      if (state is CachedImageFetchingFailureState) {
-        context.read<CachedImageBloc>().add(FetchingCachedImageErrorEvent());
-      } else if (state is CachedImageFetchedState) {
-        context.read<CachedImageBloc>().add(FetchingCachedImageFinishedEvent());
-      }
-    });
+  void _initializeImage() {
+    this._isImageFetched = false;
+
+    this.image = Image.network(
+      widget.url,
+      errorBuilder: (BuildContext context, Object exception, StackTrace? st) {
+        return BackupDisplay(
+          height: widget.customHeight,
+          width: widget.customWidth,
+        );
+      },
+    );
+
+    this.image!.image.resolve(ImageConfiguration()).addListener(
+      ImageStreamListener(
+        (image, synchronousCall) {
+          if (mounted) setState(() => _isImageFetched = true);
+        },
+      ),
+    );
   }
 }
