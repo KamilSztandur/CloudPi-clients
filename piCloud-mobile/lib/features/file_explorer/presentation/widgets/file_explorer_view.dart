@@ -3,6 +3,8 @@ import 'package:app/features/file_explorer/presentation/widgets/file_explorer_er
 import 'package:app/features/file_explorer/bloc/file_explorer_bloc.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item.dart';
+import 'package:app/features/file_explorer/presentation/widgets/selection/selected_item_frame.dart';
+import 'package:app/features/file_explorer/presentation/widgets/selection/selected_items_widget.dart';
 import 'package:app/features/loadingBaner/presentation/loading_panel.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/cupertino.dart';
@@ -71,7 +73,21 @@ class _FileExplorerViewState extends State<FileExplorerView> {
       isAlwaysShown: true,
       radius: Radius.circular(5.0),
       controller: _scrollController,
-      child: _buildItemsDisplay(),
+      child: Stack(
+        children: [
+          _buildItemsDisplay(),
+          if (this._gridViewController.value.isSelecting)
+            Align(
+              child: Padding(
+                padding: EdgeInsets.only(top: 15.0),
+                child: SelectedItemsInfo(
+                  selectedItemsAmount: this._gridViewController.value.amount,
+                ),
+              ),
+              alignment: Alignment.topCenter,
+            ),
+        ],
+      ),
     );
   }
 
@@ -80,50 +96,20 @@ class _FileExplorerViewState extends State<FileExplorerView> {
       _getItemWidgetsList(),
     );
 
-    bool listView = false;
-
-    if (listView) {
-      return ListView.builder(
-        shrinkWrap: true,
-        itemCount: 10,
-        itemBuilder: (context, index) => Padding(
-          padding: EdgeInsets.all(15.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Icon(
-                Icons.file_copy,
-                color: Colors.black,
-                size: 40.0,
-              ),
-              Text(
-                "Testowy dokument",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Text("20 Mb"),
-              Text(
-                "10 nov",
-                style: TextStyle(color: Colors.grey),
-              ),
-            ],
-          ),
-        ),
-      );
-    } else {
-      return DragSelectGridView(
-        triggerSelectionOnTap: true,
-        dragStartBehavior: DragStartBehavior.down,
-        gridController: this._gridViewController,
-        padding: EdgeInsets.all(8),
-        itemCount: directoryContent.length,
-        itemBuilder: (context, index, selected) => directoryContent[index],
-        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 150,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
-        ),
-      );
-    }
+    return DragSelectGridView(
+      triggerSelectionOnTap: false,
+      gridController: this._gridViewController,
+      padding: EdgeInsets.all(8),
+      itemCount: directoryContent.length,
+      itemBuilder: (context, index, selected) => selected
+          ? SelectedItemFrame(item: directoryContent[index])
+          : directoryContent[index],
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 150,
+        crossAxisSpacing: 8,
+        mainAxisSpacing: 8,
+      ),
+    );
   }
 
   List<FileExplorerItem> _getItemWidgetsList() {
