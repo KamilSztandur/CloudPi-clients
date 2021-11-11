@@ -14,8 +14,8 @@ class SelectedItemFrame extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: [
       Center(child: _SelectedFileBackground()),
-      Center(child: this.item),
-      // TODO: Fix for mobile - unknown error widget appears.
+      Center(child: this.item)
+      /*  TODO: Fix for mobile - unknown error widget appears.
       Positioned(
         top: _selectedIconOffset,
         right: _selectedIconOffset,
@@ -23,6 +23,7 @@ class SelectedItemFrame extends StatelessWidget {
           size: 25.0,
         ),
       ),
+      */
     ]);
   }
 }
