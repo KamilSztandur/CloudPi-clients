@@ -1,4 +1,6 @@
 import 'package:app/features/cached_image/bloc/cached_image_bloc.dart';
+import 'package:app/features/cached_image/presentation/backup_display.dart';
+import 'package:app/features/cached_image/presentation/image_placeholder.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,40 +48,27 @@ class _BackendCachedImageState extends State<BackendCachedImage> {
               if (state is CachedImageFetchedState) {
                 return state.image;
               } else if (state is CachedImageFetchingFailureState) {
-                return _getBackupDisplay();
+                return BackupDisplay(
+                  size: (this.widget.customHeight != null)
+                      ? this.widget.customHeight!.toDouble()
+                      : (this.widget.customWidth != null)
+                          ? this.widget.customWidth!.toDouble()
+                          : null,
+                );
               } else {
-                return _getPlaceholder();
+                return ImagePlaceholder(
+                  height: this.widget.customHeight != null
+                      ? this.widget.customHeight!.toDouble()
+                      : null,
+                  width: this.widget.customWidth != null
+                      ? this.widget.customWidth!.toDouble()
+                      : null,
+                );
               }
             },
           ),
         ),
       ),
-    );
-  }
-
-  Widget _getBackupDisplay() {
-    double? size = (this.widget.customHeight != null)
-        ? this.widget.customHeight!.toDouble()
-        : (this.widget.customWidth != null)
-            ? this.widget.customWidth!.toDouble()
-            : null;
-
-    return Icon(
-      Icons.file_copy,
-      size: size,
-      color: Colors.grey.shade700,
-    );
-  }
-
-  Widget _getPlaceholder() {
-    return Image.asset(
-      "assets/placeholder.png",
-      height: this.widget.customHeight != null
-          ? this.widget.customHeight!.toDouble()
-          : null,
-      width: this.widget.customWidth != null
-          ? this.widget.customWidth!.toDouble()
-          : null,
     );
   }
 

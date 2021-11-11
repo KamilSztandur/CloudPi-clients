@@ -14,7 +14,7 @@ class ImageManager {
     );
   }
 
-  Future<Image> resizeMemoryImage(Image image, int? height, int? width) async {
+  Future<Image> setValidImageSize(Image image, int? height, int? width) async {
     int fixedHeight = await _getFixedImageHeight(image, height, width);
     int fixedWidth = await _getFixedImageWidth(image, height, width);
 

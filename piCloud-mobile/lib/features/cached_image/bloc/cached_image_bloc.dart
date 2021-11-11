@@ -41,7 +41,7 @@ class CachedImageBloc extends Bloc<CachedImageEvent, CachedImageState> {
             this.url,
           );
 
-      this._image = await this._imageManager.resizeMemoryImage(
+      this._image = await this._imageManager.setValidImageSize(
             this._originalImage!,
             this.height,
             this.width,
