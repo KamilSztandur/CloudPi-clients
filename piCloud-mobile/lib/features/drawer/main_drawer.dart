@@ -27,30 +27,35 @@ class MainDrawer extends StatelessWidget {
           MainDrawerItem(
               value: 'Favorite Content',
               icon: Icons.favorite_outline_outlined,
+              colorOfIcon: Colors.red,
               onPressed: () => {
                     //TODO
                   }),
           MainDrawerItem(
               value: 'Shared by You',
               icon: Icons.folder_shared_outlined,
+              colorOfIcon: Colors.yellow,
               onPressed: () => {
                     //TODO
                   }),
           MainDrawerItem(
               value: 'Your Settings',
               icon: Icons.settings_outlined,
+              colorOfIcon: Colors.grey,
               onPressed: () => {
                     //TODO
                   }),
           MainDrawerItem(
               value: 'Cloud Settings',
               icon: Icons.admin_panel_settings_outlined,
+              colorOfIcon: Colors.blue[900],
               onPressed: () => {
                     //TODO
                   }),
           MainDrawerItem(
               value: 'Logout',
               icon: Icons.logout_outlined,
+              colorOfIcon: Colors.red[900],
               onPressed: () => {
                     //TODO
                   })
