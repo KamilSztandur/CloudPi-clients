@@ -1,5 +1,5 @@
 import 'package:app/features/file_explorer/data/DirectoryManager.dart';
-import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item.dart';
+import 'package:app/features/file_explorer/data/models/file_item.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -9,7 +9,7 @@ part 'file_explorer_state.dart';
 class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
   DirectoryManager _directoryManager = DirectoryManager();
 
-  List<FileExplorerItem>? directoryContent;
+  List<FileItem>? directoryContent;
   final String path;
 
   FileExplorerBloc({
