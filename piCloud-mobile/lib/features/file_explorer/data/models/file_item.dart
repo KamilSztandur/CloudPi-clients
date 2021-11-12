@@ -4,7 +4,7 @@ class FileItem {
   String title;
   double size;
   final FileExplorerItemType type;
-  final Object thumbnail;
+  final String? thumbnailURL;
   DateTime lastModifiedOn;
 
   FileItem({
@@ -12,6 +12,8 @@ class FileItem {
     required this.lastModifiedOn,
     required this.type,
     required this.size,
-    required this.thumbnail,
+    required this.thumbnailURL,
   });
+
+  bool hasThumbnail() => this.thumbnailURL != null;
 }

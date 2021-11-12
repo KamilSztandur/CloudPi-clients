@@ -1,3 +1,4 @@
+import 'package:app/features/cached_image/presentation/cached_image.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/models/file_item.dart';
 import 'package:flutter/cupertino.dart';
@@ -14,13 +15,14 @@ class FileExplorerItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _getIcon(),
-          _getTitle(),
-          SizedBox(height: 5.0),
-          _getDateLabel(),
+          Flexible(flex: 27, child: _getThumbnail(), fit: FlexFit.tight),
+          Flexible(flex: 1, child: Container(), fit: FlexFit.tight),
+          Flexible(flex: 15, child: _getTitle(), fit: FlexFit.tight),
+          Flexible(flex: 9, child: _getDateLabel(), fit: FlexFit.loose),
         ],
       ),
     );
@@ -70,66 +72,49 @@ class FileExplorerItem extends StatelessWidget {
     }
   }
 
-  Icon _getIcon() {
-    final double iconSize = 80.0;
-
-    switch (this.file.type) {
-      case FileExplorerItemType.DIRECTORY:
-        return Icon(
-          Icons.folder,
-          size: iconSize,
-          color: Colors.yellow.shade700,
-        );
-
-      case FileExplorerItemType.FILE:
-        return Icon(
-          Icons.file_copy,
-          size: iconSize,
-          color: Colors.grey.shade700,
-        );
-
-      case FileExplorerItemType.IMAGE:
-        return Icon(
-          Icons.image,
-          size: iconSize,
-          color: Colors.blue.shade700,
-        );
-
-      case FileExplorerItemType.VIDEO:
-        return Icon(
-          Icons.movie,
-          size: iconSize,
-          color: Colors.purple.shade700,
-        );
-
-      case FileExplorerItemType.MUSIC:
-        return Icon(
-          Icons.music_note,
-          size: iconSize,
-          color: Colors.green.shade700,
-        );
-
-      case FileExplorerItemType.TEXT:
-        return Icon(
-          Icons.text_snippet,
-          size: iconSize,
-          color: Colors.black,
-        );
-
-      default:
-        return Icon(
-          Icons.error,
-          size: iconSize,
-          color: Colors.red,
-        );
+  Widget _getThumbnail() {
+    if (this.file.hasThumbnail()) {
+      return BackendCachedImage(url: this.file.thumbnailURL!);
+    } else {
+      return Image(
+        fit: BoxFit.scaleDown,
+        image: _getDefaultThumbnailByType(),
+      );
     }
   }
 
-  Text _getTitle() {
-    return Text(
-      "${this.file.title}",
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
+  AssetImage _getDefaultThumbnailByType() {
+    switch (this.file.type) {
+      case FileExplorerItemType.DIRECTORY:
+        return AssetImage("assets/thumbnails/directory.png");
+
+      case FileExplorerItemType.IMAGE:
+        return AssetImage("assets/thumbnails/image.png");
+
+      case FileExplorerItemType.VIDEO:
+        return AssetImage("assets/thumbnails/video.png");
+
+      case FileExplorerItemType.MUSIC:
+        return AssetImage("assets/thumbnails/sound.png");
+
+      case FileExplorerItemType.TEXT:
+        return AssetImage("assets/thumbnails/txt.png");
+
+      default:
+        return AssetImage("assets/thumbnails/file.png");
+    }
+  }
+
+  Widget _getTitle() {
+    return Center(
+      child: Text(
+        "${this.file.title}",
+        overflow: TextOverflow.ellipsis,
+        maxLines: 2,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
   }
@@ -137,9 +122,9 @@ class FileExplorerItem extends StatelessWidget {
   Text _getDateLabel() {
     return Text(
       _getDateLabelText(),
-      style: TextStyle(
-        color: Colors.grey.shade700,
-      ),
+      overflow: TextOverflow.ellipsis,
+      maxLines: 1,
+      style: TextStyle(color: Colors.grey.shade700),
     );
   }
 }
