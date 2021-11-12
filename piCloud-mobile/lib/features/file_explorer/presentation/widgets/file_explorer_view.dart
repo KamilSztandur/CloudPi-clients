@@ -1,13 +1,10 @@
 import 'package:app/features/file_explorer/data/models/file_item.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_error.dart';
 import 'package:app/features/file_explorer/bloc/file_explorer_bloc.dart';
-import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
-import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item.dart';
+import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:app/features/file_explorer/presentation/widgets/selection/selected_item_frame.dart';
-import 'package:app/features/file_explorer/presentation/widgets/selection/selected_items_widget.dart';
 import 'package:app/features/loadingBaner/presentation/loading_panel.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

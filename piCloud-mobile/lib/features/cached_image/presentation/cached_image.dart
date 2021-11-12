@@ -1,6 +1,5 @@
 import 'package:app/features/cached_image/presentation/backup_display.dart';
 import 'package:app/features/cached_image/presentation/image_placeholder.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class BackendCachedImage extends StatefulWidget {

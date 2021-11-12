@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class ImagePlaceholder extends StatelessWidget {
-  int? height, width;
+  final int? height, width;
 
   ImagePlaceholder({
     this.height,
@@ -11,19 +10,21 @@ class ImagePlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: FittedBox(
-        fit: BoxFit.fill,
+    return Image(
+      image: AssetImage("assets/placeholder.jpg"),
+      height: _getSize(),
+      width: _getSize(),
+    );
+    /*
         child: Image.asset(
           "assets/placeholder.jpg",
           height: _getSize(),
           width: _getSize(),
         ),
-      ),
-    );
+        */
   }
 
-  double _getSize() {
+  double? _getSize() {
     double? size;
 
     if (height != null && width == null) {
@@ -36,8 +37,6 @@ class ImagePlaceholder extends StatelessWidget {
       } else {
         size = width!.toDouble();
       }
-    } else {
-      size = 40.0;
     }
 
     return size;

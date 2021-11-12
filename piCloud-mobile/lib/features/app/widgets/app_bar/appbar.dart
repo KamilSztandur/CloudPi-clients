@@ -1,5 +1,4 @@
 import 'package:app/features/app/widgets/app_bar/user_profile_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PICloudAppBar extends StatelessWidget implements PreferredSizeWidget {

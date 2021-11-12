@@ -1,5 +1,4 @@
-import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:flutter/material.dart';
 
 class SelectedItemFrame extends StatelessWidget {
