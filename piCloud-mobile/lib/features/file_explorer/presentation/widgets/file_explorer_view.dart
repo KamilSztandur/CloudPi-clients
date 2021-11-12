@@ -118,36 +118,15 @@ class _FileExplorerViewState extends State<FileExplorerView> {
     }
   }
 
-  //TODO: Refactor
   List<FileExplorerItem> _sortDirectoryItems(List<FileExplorerItem> items) {
-    List<FileExplorerItem> sortedList = <FileExplorerItem>[];
+    List<FileExplorerItem> sortedItems = items;
 
-    items.forEach((FileExplorerItem item) {
-      if (item.file.type == FileExplorerItemType.DIRECTORY)
-        sortedList.add(item);
-    });
+    sortedItems.sort(
+      (FileExplorerItem a, FileExplorerItem b) =>
+          a.file.type.index - b.file.type.index,
+    );
 
-    items.forEach((FileExplorerItem item) {
-      if (item.file.type == FileExplorerItemType.IMAGE) sortedList.add(item);
-    });
-
-    items.forEach((FileExplorerItem item) {
-      if (item.file.type == FileExplorerItemType.VIDEO) sortedList.add(item);
-    });
-
-    items.forEach((FileExplorerItem item) {
-      if (item.file.type == FileExplorerItemType.MUSIC) sortedList.add(item);
-    });
-
-    items.forEach((FileExplorerItem item) {
-      if (item.file.type == FileExplorerItemType.TEXT) sortedList.add(item);
-    });
-
-    items.forEach((FileExplorerItem item) {
-      if (item.file.type == FileExplorerItemType.FILE) sortedList.add(item);
-    });
-
-    return sortedList;
+    return sortedItems;
   }
 
   void _fileExplorerBlocListener(

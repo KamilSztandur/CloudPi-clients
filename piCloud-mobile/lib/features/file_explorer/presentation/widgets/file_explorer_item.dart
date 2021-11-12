@@ -100,6 +100,9 @@ class FileExplorerItem extends StatelessWidget {
       case FileExplorerItemType.TEXT:
         return AssetImage("assets/thumbnails/txt.png");
 
+      case FileExplorerItemType.PDF:
+        return AssetImage("assets/thumbnails/pdf.png");
+
       default:
         return AssetImage("assets/thumbnails/file.png");
     }

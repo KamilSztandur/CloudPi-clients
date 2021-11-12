@@ -1,8 +1,9 @@
 enum FileExplorerItemType {
   DIRECTORY,
-  FILE,
   IMAGE,
   VIDEO,
   MUSIC,
+  PDF,
   TEXT,
+  FILE,
 }

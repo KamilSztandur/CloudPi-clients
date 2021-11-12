@@ -9,9 +9,11 @@ class DirectoryManager {
 
     await Future.delayed(Duration(seconds: 5));
 
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < 20; i++) {
       FileExplorerItemType currentType =
-          FileExplorerItemType.values[Random().nextInt(6)];
+          FileExplorerItemType.values[Random().nextInt(
+        FileExplorerItemType.values.length,
+      )];
 
       String title = currentType.toString();
       title = title.substring(title.indexOf('.') + 1, title.length) + " $i";
