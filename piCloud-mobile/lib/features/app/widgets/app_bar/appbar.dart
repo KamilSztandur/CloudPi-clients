@@ -11,15 +11,6 @@ class PICloudAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: UserProfileImage(size: kToolbarHeight * 0.8),
       backgroundColor: Theme.of(context).primaryColor,
       automaticallyImplyLeading: false,
-      actions: [
-        IconButton(
-          onPressed: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Switched view to List Mode"),
-            duration: Duration(seconds: 2),
-          )),
-          icon: Icon(Icons.list, color: Colors.white),
-        ),
-      ],
     );
   }
 }
