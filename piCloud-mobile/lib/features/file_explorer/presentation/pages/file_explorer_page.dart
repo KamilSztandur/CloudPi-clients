@@ -4,6 +4,8 @@ import 'package:app/features/file_explorer/presentation/widgets/file_explorer_ad
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_view.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
+import 'package:app/features/app/widgets/navigation_bar/bottom_navigation_bar.dart';
+import 'package:auto_route/auto_route.dart';
 
 class FileExplorerPage extends StatefulWidget {
   FileExplorerPage({
@@ -35,6 +37,10 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
           (this.selection != null && this.selection!.amount > 0)
               ? Container()
               : AddMediaButton(),
+      bottomNavigationBar: PICloudBottomNavigationBar(
+        pageSwitched: (PageRouteInfo<dynamic> route) =>
+            AutoRouter.of(context).navigate(route),
+      ),
     );
   }
 
