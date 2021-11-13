@@ -7,7 +7,7 @@ class DirectoryManager {
   Future<List<FileItem>> getCurrentDirectoryItems(String path) async {
     List<FileItem> items = <FileItem>[];
 
-    await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(Duration(seconds: 1));
 
     for (int i = 0; i < 20; i++) {
       FileExplorerItemType currentType =

@@ -18,10 +18,15 @@ dependencies:
   bloc: ^7.0.0
   expandable: ^5.0.1
   equatable: ^2.0.3
+  auto_route: ^2.2.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  auto_route_generator: ^2.1.0
+  #  flutter pub run build_runner build --delete-conflicting-outputs
+  #  flutter pub run build_runner watch --delete-conflicting-outputs
+  build_runner: ^2.1.0
 
 flutter:
   uses-material-design: true
