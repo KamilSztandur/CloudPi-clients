@@ -10,11 +10,13 @@ class PICloudApp extends StatelessWidget {
       title: 'PICloud App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        scaffoldBackgroundColor: Colors.grey.shade100,
       ),
       home: Scaffold(
-        drawer: MainDrawer(),
-        bottomNavigationBar: PICloudBottomNavigationBar(),
+        bottomNavigationBar: PICloudBottomNavigationBar(
+          pageSwitched: (int index) {
+            //TODO
+          },
+        ),
         body: FileExplorerPage(),
       ),
     );

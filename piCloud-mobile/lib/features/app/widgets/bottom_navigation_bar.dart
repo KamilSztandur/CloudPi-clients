@@ -1,7 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class PICloudBottomNavigationBar extends StatelessWidget {
+class PICloudBottomNavigationBar extends StatefulWidget {
+  final Function(int) pageSwitched;
+
+  PICloudBottomNavigationBar({
+    Key? key,
+    required this.pageSwitched,
+  }) : super(key: key);
+
+  @override
+  _PICloudBottomNavigationBar createState() => _PICloudBottomNavigationBar();
+}
+
+class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
+  int _selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -11,42 +24,51 @@ class PICloudBottomNavigationBar extends StatelessWidget {
             color: Colors.grey.withOpacity(0.3),
             spreadRadius: 5,
             blurRadius: 7,
-            offset: Offset(0, -1), // changes position of shadow
+            offset: Offset(0, -1),
           ),
         ],
       ),
       child: BottomNavigationBar(
-        currentIndex: 0,
-        showUnselectedLabels: true,
+        currentIndex: _selectedIndex,
+        backgroundColor: Colors.white,
+        selectedIconTheme: IconThemeData(color: Theme.of(context).primaryColor),
+        unselectedIconTheme: IconThemeData(color: Colors.black),
         selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.black,
-        iconSize: 30.0,
-        selectedIconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-        unselectedIconTheme: IconThemeData(color: Colors.black),
-        items: [
+        showUnselectedLabels: true,
+        onTap: _onItemTapped,
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.folder_outlined),
+            icon: Icon(Icons.home_outlined),
             label: 'Home',
-            backgroundColor: Colors.grey.shade200,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.people_outline),
+            icon: Icon(Icons.folder_outlined),
+            label: 'Files',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people_alt_outlined),
             label: 'Shared',
-            backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.dashboard_outlined),
             label: 'Libraries',
-            backgroundColor: Theme.of(context).primaryColor,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            label: 'Me',
-            backgroundColor: Theme.of(context).primaryColor,
+            icon: Icon(Icons.star_outline),
+            label: 'Favourites',
           ),
         ],
       ),
     );
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+
+      this.widget.pageSwitched(index);
+    });
   }
 }

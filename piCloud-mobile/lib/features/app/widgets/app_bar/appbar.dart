@@ -1,28 +1,23 @@
-import 'package:app/features/app/widgets/app_bar/app_bar_actions.dart';
-import 'package:app/features/app/widgets/app_bar/app_bar_title.dart';
 import 'package:app/features/app/widgets/app_bar/user_profile_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PICloudAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final double height;
-
-  PICloudAppBar({
-    required this.height,
-  });
-
   @override
-  Size get preferredSize => Size.fromHeight(height);
+  Size get preferredSize => Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: AppBarTitle(height: this.height),
+      title: UserProfileImage(size: kToolbarHeight * 0.8),
       backgroundColor: Theme.of(context).primaryColor,
-      actions: <Widget>[
-        AppBarSearchButton(),
-        SwitchFileExplorerView(),
-        UserProfileImage(size: this.height * 0.5),
+      actions: [
+        IconButton(
+          onPressed: () => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Switched view to List Mode"),
+            duration: Duration(seconds: 2),
+          )),
+          icon: Icon(Icons.list, color: Colors.white),
+        ),
       ],
     );
   }

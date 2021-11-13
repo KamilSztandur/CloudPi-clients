@@ -1,5 +1,8 @@
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
+import 'package:app/features/app/widgets/app_bar/selection_app_bar.dart';
+import 'package:app/features/file_explorer/presentation/widgets/file_explorer_add_button.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_view.dart';
+import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
 
 class FileExplorerPage extends StatefulWidget {
@@ -12,21 +15,34 @@ class FileExplorerPage extends StatefulWidget {
 }
 
 class _FileExplorerPageState extends State<FileExplorerPage> {
+  Selection? selection;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PICloudAppBar(height: 50.0),
-      body: FileExplorerView(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          //TODO
-        },
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 30.0,
-        ),
+      appBar: _isSelecting()
+          ? SelectionAppBar(
+              selection: this.selection ?? DragSelectGridViewController().value,
+            ) as PreferredSizeWidget
+          : PICloudAppBar(),
+      body: FileExplorerView(
+        path: 'blablablabla',
+        selectionChanged: (Selection selection) => setState(() {
+          this.selection = selection;
+        }),
       ),
+      floatingActionButton:
+          (this.selection != null && this.selection!.amount > 0)
+              ? Container()
+              : AddMediaButton(),
     );
+  }
+
+  bool _isSelecting() {
+    if (this.selection != null && this.selection!.amount > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

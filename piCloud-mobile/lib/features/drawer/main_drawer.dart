@@ -14,16 +14,17 @@ class MainDrawer extends StatelessWidget {
       child: ListView(
         children: [
           Container(
-            height: 90.0,
-            margin: EdgeInsets.all(0.0),
-            padding: EdgeInsets.all(0.0),
-            child: DrawerHeader(
-                child: UserProfileImage(size: 10.0),
-                decoration: BoxDecoration(
-                    border: Border(
-                        bottom:
-                            BorderSide(width: 0.5, color: Colors.white60)))),
-          ),
+              height: 90.0,
+              margin: EdgeInsets.all(0.0),
+              padding: EdgeInsets.all(0.0),
+              child: Center(
+                child: DrawerHeader(
+                    child: UserProfileImage(size: 10.0),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                width: 0.5, color: Colors.white60)))),
+              )),
           MainDrawerItem(
               value: 'Favorite Content',
               icon: Icons.favorite_outline_outlined,
