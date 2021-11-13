@@ -1,3 +1,4 @@
+import 'package:app/features/drawer/main_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:app/common/widgets/under_construction_widget.dart';
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
@@ -17,6 +18,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PICloudAppBar(),
+      drawer: MainDrawer(),
       body: UnderConstructionInfo(pageName: "UserProfile"),
       bottomNavigationBar: PICloudBottomNavigationBar(),
     );
