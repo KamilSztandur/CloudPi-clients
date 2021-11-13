@@ -37,10 +37,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
           (this.selection != null && this.selection!.amount > 0)
               ? Container()
               : AddMediaButton(),
-      bottomNavigationBar: PICloudBottomNavigationBar(
-        pageSwitched: (PageRouteInfo<dynamic> route) =>
-            AutoRouter.of(context).navigate(route),
-      ),
+      bottomNavigationBar: PICloudBottomNavigationBar(),
     );
   }
 

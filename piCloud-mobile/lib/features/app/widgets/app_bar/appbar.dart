@@ -10,7 +10,6 @@ class PICloudAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: UserProfileImage(size: kToolbarHeight * 0.8),
       backgroundColor: Theme.of(context).primaryColor,
-      automaticallyImplyLeading: false,
     );
   }
 }

@@ -4,13 +4,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class PICloudBottomNavigationBar extends StatefulWidget {
-  final Function(PageRouteInfo) pageSwitched;
-
-  PICloudBottomNavigationBar({
-    Key? key,
-    required this.pageSwitched,
-  }) : super(key: key);
-
   @override
   _PICloudBottomNavigationBar createState() => _PICloudBottomNavigationBar();
 }
@@ -87,8 +80,7 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
     return -1;
   }
 
-  void _onItemTapped(int index) {
-    AutoRouter.of(context).navigate(items[index].route);
-    //this.widget.pageSwitched(items[index].route);
-  }
+  void _onItemTapped(int index) => AutoRouter.of(context).replaceAll(
+        [items[index].route],
+      );
 }
