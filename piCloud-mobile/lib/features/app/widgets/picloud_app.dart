@@ -12,6 +12,7 @@ class PICloudApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: Scaffold(
+        drawer: MainDrawer(),
         bottomNavigationBar: PICloudBottomNavigationBar(
           pageSwitched: (int index) {
             //TODO

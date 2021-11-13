@@ -19,16 +19,19 @@ class MainDrawerItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-      ),
+          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+              EdgeInsets.symmetric(vertical: 20, horizontal: 10))),
       child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
         Icon(
           this.icon,
           color: this.colorOfIcon,
+          size: 30,
         ),
+        Container(width: 40),
         Text(
           ' ' + this.value,
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: 24),
         )
       ]),
       onPressed: this.onPressed,

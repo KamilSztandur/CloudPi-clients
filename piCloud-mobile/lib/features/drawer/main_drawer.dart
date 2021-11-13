@@ -1,3 +1,4 @@
+import 'package:app/common/core/config.dart';
 import 'package:app/features/app/widgets/app_bar/user_profile_image.dart';
 import 'package:app/features/drawer/main_drawer_item.dart';
 import 'package:flutter/material.dart';
@@ -10,58 +11,77 @@ class MainDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
         child: Container(
-      color: Colors.grey[900],
-      child: ListView(
-        children: [
-          Container(
-              height: 90.0,
-              margin: EdgeInsets.all(0.0),
-              padding: EdgeInsets.all(0.0),
-              child: Center(
-                child: DrawerHeader(
-                    child: UserProfileImage(size: 10.0),
+            color: Colors.grey[900],
+            child: ListView(
+              children: [
+                Container(
+                    height: 150.0,
+                    margin: EdgeInsets.all(0.0),
+                    padding: EdgeInsets.all(0.0),
                     decoration: BoxDecoration(
                         border: Border(
-                            bottom: BorderSide(
-                                width: 0.5, color: Colors.white60)))),
-              )),
-          MainDrawerItem(
-              value: 'Favorite Content',
-              icon: Icons.favorite_outline_outlined,
-              colorOfIcon: Colors.red,
-              onPressed: () => {
-                    //TODO
-                  }),
-          MainDrawerItem(
-              value: 'Shared by You',
-              icon: Icons.folder_shared_outlined,
-              colorOfIcon: Colors.yellow,
-              onPressed: () => {
-                    //TODO
-                  }),
-          MainDrawerItem(
-              value: 'Your Settings',
-              icon: Icons.settings_outlined,
-              colorOfIcon: Colors.grey,
-              onPressed: () => {
-                    //TODO
-                  }),
-          MainDrawerItem(
-              value: 'Cloud Settings',
-              icon: Icons.admin_panel_settings_outlined,
-              colorOfIcon: Colors.blue[900],
-              onPressed: () => {
-                    //TODO
-                  }),
-          MainDrawerItem(
-              value: 'Logout',
-              icon: Icons.logout_outlined,
-              colorOfIcon: Colors.red[900],
-              onPressed: () => {
-                    //TODO
-                  })
-        ],
-      ),
-    ));
+                            bottom:
+                                BorderSide(width: 0.5, color: Colors.white60))),
+                    child: Center(
+                        child: DrawerHeader(
+                            child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                mainAxisSize: MainAxisSize.max,
+                                children: [
+                          Container(
+                              height: 70,
+                              width: 74,
+                              child: UserProfileImage(size: 60)),
+                          Text(
+                            'Adam44', //Mock or sth, should get username from user's data
+                            style: TextStyle(color: Colors.white, fontSize: 28),
+                          )
+                        ])))),
+                MainDrawerItem(
+                    value: 'User Profile',
+                    icon: Icons.account_box_outlined,
+                    onPressed: () => {
+                          //TODO
+                        }),
+                MainDrawerItem(
+                    value: 'Settings',
+                    icon: Icons.settings_outlined,
+                    onPressed: () => {
+                          //TODO
+                        }),
+                MainDrawerItem(
+                    value: 'Cloud Settings',
+                    icon: Icons.admin_panel_settings_outlined,
+                    onPressed: () => {
+                          //TODO
+                        }),
+                MainDrawerItem(
+                    value: 'About',
+                    icon: Icons.info_outline,
+                    onPressed: () => {
+                          //TODO
+                        }),
+                MainDrawerItem(
+                    value: 'Logout',
+                    icon: Icons.logout_outlined,
+                    onPressed: () => {
+                          //TODO
+                        }),
+                Container(
+                    height: 140,
+                    alignment: Alignment.bottomCenter,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Text('PiCloud Mobile',
+                              style: TextStyle(
+                                  color: Colors.white60, fontSize: 16)),
+                          Text(Config.version,
+                              style: TextStyle(
+                                  color: Colors.white70, fontSize: 14))
+                        ]))
+              ],
+            )));
   }
 }
