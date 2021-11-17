@@ -99,7 +99,7 @@ class _FileExplorerViewState extends State<FileExplorerView> {
                   _moveToNextDirectory(currentItem.file.title);
                 }
               },
-              child: Container(child: currentItem),
+              child: currentItem,
             );
           }
         },
