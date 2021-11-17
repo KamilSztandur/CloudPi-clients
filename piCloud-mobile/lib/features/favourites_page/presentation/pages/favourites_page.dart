@@ -17,7 +17,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PICloudAppBar(),
+      appBar: PICloudAppBar(title: "Favourites"),
       drawer: MainDrawer(),
       body: UnderConstructionInfo(pageName: "Favourites"),
       bottomNavigationBar: PICloudBottomNavigationBar(),

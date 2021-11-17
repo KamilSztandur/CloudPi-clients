@@ -17,7 +17,7 @@ class _LibrariesPageState extends State<LibrariesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PICloudAppBar(),
+      appBar: PICloudAppBar(title: "Libraries"),
       drawer: MainDrawer(),
       body: UnderConstructionInfo(pageName: "Libraries"),
       bottomNavigationBar: PICloudBottomNavigationBar(),

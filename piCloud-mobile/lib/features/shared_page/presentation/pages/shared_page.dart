@@ -17,7 +17,7 @@ class _SharedPageState extends State<SharedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PICloudAppBar(),
+      appBar: PICloudAppBar(title: "Shared"),
       drawer: MainDrawer(),
       body: UnderConstructionInfo(pageName: "Shared"),
       bottomNavigationBar: PICloudBottomNavigationBar(),

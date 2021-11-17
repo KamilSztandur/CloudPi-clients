@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PICloudAppBar(),
+      appBar: PICloudAppBar(title: "Home"),
       drawer: MainDrawer(),
       body: UnderConstructionInfo(pageName: "Home"),
       bottomNavigationBar: PICloudBottomNavigationBar(),

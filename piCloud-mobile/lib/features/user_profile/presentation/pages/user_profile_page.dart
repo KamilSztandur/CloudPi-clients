@@ -17,7 +17,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PICloudAppBar(),
+      appBar: PICloudAppBar(title: "User Profile"),
       drawer: MainDrawer(),
       body: UnderConstructionInfo(pageName: "UserProfile"),
       bottomNavigationBar: PICloudBottomNavigationBar(),
