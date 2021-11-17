@@ -11,15 +11,19 @@ import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'file_explorer_item/file_explorer_list_item.dart';
+
 class FileExplorerView extends StatefulWidget {
   final Function(Selection) selectionChanged;
   final String path;
+  final bool displayAsListView;
 
-  FileExplorerView({
-    Key? key,
-    required this.path,
-    required this.selectionChanged,
-  }) : super(key: key);
+  FileExplorerView(
+      {Key? key,
+      required this.path,
+      required this.selectionChanged,
+      required this.displayAsListView})
+      : super(key: key);
 
   @override
   _FileExplorerViewState createState() => _FileExplorerViewState();
@@ -57,7 +61,9 @@ class _FileExplorerViewState extends State<FileExplorerView> {
           child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
             builder: (context, state) {
               if (state is FetchedDataFileExplorerState) {
-                return _buildFileExplorerView();
+                return this.widget.displayAsListView
+                    ? _buildFileExplorerListView()
+                    : _buildFileExplorerView();
               } else if (state is FetchingDataErrorFileExplorerState) {
                 return FileExplorerErrorWidget(
                   errorMessage: "Check your internet connection.",
@@ -112,6 +118,12 @@ class _FileExplorerViewState extends State<FileExplorerView> {
     );
   }
 
+  Widget _buildFileExplorerListView() {
+    return ListView(
+      children: _getItemWidgetsListForListView(),
+    );
+  }
+
   List<FileExplorerItem> _getItemWidgetsList() {
     List<FileExplorerItem> items = <FileExplorerItem>[];
 
@@ -135,6 +147,25 @@ class _FileExplorerViewState extends State<FileExplorerView> {
     );
 
     return sortedItems;
+  }
+
+  List<FileExplorerListItem> _getItemWidgetsListForListView() {
+    List<FileExplorerListItem> items = <FileExplorerListItem>[];
+
+    if (this._bloc.directoryContent == null) {
+      return items;
+    } else {
+      this._bloc.directoryContent!.forEach(
+            (FileItem item) => items.add(FileExplorerListItem(file: item)),
+          );
+
+      items.sort(
+        (FileExplorerListItem a, FileExplorerListItem b) =>
+            a.file.type.index - b.file.type.index,
+      );
+
+      return items;
+    }
   }
 
   void _moveToNextDirectory(String directoryName) {

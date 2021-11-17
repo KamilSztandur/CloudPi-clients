@@ -21,6 +21,7 @@ class FileExplorerPage extends StatefulWidget {
 
 class _FileExplorerPageState extends State<FileExplorerPage> {
   Selection? selection;
+  bool listViewForFileExplorer = false;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +30,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
       drawer: MainDrawer(),
       body: FileExplorerView(
         path: this.widget.path,
+        displayAsListView: listViewForFileExplorer,
         selectionChanged: (Selection selection) => setState(() {
           this.selection = selection;
         }),
@@ -67,8 +69,11 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
         title: _getTitle(),
         actions: [
           IconButton(
-              //Switch view button mock
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  listViewForFileExplorer = !listViewForFileExplorer;
+                });
+              },
               icon: Icon(
                 Icons.segment_rounded,
                 color: Colors.white,
