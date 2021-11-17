@@ -19,7 +19,7 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
     PICloudBottomNavigationBarItem(
       icon: Icon(Icons.folder_outlined),
       label: 'Files',
-      route: FileExplorerRoute(),
+      route: FileExplorerRoute(path: "/"),
     ),
     PICloudBottomNavigationBarItem(
       icon: Icon(Icons.folder_shared_outlined),
