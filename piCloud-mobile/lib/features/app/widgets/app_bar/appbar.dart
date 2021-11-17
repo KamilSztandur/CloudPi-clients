@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 
 class PICloudAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
+  final List<Widget>? actions;
 
   PICloudAppBar({
     Key? key,
     this.title,
+    this.actions,
   }) : super(key: key);
 
   @override
@@ -21,6 +23,7 @@ class PICloudAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: true,
       leading: _shouldDisplayGoBackLeading(context) ? GoBackLeading() : null,
       backgroundColor: Theme.of(context).primaryColor,
+      actions: this.actions,
     );
   }
 

@@ -14,12 +14,17 @@ class LibrariesPage extends StatefulWidget {
 }
 
 class _LibrariesPageState extends State<LibrariesPage> {
+  final String title = "Libraries";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PICloudAppBar(title: "Libraries"),
+      appBar: PICloudAppBar(
+        title: this.title,
+        actions: [],
+      ),
       drawer: MainDrawer(),
-      body: UnderConstructionInfo(pageName: "Libraries"),
+      body: UnderConstructionInfo(pageName: this.title),
       bottomNavigationBar: PICloudBottomNavigationBar(),
     );
   }

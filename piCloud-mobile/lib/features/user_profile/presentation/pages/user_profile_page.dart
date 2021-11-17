@@ -14,12 +14,17 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class _UserProfilePageState extends State<UserProfilePage> {
+  final String title = "User Profile";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PICloudAppBar(title: "User Profile"),
+      appBar: PICloudAppBar(
+        title: this.title,
+        actions: [],
+      ),
       drawer: MainDrawer(),
-      body: UnderConstructionInfo(pageName: "UserProfile"),
+      body: UnderConstructionInfo(pageName: this.title),
       bottomNavigationBar: PICloudBottomNavigationBar(),
     );
   }

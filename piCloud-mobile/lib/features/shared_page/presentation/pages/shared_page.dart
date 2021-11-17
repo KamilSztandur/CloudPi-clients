@@ -14,12 +14,17 @@ class SharedPage extends StatefulWidget {
 }
 
 class _SharedPageState extends State<SharedPage> {
+  final String title = "Shared";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PICloudAppBar(title: "Shared"),
+      appBar: PICloudAppBar(
+        title: this.title,
+        actions: [],
+      ),
       drawer: MainDrawer(),
-      body: UnderConstructionInfo(pageName: "Shared"),
+      body: UnderConstructionInfo(pageName: this.title),
       bottomNavigationBar: PICloudBottomNavigationBar(),
     );
   }

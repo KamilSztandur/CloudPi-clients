@@ -14,12 +14,17 @@ class FavouritesPage extends StatefulWidget {
 }
 
 class _FavouritesPageState extends State<FavouritesPage> {
+  final String title = "Favourites";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PICloudAppBar(title: "Favourites"),
+      appBar: PICloudAppBar(
+        title: this.title,
+        actions: [],
+      ),
       drawer: MainDrawer(),
-      body: UnderConstructionInfo(pageName: "Favourites"),
+      body: UnderConstructionInfo(pageName: this.title),
       bottomNavigationBar: PICloudBottomNavigationBar(),
     );
   }

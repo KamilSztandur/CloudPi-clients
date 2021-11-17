@@ -14,12 +14,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final String title = "Home";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PICloudAppBar(title: "Home"),
+      appBar: PICloudAppBar(
+        title: this.title,
+        actions: [],
+      ),
       drawer: MainDrawer(),
-      body: UnderConstructionInfo(pageName: "Home"),
+      body: UnderConstructionInfo(pageName: this.title),
       bottomNavigationBar: PICloudBottomNavigationBar(),
     );
   }

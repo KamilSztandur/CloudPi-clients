@@ -25,11 +25,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _isSelecting()
-          ? SelectionAppBar(
-              selection: this.selection ?? DragSelectGridViewController().value,
-            ) as PreferredSizeWidget
-          : PICloudAppBar(title: _getTitle()),
+      appBar: _getBar(),
       drawer: MainDrawer(),
       body: FileExplorerView(
         path: this.widget.path,
@@ -37,10 +33,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
           this.selection = selection;
         }),
       ),
-      floatingActionButton:
-          (this.selection != null && this.selection!.amount > 0)
-              ? Container()
-              : AddMediaButton(),
+      floatingActionButton: _getAddMediaButtonIfNeeded(),
       bottomNavigationBar: PICloudBottomNavigationBar(),
     );
   }
@@ -62,5 +55,32 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
 
       return directoryName;
     }
+  }
+
+  PreferredSizeWidget _getBar() {
+    if (_isSelecting()) {
+      return SelectionAppBar(
+        selection: this.selection ?? DragSelectGridViewController().value,
+      );
+    } else {
+      return PICloudAppBar(
+        title: _getTitle(),
+        actions: [
+          IconButton(
+              //Switch view button mock
+              onPressed: () {},
+              icon: Icon(
+                Icons.segment_rounded,
+                color: Colors.white,
+              ))
+        ],
+      );
+    }
+  }
+
+  Widget _getAddMediaButtonIfNeeded() {
+    return (this.selection != null && this.selection!.amount > 0)
+        ? Container()
+        : AddMediaButton();
   }
 }
