@@ -16,10 +16,7 @@ class PICloudAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(
-        this.title ?? "",
-        style: TextStyle(fontWeight: FontWeight.normal),
-      ),
+      title: Text(this.title ?? ""),
       centerTitle: true,
       automaticallyImplyLeading: true,
       leading: _shouldDisplayGoBackLeading(context) ? GoBackLeading() : null,
