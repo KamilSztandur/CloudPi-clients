@@ -1,9 +1,12 @@
+import 'package:app/features/app/router/app_router.gr.dart';
+import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/models/file_item.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_error.dart';
 import 'package:app/features/file_explorer/bloc/file_explorer_bloc.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:app/features/file_explorer/presentation/widgets/selection/selected_item_frame.dart';
 import 'package:app/features/loadingBaner/presentation/loading_panel.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,8 +32,7 @@ class _FileExplorerViewState extends State<FileExplorerView> {
 
   @override
   void initState() {
-    this._bloc = FileExplorerBloc(path: widget.path);
-    this._bloc.add(FetchDataFileExplorerEvent(path: widget.path));
+    _setupBlocForPath(widget.path);
 
     this._gridViewController.addListener(
           () => this.widget.selectionChanged(this._gridViewController.value),
@@ -86,10 +88,19 @@ class _FileExplorerViewState extends State<FileExplorerView> {
         padding: EdgeInsets.all(8),
         itemCount: directoryContent.length,
         itemBuilder: (context, index, selected) {
+          FileExplorerItem currentItem = directoryContent[index];
+
           if (selected) {
-            return SelectedItemFrame(item: directoryContent[index]);
+            return SelectedItemFrame(item: currentItem);
           } else {
-            return directoryContent[index];
+            return GestureDetector(
+              onTap: () {
+                if (currentItem.file.type == FileExplorerItemType.DIRECTORY) {
+                  _moveToNextDirectory(currentItem.file.title);
+                }
+              },
+              child: Container(child: currentItem),
+            );
           }
         },
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -124,6 +135,18 @@ class _FileExplorerViewState extends State<FileExplorerView> {
     );
 
     return sortedItems;
+  }
+
+  void _moveToNextDirectory(String directoryName) {
+    this._bloc.close();
+
+    String newPath = this.widget.path + directoryName + "/";
+    AutoRouter.of(context).push(FileExplorerRoute(path: newPath));
+  }
+
+  void _setupBlocForPath(String path) {
+    this._bloc = FileExplorerBloc(path: path);
+    this._bloc.add(FetchDataFileExplorerEvent(path: path));
   }
 
   void _fileExplorerBlocListener(
