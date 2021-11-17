@@ -8,8 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:app/features/app/widgets/navigation_bar/bottom_navigation_bar.dart';
 
 class FileExplorerPage extends StatefulWidget {
+  final String path;
+
   FileExplorerPage({
     Key? key,
+    required this.path,
   }) : super(key: key);
 
   @override
@@ -26,10 +29,10 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
           ? SelectionAppBar(
               selection: this.selection ?? DragSelectGridViewController().value,
             ) as PreferredSizeWidget
-          : PICloudAppBar(),
+          : PICloudAppBar(title: _getTitle()),
       drawer: MainDrawer(),
       body: FileExplorerView(
-        path: 'blablablabla',
+        path: this.widget.path,
         selectionChanged: (Selection selection) => setState(() {
           this.selection = selection;
         }),
@@ -47,6 +50,17 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
       return true;
     } else {
       return false;
+    }
+  }
+
+  String _getTitle() {
+    if (widget.path == "/") {
+      return "Files";
+    } else {
+      String directoryName = widget.path.substring(0, widget.path.length - 1);
+      directoryName = directoryName.split('/').last;
+
+      return directoryName;
     }
   }
 }

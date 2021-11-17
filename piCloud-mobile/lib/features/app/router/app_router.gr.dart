@@ -39,10 +39,10 @@ class AppRouter extends _i7.RootStackRouter {
           routeData: routeData, child: _i3.FavouritesPage(key: args.key));
     },
     FileExplorerRoute.name: (routeData) {
-      final args = routeData.argsAs<FileExplorerRouteArgs>(
-          orElse: () => const FileExplorerRouteArgs());
+      final args = routeData.argsAs<FileExplorerRouteArgs>();
       return _i7.MaterialPageX<dynamic>(
-          routeData: routeData, child: _i4.FileExplorerPage(key: args.key));
+          routeData: routeData,
+          child: _i4.FileExplorerPage(key: args.key, path: args.path));
     },
     LibrariesRoute.name: (routeData) {
       final args = routeData.argsAs<LibrariesRouteArgs>(
@@ -114,17 +114,20 @@ class FavouritesRouteArgs {
 
 /// generated route for [_i4.FileExplorerPage]
 class FileExplorerRoute extends _i7.PageRouteInfo<FileExplorerRouteArgs> {
-  FileExplorerRoute({_i8.Key? key})
+  FileExplorerRoute({_i8.Key? key, required String path})
       : super(name,
-            path: '/file-explorer-page', args: FileExplorerRouteArgs(key: key));
+            path: '/file-explorer-page',
+            args: FileExplorerRouteArgs(key: key, path: path));
 
   static const String name = 'FileExplorerRoute';
 }
 
 class FileExplorerRouteArgs {
-  const FileExplorerRouteArgs({this.key});
+  const FileExplorerRouteArgs({this.key, required this.path});
 
   final _i8.Key? key;
+
+  final String path;
 }
 
 /// generated route for [_i5.LibrariesPage]
