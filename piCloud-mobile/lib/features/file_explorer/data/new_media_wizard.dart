@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 
 class NewMediaWizard {
   Future<List<File>> pickFiles() async {
@@ -28,4 +29,9 @@ class NewMediaWizard {
 
     return parsedFiles;
   }
+
+  //WARNING: MOCK -> TODO
+  bool isDirectoryNameTaken(String name) => false;
+
+  bool isNameLegal(String name) => RegExp(r'^[a-zA-Z0-9\(\)]+$').hasMatch(name);
 }

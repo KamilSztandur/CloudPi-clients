@@ -27,7 +27,7 @@ class AddMediaButton extends StatelessWidget {
       elevation: 8.0,
       shape: CircleBorder(),
       children: [
-        CreateDirectoryButton(onSubmitted: _createDirectory),
+        CreateDirectoryButton(onSubmitted: _createDirectory, context: context),
         PickFileButton(onFilePicked: _uploadFile),
         TakePhotoButton(onPhotoTaken: _uploadPhoto),
       ],
