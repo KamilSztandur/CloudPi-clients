@@ -50,12 +50,6 @@ class _FileExplorerViewState extends State<FileExplorerView> {
     super.dispose();
   }
 
-  Future<bool> _checkIfPreferredViewIsList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    return prefs.getString("preferredView") == "list";
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -70,7 +64,10 @@ class _FileExplorerViewState extends State<FileExplorerView> {
                   future: _checkIfPreferredViewIsList(),
                   builder: (context, snapshot) {
                     if (snapshot.data != null) {
-                      return _buildFileExplorerView(snapshot.data as bool);
+                      return RefreshIndicator(
+                        child: _buildFileExplorerView(snapshot.data as bool),
+                        onRefresh: _refreshData,
+                      );
                     } else {
                       return LoadingPanel();
                     }
@@ -104,7 +101,7 @@ class _FileExplorerViewState extends State<FileExplorerView> {
       mainAxisSpacingValue = 1;
       mainAxisExtentValue = 90;
     } else {
-      directoryContent = _sortDirectoryItems(_getItemWidgetsList());
+      directoryContent = _getItemWidgetsList();
       maxCrossAxisExtentValue = 150;
       crossAxisSpacingValue = 8;
       mainAxisSpacingValue = 8;
@@ -160,15 +157,10 @@ class _FileExplorerViewState extends State<FileExplorerView> {
     }
   }
 
-  List<FileExplorerItem> _sortDirectoryItems(List<FileExplorerItem> items) {
-    List<FileExplorerItem> sortedItems = items;
+  Future<bool> _checkIfPreferredViewIsList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    sortedItems.sort(
-      (FileExplorerItem a, FileExplorerItem b) =>
-          a.file.type.index - b.file.type.index,
-    );
-
-    return sortedItems;
+    return prefs.getString("preferredView") == "list";
   }
 
   List<FileExplorerListItem> _getItemWidgetsListForListView() {
