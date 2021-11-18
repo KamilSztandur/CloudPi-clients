@@ -10,11 +10,30 @@ class TakePhotoButton extends SpeedDialChild {
   TakePhotoButton({
     required this.onPhotoTaken,
   }) : super(
-          child: Icon(Icons.add_a_photo),
+          child: Icon(
+            Icons.add_a_photo,
+            size: 35.0,
+          ),
           foregroundColor: Colors.white,
           backgroundColor: Colors.blue,
-          label: 'Take and upload photo',
-          labelStyle: TextStyle(fontSize: 18.0),
+          labelWidget: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text(
+              'Take and upload photo',
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17.5,
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    blurRadius: 10.0,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ],
+              ),
+            ),
+          ),
           onTap: () async {
             File? photo = await NewMediaWizard().takePhoto();
 

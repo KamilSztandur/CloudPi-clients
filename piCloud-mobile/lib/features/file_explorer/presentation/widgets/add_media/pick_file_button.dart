@@ -10,11 +10,29 @@ class PickFileButton extends SpeedDialChild {
   PickFileButton({
     required this.onFilePicked,
   }) : super(
-          child: Icon(Icons.note_add),
+          child: Icon(
+            Icons.note_add,
+            size: 35.0,
+          ),
           foregroundColor: Colors.white,
           backgroundColor: Colors.blue,
-          label: 'Pick file from storage',
-          labelStyle: TextStyle(fontSize: 18.0),
+          labelWidget: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text(
+              'Pick file from storage',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17.5,
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    blurRadius: 10.0,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ],
+              ),
+            ),
+          ),
           onTap: () async => onFilePicked(await NewMediaWizard().pickFiles()),
         );
 }

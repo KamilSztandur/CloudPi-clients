@@ -10,11 +10,30 @@ class CreateDirectoryButton extends SpeedDialChild {
     required this.onSubmitted,
     required this.context,
   }) : super(
-          child: Icon(Icons.create_new_folder),
+          child: Icon(
+            Icons.create_new_folder,
+            size: 35.0,
+          ),
           foregroundColor: Colors.white,
           backgroundColor: Colors.blue,
-          label: 'Create new directory',
-          labelStyle: TextStyle(fontSize: 18.0),
+          labelWidget: Padding(
+            padding: EdgeInsets.all(10.0),
+            child: Text(
+              'Create new directory',
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 17.5,
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    blurRadius: 10.0,
+                    color: Color.fromARGB(255, 0, 0, 0),
+                  ),
+                ],
+              ),
+            ),
+          ),
           onTap: () => CreateDirectoryPopup(
             namePicked: onSubmitted,
             context: context,

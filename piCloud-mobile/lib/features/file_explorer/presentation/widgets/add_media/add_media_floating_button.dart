@@ -23,11 +23,12 @@ class _AddMediaButtonState extends State<AddMediaButton> {
       activeBackgroundColor: Colors.blueGrey,
       activeForegroundColor: Colors.white,
       buttonSize: 56.0,
+      childrenButtonSize: 75,
       visible: true,
       closeManually: false,
       curve: Curves.bounceIn,
       overlayColor: Colors.black,
-      overlayOpacity: 0.5,
+      overlayOpacity: 0.7,
       elevation: 8.0,
       shape: CircleBorder(),
       children: [

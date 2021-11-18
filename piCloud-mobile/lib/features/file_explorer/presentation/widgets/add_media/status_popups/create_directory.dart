@@ -53,6 +53,7 @@ class CreateDirectoryPopup {
 
   Widget _getTitle() => Text(
         "Create new directory",
+        textAlign: TextAlign.center,
         style: TextStyle(
           color: Theme.of(context).primaryColorDark,
           fontWeight: FontWeight.bold,
@@ -101,7 +102,7 @@ class CreateDirectoryPopup {
   Widget _getHintLabel() => Text(
         "Name should be unique and not contain any forbidden special characters like #, %, &, {, }, \\, /, *, ?, +, @ etc.",
         style: TextStyle(fontSize: 13.0),
-        textAlign: TextAlign.left,
+        textAlign: TextAlign.center,
       );
 
   Widget _getCreateButton(Function setState) => SizedBox(

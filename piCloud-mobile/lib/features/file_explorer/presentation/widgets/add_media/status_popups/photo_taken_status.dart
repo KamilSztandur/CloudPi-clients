@@ -16,7 +16,10 @@ class PhotoTakenPopup {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text("Image saved successfully."),
+        title: Text(
+          "Image saved successfully.",
+          textAlign: TextAlign.center,
+        ),
         contentPadding: EdgeInsets.only(
           top: 15.0,
           right: 15.0,
