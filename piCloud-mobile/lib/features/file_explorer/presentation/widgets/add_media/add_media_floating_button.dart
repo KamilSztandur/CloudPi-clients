@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:app/features/file_explorer/presentation/widgets/add_media/create_directory_button.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/pick_file_button.dart';
+import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/photo_taken_status.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/take_photo_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -27,8 +28,6 @@ class _AddMediaButtonState extends State<AddMediaButton> {
       curve: Curves.bounceIn,
       overlayColor: Colors.black,
       overlayOpacity: 0.5,
-      onOpen: () => print('OPENING DIAL'),
-      onClose: () => print('DIAL CLOSED'),
       elevation: 8.0,
       shape: CircleBorder(),
       children: [
@@ -49,22 +48,21 @@ class _AddMediaButtonState extends State<AddMediaButton> {
   }
 
   void _uploadFile(List<File> files) {
-    //TODO
+    if (files.length > 0) {
+      //TODO
 
-    int n = files.length;
-    ScaffoldMessenger.of(context).showSnackBar(_NotificationSnackbar(
-      context: context,
-      message: "$n file${n > 1 ? 's' : ''} uploaded.",
-    ));
+      int n = files.length;
+      ScaffoldMessenger.of(context).showSnackBar(_NotificationSnackbar(
+        context: context,
+        message: "$n file${n > 1 ? 's' : ''} uploaded.",
+      ));
+    }
   }
 
-  void _uploadPhoto() {
+  void _uploadPhoto(File file) {
     //TODO
 
-    ScaffoldMessenger.of(context).showSnackBar(_NotificationSnackbar(
-      context: context,
-      message: "Photo uploaded.",
-    ));
+    PhotoTakenPopup(context: context, imageFile: file).show();
   }
 }
 

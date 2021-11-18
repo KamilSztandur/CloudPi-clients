@@ -1,7 +1,6 @@
 import 'dart:io';
-
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class NewMediaWizard {
   Future<List<File>> pickFiles() async {
@@ -34,4 +33,17 @@ class NewMediaWizard {
   bool isDirectoryNameTaken(String name) => false;
 
   bool isNameLegal(String name) => RegExp(r'^[a-zA-Z0-9\(\)]+$').hasMatch(name);
+
+  Future<File?> takePhoto() async {
+    final ImagePicker _picker = ImagePicker();
+
+    XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+
+    if (photo != null) {
+      File file = File(photo.path);
+      return file;
+    } else {
+      return null;
+    }
+  }
 }
