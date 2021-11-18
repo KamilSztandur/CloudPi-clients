@@ -1,7 +1,7 @@
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
 import 'package:app/features/app/widgets/app_bar/selection_app_bar.dart';
 import 'package:app/features/drawer/main_drawer.dart';
-import 'package:app/features/file_explorer/presentation/widgets/file_explorer_add_button.dart';
+import 'package:app/features/file_explorer/presentation/widgets/add_media/add_media_floating_button.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_view.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
