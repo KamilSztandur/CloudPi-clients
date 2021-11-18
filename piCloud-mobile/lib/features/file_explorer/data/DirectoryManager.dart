@@ -3,11 +3,18 @@ import 'package:app/features/file_explorer/data/models/file_explorer_item_type.d
 import 'package:app/features/file_explorer/data/models/file_item.dart';
 
 class DirectoryManager {
-  // WARNING: Mock
   Future<List<FileItem>> getCurrentDirectoryItems(String path) async {
-    List<FileItem> items = <FileItem>[];
+    List<FileItem> items = await _getRawList(path);
+    List<FileItem> sortedItems = _sortDirectoryItemsByTypeAndName(items);
 
+    return sortedItems;
+  }
+
+  // WARNING: Mock
+  Future<List<FileItem>> _getRawList(String path) async {
     await Future.delayed(Duration(seconds: 1));
+
+    List<FileItem> items = <FileItem>[];
 
     for (int i = 0; i < 20; i++) {
       FileExplorerItemType currentType =
@@ -42,5 +49,20 @@ class DirectoryManager {
     );
 
     return items;
+  }
+
+  List<FileItem> _sortDirectoryItemsByTypeAndName(List<FileItem> items) {
+    List<FileItem> sortedItems = items;
+
+    sortedItems.sort((FileItem a, FileItem b) {
+      int typeComparison = a.type.index - b.type.index;
+      if (typeComparison == 0) {
+        return a.title.compareTo(b.title);
+      } else {
+        return typeComparison;
+      }
+    });
+
+    return sortedItems;
   }
 }
