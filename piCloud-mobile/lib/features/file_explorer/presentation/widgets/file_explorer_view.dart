@@ -10,6 +10,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'file_explorer_item/file_explorer_list_item.dart';
 
 class FileExplorerView extends StatefulWidget {
   final Function(Selection) selectionChanged;
@@ -47,6 +50,12 @@ class _FileExplorerViewState extends State<FileExplorerView> {
     super.dispose();
   }
 
+  Future<bool> _checkIfPreferredViewIsList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getString("preferredView") == "list";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -57,9 +66,15 @@ class _FileExplorerViewState extends State<FileExplorerView> {
           child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
             builder: (context, state) {
               if (state is FetchedDataFileExplorerState) {
-                return RefreshIndicator(
-                  child: _buildFileExplorerView(),
-                  onRefresh: _refreshData,
+                return FutureBuilder(
+                  future: _checkIfPreferredViewIsList(),
+                  builder: (context, snapshot) {
+                    if (snapshot.data != null) {
+                      return _buildFileExplorerView(snapshot.data as bool);
+                    } else {
+                      return LoadingPanel();
+                    }
+                  },
                 );
               } else if (state is FetchingDataErrorFileExplorerState) {
                 return FileExplorerErrorWidget(
@@ -75,8 +90,25 @@ class _FileExplorerViewState extends State<FileExplorerView> {
     );
   }
 
-  Widget _buildFileExplorerView() {
-    List<FileExplorerItem> directoryContent = _getItemWidgetsList();
+  Widget _buildFileExplorerView(bool displayAsListView) {
+    List<FileExplorerItem> directoryContent;
+    double maxCrossAxisExtentValue;
+    double crossAxisSpacingValue;
+    double mainAxisSpacingValue;
+    double? mainAxisExtentValue;
+
+    if (displayAsListView) {
+      directoryContent = _getItemWidgetsListForListView();
+      maxCrossAxisExtentValue = 500;
+      crossAxisSpacingValue = 1;
+      mainAxisSpacingValue = 1;
+      mainAxisExtentValue = 90;
+    } else {
+      directoryContent = _sortDirectoryItems(_getItemWidgetsList());
+      maxCrossAxisExtentValue = 150;
+      crossAxisSpacingValue = 8;
+      mainAxisSpacingValue = 8;
+    }
 
     return Scrollbar(
       thickness: 7.5,
@@ -105,9 +137,10 @@ class _FileExplorerViewState extends State<FileExplorerView> {
           }
         },
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 150,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
+          maxCrossAxisExtent: maxCrossAxisExtentValue,
+          crossAxisSpacing: crossAxisSpacingValue,
+          mainAxisSpacing: mainAxisSpacingValue,
+          mainAxisExtent: mainAxisExtentValue,
         ),
       ),
     );
@@ -122,6 +155,36 @@ class _FileExplorerViewState extends State<FileExplorerView> {
       this._bloc.directoryContent!.forEach(
             (FileItem item) => items.add(FileExplorerItem(file: item)),
           );
+
+      return items;
+    }
+  }
+
+  List<FileExplorerItem> _sortDirectoryItems(List<FileExplorerItem> items) {
+    List<FileExplorerItem> sortedItems = items;
+
+    sortedItems.sort(
+      (FileExplorerItem a, FileExplorerItem b) =>
+          a.file.type.index - b.file.type.index,
+    );
+
+    return sortedItems;
+  }
+
+  List<FileExplorerListItem> _getItemWidgetsListForListView() {
+    List<FileExplorerListItem> items = <FileExplorerListItem>[];
+
+    if (this._bloc.directoryContent == null) {
+      return items;
+    } else {
+      this._bloc.directoryContent!.forEach(
+            (FileItem item) => items.add(FileExplorerListItem(file: item)),
+          );
+
+      items.sort(
+        (FileExplorerListItem a, FileExplorerListItem b) =>
+            a.file.type.index - b.file.type.index,
+      );
 
       return items;
     }
