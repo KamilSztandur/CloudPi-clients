@@ -10,20 +10,19 @@ import 'package:auto_route/auto_route.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'file_explorer_item/file_explorer_list_item.dart';
 
 class FileExplorerView extends StatefulWidget {
   final Function(Selection) selectionChanged;
   final String path;
-  final bool displayAsListView;
 
-  FileExplorerView(
-      {Key? key,
-      required this.path,
-      required this.selectionChanged,
-      required this.displayAsListView})
-      : super(key: key);
+  FileExplorerView({
+    Key? key,
+    required this.path,
+    required this.selectionChanged,
+  }) : super(key: key);
 
   @override
   _FileExplorerViewState createState() => _FileExplorerViewState();
@@ -51,6 +50,12 @@ class _FileExplorerViewState extends State<FileExplorerView> {
     super.dispose();
   }
 
+  Future<bool> _checkIfPreferredViewIsList() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    return prefs.getString("preferredView") == "list";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -61,9 +66,15 @@ class _FileExplorerViewState extends State<FileExplorerView> {
           child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
             builder: (context, state) {
               if (state is FetchedDataFileExplorerState) {
-                return RefreshIndicator(
-                  child: _buildFileExplorerView(),
-                  onRefresh: _refreshData,
+                return FutureBuilder(
+                  future: _checkIfPreferredViewIsList(),
+                  builder: (context, snapshot) {
+                    if (snapshot.data != null) {
+                      return _buildFileExplorerView(snapshot.data as bool);
+                    } else {
+                      return LoadingPanel();
+                    }
+                  },
                 );
               } else if (state is FetchingDataErrorFileExplorerState) {
                 return FileExplorerErrorWidget(
@@ -79,14 +90,14 @@ class _FileExplorerViewState extends State<FileExplorerView> {
     );
   }
 
-  Widget _buildFileExplorerView() {
+  Widget _buildFileExplorerView(bool displayAsListView) {
     List<FileExplorerItem> directoryContent;
     double maxCrossAxisExtentValue;
     double crossAxisSpacingValue;
     double mainAxisSpacingValue;
     double? mainAxisExtentValue;
 
-    if (this.widget.displayAsListView) {
+    if (displayAsListView) {
       directoryContent = _getItemWidgetsListForListView();
       maxCrossAxisExtentValue = 500;
       crossAxisSpacingValue = 1;

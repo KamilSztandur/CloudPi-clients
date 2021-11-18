@@ -22,6 +22,7 @@ dependencies:
   flutter_speed_dial: ^4.6.6
   file_picker: ^4.2.3
   image_picker: ^0.8.4+4
+  shared_preferences: ^2.0.8
 
 dev_dependencies:
   flutter_test:
