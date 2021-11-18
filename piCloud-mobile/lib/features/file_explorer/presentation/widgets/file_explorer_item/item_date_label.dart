@@ -3,11 +3,10 @@ import 'package:flutter/material.dart';
 
 class FileExplorerItemDateLabel extends StatelessWidget {
   final FileItem file;
+  final bool? showYear;
 
-  FileExplorerItemDateLabel({
-    Key? key,
-    required this.file,
-  }) : super(key: key);
+  FileExplorerItemDateLabel({Key? key, required this.file, this.showYear})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +22,14 @@ class FileExplorerItemDateLabel extends StatelessWidget {
     String day = "${this.file.lastModifiedOn.day}";
     String month = _getMonthAcronym(this.file.lastModifiedOn.month);
     String year = "${this.file.lastModifiedOn.year}";
-    year = year.substring(year.length - 2);
 
-    if (DateTime.now().year == this.file.lastModifiedOn.year) {
-      return "$day $month";
-    } else {
+    if (showYear == true) {
       return "$day $month $year";
+    } else if (DateTime.now().year != this.file.lastModifiedOn.year) {
+      year = year.substring(year.length - 2);
+      return "$day $month $year";
+    } else {
+      return "$day $month";
     }
   }
 

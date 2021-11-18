@@ -4,6 +4,8 @@ import 'package:app/features/file_explorer/presentation/widgets/file_explorer_it
 import 'package:flutter/material.dart';
 
 class FileExplorerListItem extends FileExplorerItem {
+  final Color colorOfAdditionalInfo = Colors.grey.shade700;
+
   FileExplorerListItem({Key? key, required file}) : super(key: key, file: file);
 
   @override
@@ -11,65 +13,82 @@ class FileExplorerListItem extends FileExplorerItem {
     return Container(
       height: 100,
       padding: EdgeInsets.all(10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+      child: _getContentOfItem(),
+    );
+  }
+
+  Row _getContentOfItem() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
               Flexible(
                 child: FileExplorerThumbnail(file: file),
                 flex: 5,
                 fit: FlexFit.tight,
               ),
-              Spacer(
-                flex: 2,
+              Spacer(flex: 2),
+              _getTitleAndSizeWidget()
+            ],
+          ),
+          flex: 20,
+          fit: FlexFit.tight,
+        ),
+        _getDateInfoWidget(),
+      ],
+    );
+  }
+
+  Flexible _getTitleAndSizeWidget() {
+    return Flexible(
+      flex: 14,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Spacer(flex: 2),
+          Flexible(
+            child: Text(
+              file.title,
+              style: TextStyle(
+                fontSize: 20,
               ),
-              Flexible(
-                  flex: 14,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Spacer(flex: 2),
-                      Flexible(
-                        child: Text(
-                          file.title,
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                        flex: 30,
-                        fit: FlexFit.tight,
-                      ),
-                      Flexible(
-                        child: Text(
-                          file.size.toString() + ' Mb',
-                          style: TextStyle(color: Colors.grey.shade700),
-                        ),
-                        flex: 12,
-                      ),
-                    ],
-                  ))
-            ]),
-            flex: 20,
+            ),
+            flex: 30,
             fit: FlexFit.tight,
           ),
           Flexible(
-            child: Column(
-              children: [
-                Text(
-                  _getProperTimeFormat(file.lastModifiedOn),
-                  style: TextStyle(color: Colors.grey.shade700),
-                ),
-                FileExplorerItemDateLabel(file: file),
-              ],
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
+            child: Text(
+              file.size.toString() + ' Mb',
+              style: TextStyle(color: colorOfAdditionalInfo),
             ),
-            flex: 6,
+            flex: 12,
           ),
         ],
       ),
+    );
+  }
+
+  Flexible _getDateInfoWidget() {
+    return Flexible(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          Text(
+            _getProperTimeFormat(file.lastModifiedOn),
+            style: TextStyle(color: colorOfAdditionalInfo),
+          ),
+          FileExplorerItemDateLabel(
+            file: file,
+            showYear: true,
+          ),
+        ],
+      ),
+      flex: 6,
     );
   }
 
