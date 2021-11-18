@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app/features/file_explorer/presentation/widgets/add_media/create_directory_button.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/pick_file_button.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/take_photo_button.dart';
@@ -36,7 +38,7 @@ class AddMediaButton extends StatelessWidget {
     //TODO
   }
 
-  void _uploadFile() {
+  void _uploadFile(List<File> files) {
     //TODO
   }
 
