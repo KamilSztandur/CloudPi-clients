@@ -12,6 +12,8 @@ class DirectoryManager {
 
   // WARNING: Mock
   Future<List<FileItem>> _getRawList(String path) async {
+    await Future.delayed(Duration(seconds: 1));
+
     List<FileItem> items = <FileItem>[];
 
     for (int i = 0; i < 20; i++) {
