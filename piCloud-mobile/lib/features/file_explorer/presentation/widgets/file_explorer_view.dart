@@ -61,9 +61,7 @@ class _FileExplorerViewState extends State<FileExplorerView> {
           child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
             builder: (context, state) {
               if (state is FetchedDataFileExplorerState) {
-                return this.widget.displayAsListView
-                    ? _buildFileExplorerListView()
-                    : _buildFileExplorerView();
+                return _buildFileExplorerView();
               } else if (state is FetchingDataErrorFileExplorerState) {
                 return FileExplorerErrorWidget(
                   errorMessage: "Check your internet connection.",
@@ -79,9 +77,24 @@ class _FileExplorerViewState extends State<FileExplorerView> {
   }
 
   Widget _buildFileExplorerView() {
-    List<FileExplorerItem> directoryContent = _sortDirectoryItems(
-      _getItemWidgetsList(),
-    );
+    List<FileExplorerItem> directoryContent;
+    double maxCrossAxisExtentValue;
+    double crossAxisSpacingValue;
+    double mainAxisSpacingValue;
+    double? mainAxisExtentValue;
+
+    if (this.widget.displayAsListView) {
+      directoryContent = _getItemWidgetsListForListView();
+      maxCrossAxisExtentValue = 500;
+      crossAxisSpacingValue = 1;
+      mainAxisSpacingValue = 1;
+      mainAxisExtentValue = 90;
+    } else {
+      directoryContent = _sortDirectoryItems(_getItemWidgetsList());
+      maxCrossAxisExtentValue = 150;
+      crossAxisSpacingValue = 8;
+      mainAxisSpacingValue = 8;
+    }
 
     return Scrollbar(
       thickness: 7.5,
@@ -110,17 +123,12 @@ class _FileExplorerViewState extends State<FileExplorerView> {
           }
         },
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 150,
-          crossAxisSpacing: 8,
-          mainAxisSpacing: 8,
+          maxCrossAxisExtent: maxCrossAxisExtentValue,
+          crossAxisSpacing: crossAxisSpacingValue,
+          mainAxisSpacing: mainAxisSpacingValue,
+          mainAxisExtent: mainAxisExtentValue,
         ),
       ),
-    );
-  }
-
-  Widget _buildFileExplorerListView() {
-    return ListView(
-      children: _getItemWidgetsListForListView(),
     );
   }
 

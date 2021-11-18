@@ -21,7 +21,7 @@ class FileExplorerPage extends StatefulWidget {
 
 class _FileExplorerPageState extends State<FileExplorerPage> {
   Selection? selection;
-  bool listViewForFileExplorer = false;
+  static bool listViewForFileExplorer = false;
 
   @override
   Widget build(BuildContext context) {
