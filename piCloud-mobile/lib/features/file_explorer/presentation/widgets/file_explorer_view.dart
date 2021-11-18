@@ -76,9 +76,7 @@ class _FileExplorerViewState extends State<FileExplorerView> {
   }
 
   Widget _buildFileExplorerView() {
-    List<FileExplorerItem> directoryContent = _sortDirectoryItems(
-      _getItemWidgetsList(),
-    );
+    List<FileExplorerItem> directoryContent = _getItemWidgetsList();
 
     return Scrollbar(
       thickness: 7.5,
@@ -127,17 +125,6 @@ class _FileExplorerViewState extends State<FileExplorerView> {
 
       return items;
     }
-  }
-
-  List<FileExplorerItem> _sortDirectoryItems(List<FileExplorerItem> items) {
-    List<FileExplorerItem> sortedItems = items;
-
-    sortedItems.sort(
-      (FileExplorerItem a, FileExplorerItem b) =>
-          a.file.type.index - b.file.type.index,
-    );
-
-    return sortedItems;
   }
 
   void _moveToNextDirectory(String directoryName) =>
