@@ -32,7 +32,7 @@ class _FileExplorerViewState extends State<FileExplorerView> {
 
   @override
   void initState() {
-    _setupBlocForPath(widget.path);
+    _initializeBloc();
 
     this._gridViewController.addListener(
           () => this.widget.selectionChanged(this._gridViewController.value),
@@ -57,7 +57,10 @@ class _FileExplorerViewState extends State<FileExplorerView> {
           child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
             builder: (context, state) {
               if (state is FetchedDataFileExplorerState) {
-                return _buildFileExplorerView();
+                return RefreshIndicator(
+                  child: _buildFileExplorerView(),
+                  onRefresh: _refreshData,
+                );
               } else if (state is FetchingDataErrorFileExplorerState) {
                 return FileExplorerErrorWidget(
                   errorMessage: "Check your internet connection.",
@@ -137,17 +140,15 @@ class _FileExplorerViewState extends State<FileExplorerView> {
     return sortedItems;
   }
 
-  void _moveToNextDirectory(String directoryName) {
-    this._bloc.close();
+  void _moveToNextDirectory(String directoryName) =>
+      AutoRouter.of(context).push(
+        FileExplorerRoute(path: this.widget.path + directoryName + "/"),
+      );
 
-    String newPath = this.widget.path + directoryName + "/";
-    AutoRouter.of(context).push(FileExplorerRoute(path: newPath));
-  }
-
-  void _setupBlocForPath(String path) {
-    this._bloc = FileExplorerBloc(path: path);
-    this._bloc.add(FetchDataFileExplorerEvent(path: path));
-  }
+  Future<void> _refreshData() async => setState(() {
+        this._bloc.close();
+        _initializeBloc();
+      });
 
   void _fileExplorerBlocListener(
     BuildContext context,
@@ -170,5 +171,10 @@ class _FileExplorerViewState extends State<FileExplorerView> {
             );
       }
     });
+  }
+
+  void _initializeBloc() {
+    this._bloc = FileExplorerBloc(path: widget.path);
+    this._bloc.add(FetchDataFileExplorerEvent(path: widget.path));
   }
 }
