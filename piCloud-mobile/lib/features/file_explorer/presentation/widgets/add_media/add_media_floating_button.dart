@@ -6,7 +6,12 @@ import 'package:app/features/file_explorer/presentation/widgets/add_media/take_p
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-class AddMediaButton extends StatelessWidget {
+class AddMediaButton extends StatefulWidget {
+  @override
+  _AddMediaButtonState createState() => _AddMediaButtonState();
+}
+
+class _AddMediaButtonState extends State<AddMediaButton> {
   @override
   Widget build(BuildContext context) {
     return SpeedDial(
@@ -36,13 +41,45 @@ class AddMediaButton extends StatelessWidget {
 
   void _createDirectory(String directoryName) {
     //TODO
+
+    ScaffoldMessenger.of(context).showSnackBar(_NotificationSnackbar(
+      context: context,
+      message: "Directory $directoryName created.",
+    ));
   }
 
   void _uploadFile(List<File> files) {
     //TODO
+
+    int n = files.length;
+    ScaffoldMessenger.of(context).showSnackBar(_NotificationSnackbar(
+      context: context,
+      message: "$n file${n > 1 ? 's' : ''} uploaded.",
+    ));
   }
 
   void _uploadPhoto() {
     //TODO
+
+    ScaffoldMessenger.of(context).showSnackBar(_NotificationSnackbar(
+      context: context,
+      message: "Photo uploaded.",
+    ));
   }
+}
+
+class _NotificationSnackbar extends SnackBar {
+  final String message;
+  final BuildContext context;
+
+  _NotificationSnackbar({
+    required this.message,
+    required this.context,
+  }) : super(
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Theme.of(context).primaryColorDark,
+        );
 }
