@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class AddMediaButton extends StatefulWidget {
+  const AddMediaButton({Key? key}) : super(key: key);
+
   @override
   _AddMediaButtonState createState() => _AddMediaButtonState();
 }
@@ -22,15 +24,12 @@ class _AddMediaButtonState extends State<AddMediaButton> {
       foregroundColor: Colors.white,
       activeBackgroundColor: Colors.blueGrey,
       activeForegroundColor: Colors.white,
-      buttonSize: 56.0,
       childrenButtonSize: 75,
-      visible: true,
-      closeManually: false,
       curve: Curves.bounceIn,
       overlayColor: Colors.black,
       overlayOpacity: 0.7,
-      elevation: 8.0,
-      shape: CircleBorder(),
+      elevation: 8,
+      shape: const CircleBorder(),
       children: [
         CreateDirectoryButton(onSubmitted: _createDirectory, context: context),
         PickFileButton(onFilePicked: _uploadFile),
@@ -42,21 +41,25 @@ class _AddMediaButtonState extends State<AddMediaButton> {
   void _createDirectory(String directoryName) {
     //TODO
 
-    ScaffoldMessenger.of(context).showSnackBar(_NotificationSnackbar(
-      context: context,
-      message: "Directory $directoryName created.",
-    ));
+    ScaffoldMessenger.of(context).showSnackBar(
+      _NotificationSnackbar(
+        context: context,
+        message: 'Directory $directoryName created.',
+      ),
+    );
   }
 
   void _uploadFile(List<File> files) {
-    if (files.length > 0) {
+    if (files.isNotEmpty) {
       //TODO
 
-      int n = files.length;
-      ScaffoldMessenger.of(context).showSnackBar(_NotificationSnackbar(
-        context: context,
-        message: "$n file${n > 1 ? 's' : ''} uploaded.",
-      ));
+      final n = files.length;
+      ScaffoldMessenger.of(context).showSnackBar(
+        _NotificationSnackbar(
+          context: context,
+          message: "$n file${n > 1 ? 's' : ''} uploaded.",
+        ),
+      );
     }
   }
 
@@ -68,17 +71,17 @@ class _AddMediaButtonState extends State<AddMediaButton> {
 }
 
 class _NotificationSnackbar extends SnackBar {
-  final String message;
-  final BuildContext context;
-
   _NotificationSnackbar({
     required this.message,
     required this.context,
   }) : super(
           content: Text(
             message,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.white),
           ),
           backgroundColor: Theme.of(context).primaryColorDark,
         );
+
+  final String message;
+  final BuildContext context;
 }

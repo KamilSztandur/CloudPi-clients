@@ -13,13 +13,13 @@ class MainDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-        padding: EdgeInsets.all(15.0),
+        padding: const EdgeInsets.all(15),
         color: Theme.of(context).primaryColor,
         child: Column(
           children: [
             _getDrawerHeader(),
             _getDrawerOptions(context),
-            Spacer(flex: 3),
+            const Spacer(flex: 3),
             _getVersionInfoLabel(),
           ],
         ),
@@ -29,9 +29,7 @@ class MainDrawer extends StatelessWidget {
 
   Widget _getDrawerHeader() {
     return Container(
-      margin: EdgeInsets.all(0.0),
-      padding: EdgeInsets.all(0.0),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(width: 0.5, color: Colors.white60),
         ),
@@ -40,9 +38,8 @@ class MainDrawer extends StatelessWidget {
         child: DrawerHeader(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
+            children: const [
+              SizedBox(
                 height: 70,
                 width: 74,
                 child: UserProfileImage(size: 60),
@@ -62,54 +59,50 @@ class MainDrawer extends StatelessWidget {
   }
 
   Widget _getDrawerOptions(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          MainDrawerItem(
-            value: 'User Profile',
-            icon: Icons.account_box_outlined,
-            onPressed: _onUserProfileTapped,
-          ),
-          MainDrawerItem(
-            value: 'Settings',
-            icon: Icons.settings_outlined,
-            onPressed: _onSettingsTapped,
-          ),
-          MainDrawerItem(
-            value: 'Cloud Settings',
-            icon: Icons.admin_panel_settings_outlined,
-            onPressed: _onCloudSettingsTapped,
-          ),
-          MainDrawerItem(
-            value: 'About',
-            icon: Icons.info_outline,
-            onPressed: () => _onAboutTapped(context),
-          ),
-          MainDrawerItem(
-            value: 'Logout',
-            icon: Icons.logout_outlined,
-            onPressed: _onLogoutTapped,
-          ),
-        ],
-      ),
+    return Column(
+      children: [
+        MainDrawerItem(
+          value: 'User Profile',
+          icon: Icons.account_box_outlined,
+          onPressed: _onUserProfileTapped,
+        ),
+        MainDrawerItem(
+          value: 'Settings',
+          icon: Icons.settings_outlined,
+          onPressed: _onSettingsTapped,
+        ),
+        MainDrawerItem(
+          value: 'Cloud Settings',
+          icon: Icons.admin_panel_settings_outlined,
+          onPressed: _onCloudSettingsTapped,
+        ),
+        MainDrawerItem(
+          value: 'About',
+          icon: Icons.info_outline,
+          onPressed: () => _onAboutTapped(context),
+        ),
+        MainDrawerItem(
+          value: 'Logout',
+          icon: Icons.logout_outlined,
+          onPressed: _onLogoutTapped,
+        ),
+      ],
     );
   }
 
   Widget _getVersionInfoLabel() {
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text(
-            'PiCloud Mobile',
-            style: TextStyle(color: Colors.white60, fontSize: 16),
-          ),
-          Text(
-            Config.version,
-            style: TextStyle(color: Colors.white70, fontSize: 14),
-          )
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: const [
+        Text(
+          'PiCloud Mobile',
+          style: TextStyle(color: Colors.white60, fontSize: 16),
+        ),
+        Text(
+          Config.version,
+          style: TextStyle(color: Colors.white70, fontSize: 14),
+        )
+      ],
     );
   }
 

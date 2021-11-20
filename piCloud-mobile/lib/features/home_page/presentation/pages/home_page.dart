@@ -5,7 +5,7 @@ import 'package:app/features/drawer/main_drawer.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({
+  const HomePage({
     Key? key,
   }) : super(key: key);
 
@@ -14,18 +14,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final String title = "Home";
+  final String title = 'Home';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PICloudAppBar(
-        title: this.title,
-        actions: [],
+        title: title,
+        actions: const [],
       ),
-      drawer: MainDrawer(),
-      body: UnderConstructionInfo(pageName: this.title),
-      bottomNavigationBar: PICloudBottomNavigationBar(),
+      drawer: const MainDrawer(),
+      body: UnderConstructionInfo(pageName: title),
+      bottomNavigationBar: const PICloudBottomNavigationBar(),
     );
   }
 }

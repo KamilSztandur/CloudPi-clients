@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 
 class UserProfileImage extends StatelessWidget {
-  final double size;
-
-  UserProfileImage({
+  const UserProfileImage({
+    Key? key,
     required this.size,
-  });
+  }) : super(key: key);
+
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       height: size,
       width: size,
-      child: ClipOval(
+      child: const ClipOval(
         child: Image(
           fit: BoxFit.scaleDown,
-          image: AssetImage("assets/profilepic.jpg"),
+          image: AssetImage('assets/profilepic.jpg'),
         ),
       ),
     );

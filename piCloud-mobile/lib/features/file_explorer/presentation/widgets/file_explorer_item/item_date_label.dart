@@ -2,11 +2,14 @@ import 'package:app/features/file_explorer/data/models/file_item.dart';
 import 'package:flutter/material.dart';
 
 class FileExplorerItemDateLabel extends StatelessWidget {
+  const FileExplorerItemDateLabel({
+    Key? key,
+    required this.file,
+    this.showYear,
+  }) : super(key: key);
+
   final FileItem file;
   final bool? showYear;
-
-  FileExplorerItemDateLabel({Key? key, required this.file, this.showYear})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,48 +22,48 @@ class FileExplorerItemDateLabel extends StatelessWidget {
   }
 
   String _getDateLabelText() {
-    String day = "${this.file.lastModifiedOn.day}";
-    String month = _getMonthAcronym(this.file.lastModifiedOn.month);
-    String year = "${this.file.lastModifiedOn.year}";
+    final day = '${file.lastModifiedOn.day}';
+    final month = _getMonthAcronym(file.lastModifiedOn.month);
+    var year = '${file.lastModifiedOn.year}';
 
-    if (showYear == true) {
-      return "$day $month $year";
-    } else if (DateTime.now().year != this.file.lastModifiedOn.year) {
+    if (showYear ?? false) {
+      return '$day $month $year';
+    } else if (DateTime.now().year != file.lastModifiedOn.year) {
       year = year.substring(year.length - 2);
-      return "$day $month $year";
+      return '$day $month $year';
     } else {
-      return "$day $month";
+      return '$day $month';
     }
   }
 
   String _getMonthAcronym(int index) {
     switch (index) {
       case 1:
-        return "jan";
+        return 'jan';
       case 2:
-        return "feb";
+        return 'feb';
       case 3:
-        return "mar";
+        return 'mar';
       case 4:
-        return "apr";
+        return 'apr';
       case 5:
-        return "may";
+        return 'may';
       case 6:
-        return "jun";
+        return 'jun';
       case 7:
-        return "jul";
+        return 'jul';
       case 8:
-        return "aug";
+        return 'aug';
       case 9:
-        return "sep";
+        return 'sep';
       case 10:
-        return "oct";
+        return 'oct';
       case 11:
-        return "nov";
+        return 'nov';
       case 12:
-        return "dec";
+        return 'dec';
       default:
-        return "";
+        return '';
     }
   }
 }

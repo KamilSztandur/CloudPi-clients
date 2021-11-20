@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
 
 class AppBarTitle extends StatelessWidget {
-  final double height;
-
-  AppBarTitle({
+  const AppBarTitle({
+    Key? key,
     required this.height,
-  });
+  }) : super(key: key);
+
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         InkWell(
           onTap: () {
             // return to main page
           },
           child: Container(
-            padding: EdgeInsets.all(7.5),
-            height: this.height,
-            child: Image(
+            padding: const EdgeInsets.all(7.5),
+            height: height,
+            child: const Image(
               fit: BoxFit.scaleDown,
               image: AssetImage('assets/logo.png'),
             ),

@@ -1,43 +1,42 @@
 import 'package:flutter/material.dart';
 
 class SelectedItemsInfo extends StatelessWidget {
-  final int selectedItemsAmount;
-
-  SelectedItemsInfo({
+  const SelectedItemsInfo({
+    Key? key,
     required this.selectedItemsAmount,
-  });
+  }) : super(key: key);
+
+  final int selectedItemsAmount;
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width * 0.6;
+    final width = MediaQuery.of(context).size.width * 0.6;
 
     return Container(
-      height: 40.0,
+      height: 40,
       width: width,
       decoration: BoxDecoration(
         color: Colors.white,
         border: Border.all(
           color: Theme.of(context).primaryColor,
-          width: 2.0,
+          width: 2,
         ),
-        boxShadow: <BoxShadow>[
+        boxShadow: const <BoxShadow>[
           BoxShadow(
             color: Colors.grey,
             offset: Offset(-1, -1),
-            blurRadius: 15.0,
+            blurRadius: 15,
           ),
         ],
-        borderRadius: BorderRadius.all(
-          Radius.circular(15.0),
-        ),
+        borderRadius: const BorderRadius.all(Radius.circular(15)),
       ),
       child: Center(
         child: Text(
-          "Selected $selectedItemsAmount items.",
+          'Selected $selectedItemsAmount items.',
           style: TextStyle(
             color: Theme.of(context).primaryColor,
             fontWeight: FontWeight.bold,
-            fontSize: 16.0,
+            fontSize: 16,
           ),
         ),
       ),

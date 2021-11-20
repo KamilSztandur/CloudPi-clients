@@ -4,26 +4,26 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class PhotoTakenPopup {
-  final BuildContext context;
-  final File imageFile;
-
-  PhotoTakenPopup({
+  const PhotoTakenPopup({
     required this.context,
     required this.imageFile,
   });
 
+  final BuildContext context;
+  final File imageFile;
+
   void show() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(
-          "Image saved successfully.",
+        title: const Text(
+          'Image saved successfully.',
           textAlign: TextAlign.center,
         ),
-        contentPadding: EdgeInsets.only(
-          top: 15.0,
-          right: 15.0,
-          left: 15.0,
+        contentPadding: const EdgeInsets.only(
+          top: 15,
+          right: 15,
+          left: 15,
         ),
         actions: [
           SizedBox(
@@ -33,8 +33,8 @@ class PhotoTakenPopup {
               style: ElevatedButton.styleFrom(
                 primary: Theme.of(context).primaryColorDark,
               ),
-              child: Text(
-                "Close",
+              child: const Text(
+                'Close',
                 style: TextStyle(color: Colors.white),
               ),
             ),

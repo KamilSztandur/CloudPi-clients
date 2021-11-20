@@ -3,15 +3,15 @@ import 'package:app/features/cached_image/presentation/image_placeholder.dart';
 import 'package:flutter/material.dart';
 
 class BackendCachedImage extends StatefulWidget {
-  final String url;
-  final int? customHeight, customWidth;
-
-  BackendCachedImage({
+  const BackendCachedImage({
     Key? key,
     required this.url,
     this.customHeight,
     this.customWidth,
   }) : super(key: key);
+
+  final String url;
+  final int? customHeight, customWidth;
 
   @override
   _BackendCachedImageState createState() => _BackendCachedImageState();
@@ -23,7 +23,7 @@ class _BackendCachedImageState extends State<BackendCachedImage> {
 
   @override
   void initState() {
-    if (this.image == null) {
+    if (image == null) {
       _initializeImage();
     }
 
@@ -33,7 +33,7 @@ class _BackendCachedImageState extends State<BackendCachedImage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: _isImageFetched == true
+      child: _isImageFetched ?? false
           ? image
           : ImagePlaceholder(
               height: widget.customHeight,
@@ -43,11 +43,11 @@ class _BackendCachedImageState extends State<BackendCachedImage> {
   }
 
   void _initializeImage() {
-    this._isImageFetched = false;
+    _isImageFetched = false;
 
-    this.image = Image.network(
+    image = Image.network(
       widget.url,
-      errorBuilder: (BuildContext context, Object exception, StackTrace? st) {
+      errorBuilder: (context, exception, st) {
         return BackupDisplay(
           height: widget.customHeight,
           width: widget.customWidth,
@@ -55,10 +55,12 @@ class _BackendCachedImageState extends State<BackendCachedImage> {
       },
     );
 
-    this.image!.image.resolve(ImageConfiguration()).addListener(
+    image!.image.resolve(ImageConfiguration.empty).addListener(
       ImageStreamListener(
         (image, synchronousCall) {
-          if (mounted) setState(() => _isImageFetched = true);
+          if (mounted) {
+            setState(() => _isImageFetched = true);
+          }
         },
       ),
     );

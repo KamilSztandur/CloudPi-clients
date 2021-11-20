@@ -1,39 +1,38 @@
 import 'package:flutter/material.dart';
 
 class LoadingPanel extends StatelessWidget {
+  const LoadingPanel({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    double size = MediaQuery.of(context).size.shortestSide * 0.8;
+    final size = MediaQuery.of(context).size.shortestSide * 0.8;
 
     return Center(
       child: Stack(
         children: [
           Center(
-            child: Container(
+            child: SizedBox(
               height: size,
               width: size,
-              child: CircularProgressIndicator(
+              child: const CircularProgressIndicator(
                 color: Colors.black,
-                strokeWidth: 3.0,
+                strokeWidth: 3,
               ),
             ),
           ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Image.asset(
-                  "assets/loading.gif",
-                  height: 125.0,
-                  width: 125.0,
+                  'assets/loading.gif',
+                  height: 125,
+                  width: 125,
                 ),
-                SizedBox(height: 15.0),
-                Text(
-                  "Loading...",
-                  style: TextStyle(
-                    fontSize: 25.0,
-                  ),
+                const SizedBox(height: 15),
+                const Text(
+                  'Loading...',
+                  style: TextStyle(fontSize: 25),
                 ),
               ],
             ),

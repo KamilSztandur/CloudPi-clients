@@ -13,25 +13,25 @@ class InitializeFileExplorerEvent extends FileExplorerEvent {
 }
 
 class FetchDataFileExplorerEvent extends FileExplorerEvent {
-  final String path;
-
-  FetchDataFileExplorerEvent({
+  const FetchDataFileExplorerEvent({
     required this.path,
   });
 
+  final String path;
+
   @override
-  List<Object> get props => [this.path];
+  List<Object> get props => [path];
 }
 
-class FetchDataErrorOccuredFileExplorerEvent extends FileExplorerEvent {
-  final String errorMessage;
-
-  FetchDataErrorOccuredFileExplorerEvent({
+class FetchDataErrorOccurredFileExplorerEvent extends FileExplorerEvent {
+  const FetchDataErrorOccurredFileExplorerEvent({
     required this.errorMessage,
   });
 
+  final String errorMessage;
+
   @override
-  List<Object> get props => [this.errorMessage];
+  List<Object> get props => [errorMessage];
 }
 
 class FetchingDataFinishedFileExplorerEvent extends FileExplorerEvent {

@@ -12,7 +12,7 @@ class FileExplorerInitialState extends FileExplorerState {
   List<Object> get props => [];
 }
 
-class FetchningDataFileExplorerState extends FileExplorerState {
+class FetchingDataFileExplorerState extends FileExplorerState {
   @override
   List<Object> get props => [];
 }
@@ -23,12 +23,12 @@ class FetchedDataFileExplorerState extends FileExplorerState {
 }
 
 class FetchingDataErrorFileExplorerState extends FileExplorerState {
-  final String errorMessage;
-
-  FetchingDataErrorFileExplorerState({
+  const FetchingDataErrorFileExplorerState({
     required this.errorMessage,
   });
 
+  final String errorMessage;
+
   @override
-  List<Object> get props => [this.errorMessage];
+  List<Object> get props => [errorMessage];
 }

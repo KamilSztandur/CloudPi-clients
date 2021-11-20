@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SwitchViewButton extends StatefulWidget {
-  final VoidCallback viewSwitched;
-
-  SwitchViewButton({
+  const SwitchViewButton({
     Key? key,
     required this.viewSwitched,
   }) : super(key: key);
+
+  final VoidCallback viewSwitched;
 
   @override
   _SwitchViewButtonState createState() => _SwitchViewButtonState();
@@ -23,7 +23,7 @@ class _SwitchViewButtonState extends State<SwitchViewButton> {
           return IconButton(
             onPressed: _onSwitchPressed,
             icon: Icon(
-              snapshot.data as IconData,
+              snapshot.data! as IconData,
               color: Colors.white,
             ),
           );
@@ -35,14 +35,14 @@ class _SwitchViewButtonState extends State<SwitchViewButton> {
   }
 
   Future<IconData> _getIcon() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? viewValue = prefs.getString("preferredView");
+    final prefs = await SharedPreferences.getInstance();
+    final viewValue = prefs.getString('preferredView');
 
     if (viewValue != null) {
       switch (viewValue) {
-        case "tiles":
+        case 'tiles':
           return Icons.view_list_outlined;
-        case "list":
+        case 'list':
           return Icons.grid_view_outlined;
         default:
         //Ignore
@@ -52,21 +52,21 @@ class _SwitchViewButtonState extends State<SwitchViewButton> {
     return Icons.visibility;
   }
 
-  void _onSwitchPressed() async {
-    SharedPreferences prefs = await (SharedPreferences.getInstance());
-    final String preferredViewSettingKey = "preferredView";
+  Future<void> _onSwitchPressed() async {
+    final prefs = await SharedPreferences.getInstance();
+    const preferredViewSettingKey = 'preferredView';
 
-    String? currentValue = prefs.getString(preferredViewSettingKey);
+    final currentValue = prefs.getString(preferredViewSettingKey);
     if (currentValue != null) {
       switch (currentValue) {
-        case "tiles":
-          await prefs.setString(preferredViewSettingKey, "list");
-          this.widget.viewSwitched();
+        case 'tiles':
+          await prefs.setString(preferredViewSettingKey, 'list');
+          widget.viewSwitched();
           break;
 
-        case "list":
-          await prefs.setString(preferredViewSettingKey, "tiles");
-          this.widget.viewSwitched();
+        case 'list':
+          await prefs.setString(preferredViewSettingKey, 'tiles');
+          widget.viewSwitched();
           break;
 
         default:

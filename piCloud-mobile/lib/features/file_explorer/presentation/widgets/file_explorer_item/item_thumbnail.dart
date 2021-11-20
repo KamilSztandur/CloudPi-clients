@@ -4,12 +4,12 @@ import 'package:app/features/file_explorer/data/models/file_item.dart';
 import 'package:flutter/material.dart';
 
 class FileExplorerThumbnail extends StatefulWidget {
-  final FileItem file;
-
-  FileExplorerThumbnail({
+  const FileExplorerThumbnail({
     Key? key,
     required this.file,
   }) : super(key: key);
+
+  final FileItem file;
 
   @override
   _FileExplorerThumbnailState createState() => _FileExplorerThumbnailState();
@@ -17,34 +17,34 @@ class FileExplorerThumbnail extends StatefulWidget {
 
 class _FileExplorerThumbnailState extends State<FileExplorerThumbnail> {
   AssetImage _getDefaultThumbnailByType() {
-    switch (this.widget.file.type) {
-      case FileExplorerItemType.DIRECTORY:
-        return AssetImage("assets/thumbnails/directory.png");
+    switch (widget.file.type) {
+      case FileExplorerItemType.directory:
+        return const AssetImage('assets/thumbnails/directory.png');
 
-      case FileExplorerItemType.IMAGE:
-        return AssetImage("assets/thumbnails/image.png");
+      case FileExplorerItemType.image:
+        return const AssetImage('assets/thumbnails/image.png');
 
-      case FileExplorerItemType.VIDEO:
-        return AssetImage("assets/thumbnails/video.png");
+      case FileExplorerItemType.video:
+        return const AssetImage('assets/thumbnails/video.png');
 
-      case FileExplorerItemType.MUSIC:
-        return AssetImage("assets/thumbnails/sound.png");
+      case FileExplorerItemType.music:
+        return const AssetImage('assets/thumbnails/sound.png');
 
-      case FileExplorerItemType.TEXT:
-        return AssetImage("assets/thumbnails/txt.png");
+      case FileExplorerItemType.text:
+        return const AssetImage('assets/thumbnails/txt.png');
 
-      case FileExplorerItemType.PDF:
-        return AssetImage("assets/thumbnails/pdf.png");
+      case FileExplorerItemType.pdf:
+        return const AssetImage('assets/thumbnails/pdf.png');
 
       default:
-        return AssetImage("assets/thumbnails/file.png");
+        return const AssetImage('assets/thumbnails/file.png');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (this.widget.file.hasThumbnail()) {
-      return BackendCachedImage(url: this.widget.file.thumbnailURL!);
+    if (widget.file.hasThumbnail()) {
+      return BackendCachedImage(url: widget.file.thumbnailURL!);
     } else {
       return Image(
         fit: BoxFit.scaleDown,

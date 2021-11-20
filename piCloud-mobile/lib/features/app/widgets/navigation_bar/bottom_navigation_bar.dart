@@ -4,6 +4,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class PICloudBottomNavigationBar extends StatefulWidget {
+  const PICloudBottomNavigationBar({Key? key}) : super(key: key);
+
   @override
   _PICloudBottomNavigationBar createState() => _PICloudBottomNavigationBar();
 }
@@ -12,27 +14,27 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
   final List<PICloudBottomNavigationBarItem> items =
       <PICloudBottomNavigationBarItem>[
     PICloudBottomNavigationBarItem(
-      icon: Icon(Icons.home_outlined),
+      icon: const Icon(Icons.home_outlined),
       label: 'Home',
       route: HomeRoute(),
     ),
     PICloudBottomNavigationBarItem(
-      icon: Icon(Icons.folder_outlined),
+      icon: const Icon(Icons.folder_outlined),
       label: 'Files',
-      route: FileExplorerRoute(path: "/"),
+      route: FileExplorerRoute(path: '/'),
     ),
     PICloudBottomNavigationBarItem(
-      icon: Icon(Icons.folder_shared_outlined),
+      icon: const Icon(Icons.folder_shared_outlined),
       label: 'Shared',
       route: SharedRoute(),
     ),
     PICloudBottomNavigationBarItem(
-      icon: Icon(Icons.dashboard_outlined),
+      icon: const Icon(Icons.dashboard_outlined),
       label: 'Libraries',
       route: LibrariesRoute(),
     ),
     PICloudBottomNavigationBarItem(
-      icon: Icon(Icons.star_outline),
+      icon: const Icon(Icons.star_outline),
       label: 'Favourites',
       route: FavouritesRoute(),
     ),
@@ -47,7 +49,7 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
             color: Colors.grey.withOpacity(0.3),
             spreadRadius: 5,
             blurRadius: 7,
-            offset: Offset(0, -1),
+            offset: const Offset(0, -1),
           ),
         ],
       ),
@@ -56,22 +58,23 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
         selectedIconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-        unselectedIconTheme: IconThemeData(color: Colors.black),
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
+        unselectedIconTheme: const IconThemeData(color: Colors.black),
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
         selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.black,
         showUnselectedLabels: true,
         onTap: _onItemTapped,
-        items: this.items,
+        items: items,
       ),
     );
   }
 
   int _getCurrentlySelectedItem() {
-    var currentRoute = AutoRouter.of(context).current.route.toRoute().routeName;
+    final currentRoute =
+        AutoRouter.of(context).current.route.toRoute().routeName;
 
-    int n = items.length;
-    for (int i = 0; i < n; i++) {
+    final n = items.length;
+    for (var i = 0; i < n; i++) {
       if (items[i].route.routeName == currentRoute) {
         return i;
       }
