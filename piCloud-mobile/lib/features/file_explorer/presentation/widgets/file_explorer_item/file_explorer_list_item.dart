@@ -2,6 +2,7 @@ import 'package:app/features/file_explorer/presentation/widgets/file_explorer_it
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/item_date_label.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/item_thumbnail.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class FileExplorerListItem extends FileExplorerItem {
   final Color colorOfAdditionalInfo = Colors.grey.shade700;
@@ -93,6 +94,6 @@ class FileExplorerListItem extends FileExplorerItem {
   }
 
   String _getProperTimeFormat(DateTime dateTime) {
-    return dateTime.hour.toString() + ':' + dateTime.minute.toString();
+    return DateFormat('Hm').format(dateTime);
   }
 }
