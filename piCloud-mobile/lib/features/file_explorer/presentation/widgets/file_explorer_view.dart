@@ -113,6 +113,7 @@ class _FileExplorerViewState extends State<FileExplorerView> {
       radius: Radius.circular(5.0),
       controller: _scrollController,
       child: DragSelectGridView(
+        scrollController: _scrollController,
         triggerSelectionOnTap: false,
         gridController: this._gridViewController,
         padding: EdgeInsets.all(8),
