@@ -3,27 +3,27 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class PICloudAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String? title;
-  final List<Widget>? actions;
-
-  PICloudAppBar({
+  const PICloudAppBar({
     Key? key,
     this.title,
     this.actions,
   }) : super(key: key);
 
+  final String? title;
+  final List<Widget>? actions;
+
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(this.title ?? ""),
+      title: Text(title ?? ''),
       centerTitle: true,
-      automaticallyImplyLeading: true,
-      leading: _shouldDisplayGoBackLeading(context) ? GoBackLeading() : null,
+      leading:
+          _shouldDisplayGoBackLeading(context) ? const GoBackLeading() : null,
       backgroundColor: Theme.of(context).primaryColor,
-      actions: this.actions,
+      actions: actions,
     );
   }
 

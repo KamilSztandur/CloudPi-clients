@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PICloudApp extends StatelessWidget {
+  PICloudApp({Key? key}) : super(key: key);
+
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
   final _appRouter = AppRouter();
 
@@ -29,8 +31,8 @@ class PICloudApp extends StatelessWidget {
     );
   }
 
-  void _setUpSharedPrefs() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString("preferredView", "tiles");
+  Future<void> _setUpSharedPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('preferredView', 'tiles');
   }
 }

@@ -9,12 +9,12 @@ import 'package:auto_route/auto_route.dart';
 @MaterialAutoRouter(
   replaceInRouteName: 'Page,Route',
   routes: <AutoRoute>[
-    AutoRoute(page: HomePage, initial: true),
-    AutoRoute(page: SharedPage),
-    AutoRoute(page: FavouritesPage),
-    AutoRoute(page: FileExplorerPage),
-    AutoRoute(page: LibrariesPage),
-    AutoRoute(page: UserProfilePage),
+    AutoRoute<void>(page: HomePage, initial: true),
+    AutoRoute<void>(page: SharedPage),
+    AutoRoute<void>(page: FavouritesPage),
+    AutoRoute<void>(page: FileExplorerPage),
+    AutoRoute<void>(page: LibrariesPage),
+    AutoRoute<void>(page: UserProfilePage),
   ],
 )
 class $AppRouter {}

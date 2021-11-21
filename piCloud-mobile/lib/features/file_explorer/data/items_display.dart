@@ -1,4 +1,4 @@
 enum ItemsDisplay {
-  TILES,
-  LIST,
+  titles,
+  list,
 }

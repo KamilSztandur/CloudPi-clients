@@ -1,40 +1,39 @@
 import 'package:flutter/material.dart';
 
-// ignore: must_be_immutable
 class FileExplorerErrorWidget extends StatelessWidget {
-  String? errorMessage;
-
-  FileExplorerErrorWidget({
+  const FileExplorerErrorWidget({
+    Key? key,
     this.errorMessage,
-  });
+  }) : super(key: key);
+
+  final String? errorMessage;
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.error_outline_outlined,
-            size: 150.0,
+            size: 150,
             color: Colors.black,
           ),
-          SizedBox(height: 7.5),
-          Text(
-            "Oops! Something went wrong.",
+          const SizedBox(height: 7.5),
+          const Text(
+            'Oops! Something went wrong.',
             style: TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 20.0,
+              fontSize: 20,
             ),
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 25.0),
+          const SizedBox(height: 25),
           Text(
-            "$errorMessage",
-            style: TextStyle(
+            errorMessage ?? '',
+            style: const TextStyle(
               fontStyle: FontStyle.italic,
-              fontSize: 15.0,
+              fontSize: 15,
             ),
             textAlign: TextAlign.center,
           ),

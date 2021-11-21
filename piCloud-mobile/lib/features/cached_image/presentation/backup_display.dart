@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class BackupDisplay extends StatelessWidget {
-  final int? height, width;
-
-  BackupDisplay({
+  const BackupDisplay({
+    Key? key,
     this.height,
     this.width,
-  });
+  }) : super(key: key);
+
+  final int? height, width;
 
   @override
   Widget build(BuildContext context) {

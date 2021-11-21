@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class MainDrawerItem extends StatelessWidget {
-  final String value;
-  final VoidCallback onPressed;
-  final IconData? icon;
-  final Color? colorOfIcon;
-
   const MainDrawerItem({
     Key? key,
     required this.value,
@@ -15,31 +10,35 @@ class MainDrawerItem extends StatelessWidget {
     this.colorOfIcon,
   }) : super(key: key);
 
+  final String value;
+  final VoidCallback onPressed;
+  final IconData? icon;
+  final Color? colorOfIcon;
+
   @override
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
         foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-          EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+          const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
         ),
       ),
+      onPressed: onPressed,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Icon(
-            this.icon,
-            color: this.colorOfIcon,
+            icon,
+            color: colorOfIcon,
             size: 30,
           ),
           Container(width: 40),
           Text(
-            ' ' + this.value,
-            style: TextStyle(fontSize: 24),
+            ' $value',
+            style: const TextStyle(fontSize: 24),
           )
         ],
       ),
-      onPressed: this.onPressed,
     );
   }
 }

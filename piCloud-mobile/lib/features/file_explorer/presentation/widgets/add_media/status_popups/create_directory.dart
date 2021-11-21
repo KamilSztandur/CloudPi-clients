@@ -3,45 +3,43 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 class CreateDirectoryPopup {
-  final Function(String) namePicked;
-  final BuildContext context;
-  final TextEditingController _controller = TextEditingController();
-  String? _warningMessage;
-
   CreateDirectoryPopup({
     required this.namePicked,
     required this.context,
   });
 
+  final Function(String) namePicked;
+  final BuildContext context;
+  final TextEditingController _controller = TextEditingController();
+  String? _warningMessage;
+
   void show() {
-    showDialog(
+    showDialog<void>(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         // return alert dialog object
         return StatefulBuilder(
           builder: (context, setState) => AlertDialog(
-            contentPadding: EdgeInsets.only(
-              top: 15.0,
-              right: 15.0,
-              left: 15.0,
+            contentPadding: const EdgeInsets.only(
+              top: 15,
+              right: 15,
+              left: 15,
             ),
             title: _getTitle(),
             content: Wrap(
               children: [
-                Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _getHintLabel(),
-                      SizedBox(height: 20.0),
-                      _getInputField(),
-                      SizedBox(height: 5.0),
-                      if (this._warningMessage != null) _getWarningLabel(),
-                      SizedBox(height: 20.0),
-                      _getCreateButton(setState),
-                      _getCancelButton(),
-                    ],
-                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _getHintLabel(),
+                    const SizedBox(height: 20),
+                    _getInputField(),
+                    const SizedBox(height: 5),
+                    if (_warningMessage != null) _getWarningLabel(),
+                    const SizedBox(height: 20),
+                    _getCreateButton(setState),
+                    _getCancelButton(),
+                  ],
                 ),
               ],
             ),
@@ -52,7 +50,7 @@ class CreateDirectoryPopup {
   }
 
   Widget _getTitle() => Text(
-        "Create new directory",
+        'Create new directory',
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Theme.of(context).primaryColorDark,
@@ -65,28 +63,27 @@ class CreateDirectoryPopup {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "Name",
+            'Name',
             style: TextStyle(
               color: Theme.of(context).primaryColorDark,
-              fontSize: 15.0,
+              fontSize: 15,
             ),
           ),
           Container(
-            padding: EdgeInsets.only(
-              right: 15.0,
-              left: 15.0,
-              top: 10.0,
-              bottom: 10.0,
+            padding: const EdgeInsets.only(
+              right: 15,
+              left: 15,
+              top: 10,
+              bottom: 10,
             ),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.all(Radius.circular(5.0)),
+              borderRadius: const BorderRadius.all(Radius.circular(5)),
             ),
             child: TextFormField(
-              controller: this._controller,
-              decoration: InputDecoration.collapsed(
+              controller: _controller,
+              decoration: const InputDecoration.collapsed(
                 hintText: 'Enter name here...',
-                border: InputBorder.none,
               ),
             ),
           ),
@@ -94,49 +91,59 @@ class CreateDirectoryPopup {
       );
 
   Widget _getWarningLabel() => Text(
-        this._warningMessage ?? "",
-        style: TextStyle(color: Colors.red, fontSize: 13.0),
+        _warningMessage ?? '',
+        style: const TextStyle(
+          color: Colors.red,
+          fontSize: 13,
+        ),
         textAlign: TextAlign.center,
       );
 
-  Widget _getHintLabel() => Text(
-        "Name should be unique and not contain any forbidden special characters like #, %, &, {, }, \\, /, *, ?, +, @ etc.",
-        style: TextStyle(fontSize: 13.0),
+  Widget _getHintLabel() => const Text(
+        r'Name should be unique and not contain any forbidden special characters like #, %, &, {, }, \, /, *, ?, +, @ etc.',
+        style: TextStyle(fontSize: 13),
         textAlign: TextAlign.center,
       );
 
-  Widget _getCreateButton(Function setState) => SizedBox(
+  Widget _getCreateButton(void Function(void Function()) setState) => SizedBox(
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () => _onCreatePressed(setState),
-          child: Text("Create"),
+          child: const Text('Create'),
         ),
       );
 
   Widget _getCancelButton() => Center(
         child: TextButton(
           onPressed: _close,
-          child: Text("Cancel", textAlign: TextAlign.center),
+          child: const Text(
+            'Cancel',
+            textAlign: TextAlign.center,
+          ),
         ),
       );
 
-  void _onCreatePressed(Function setState) {
-    NewMediaWizard wizard = NewMediaWizard();
-    String name = this._controller.text;
+  void _onCreatePressed(void Function(void Function()) setState) {
+    final wizard = NewMediaWizard();
+    final name = _controller.text;
 
     if (wizard.isNameLegal(name)) {
       if (wizard.isDirectoryNameTaken(name)) {
-        setState(() {
-          this._warningMessage = "Directory with this name already exists.";
-        });
+        setState(
+          () {
+            _warningMessage = 'Directory with this name already exists.';
+          },
+        );
       } else {
-        this.namePicked(name);
+        namePicked(name);
         _close();
       }
     } else {
-      setState(() {
-        this._warningMessage = "Forbidden name.";
-      });
+      setState(
+        () {
+          _warningMessage = 'Forbidden name.';
+        },
+      );
     }
   }
 

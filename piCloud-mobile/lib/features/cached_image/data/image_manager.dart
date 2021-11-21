@@ -1,13 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 
 class ImageManager {
   Future<Image> fetchImageFromBackend(String url) async {
-    Uri parsedUrl = Uri.parse(url);
-    ByteData fetchedBytes = await NetworkAssetBundle(parsedUrl).load(url);
+    final parsedUrl = Uri.parse(url);
+    final fetchedBytes = await NetworkAssetBundle(parsedUrl).load(url);
 
     return Image.memory(
       fetchedBytes.buffer.asUint8List(),
@@ -15,10 +14,10 @@ class ImageManager {
   }
 
   Future<Image> setValidImageSize(Image image, int? height, int? width) async {
-    int fixedHeight = await _getFixedImageHeight(image, height, width);
-    int fixedWidth = await _getFixedImageWidth(image, height, width);
+    final fixedHeight = await _getFixedImageHeight(image, height, width);
+    final fixedWidth = await _getFixedImageWidth(image, height, width);
 
-    ResizeImage resizedImage = ResizeImage(
+    final resizedImage = ResizeImage(
       image.image,
       width: fixedWidth,
       height: fixedHeight,
@@ -28,8 +27,8 @@ class ImageManager {
   }
 
   Future<int> _getFixedImageHeight(Image image, int? height, int? width) async {
-    int originalImageHeight = await _getOriginalImageHeight(image);
-    int originalImageWidth = await _getOriginalImageWidth(image);
+    final originalImageHeight = await _getOriginalImageHeight(image);
+    final originalImageWidth = await _getOriginalImageWidth(image);
 
     if (height != null) {
       return height;
@@ -41,8 +40,8 @@ class ImageManager {
   }
 
   Future<int> _getFixedImageWidth(Image image, int? height, int? width) async {
-    int originalImageHeight = await _getOriginalImageHeight(image);
-    int originalImageWidth = await _getOriginalImageWidth(image);
+    final originalImageHeight = await _getOriginalImageHeight(image);
+    final originalImageWidth = await _getOriginalImageWidth(image);
 
     if (width != null) {
       return width;
@@ -61,18 +60,22 @@ class ImageManager {
     return (await _getOriginalImageSize(image)).width.toInt();
   }
 
-  Future<Size> _getOriginalImageSize(Image image) async {
-    final Completer completer = Completer();
+  Future<Size> _getOriginalImageSize(Image image) {
+    final completer = Completer<Size>();
 
-    image.image.resolve(ImageConfiguration()).addListener(
-      ImageStreamListener((ImageInfo info, bool _) {
-        completer.complete(Size(
-          info.image.width.toDouble(),
-          info.image.height.toDouble(),
-        ));
-      }),
+    image.image.resolve(ImageConfiguration.empty).addListener(
+      ImageStreamListener(
+        (info, _) {
+          completer.complete(
+            Size(
+              info.image.width.toDouble(),
+              info.image.height.toDouble(),
+            ),
+          );
+        },
+      ),
     );
 
-    return await completer.future;
+    return completer.future;
   }
 }

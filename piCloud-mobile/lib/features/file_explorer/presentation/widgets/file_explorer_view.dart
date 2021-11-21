@@ -1,11 +1,10 @@
 import 'package:app/features/app/router/app_router.gr.dart';
-import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
-import 'package:app/features/file_explorer/data/models/file_item.dart';
-import 'package:app/features/file_explorer/presentation/widgets/file_explorer_error.dart';
 import 'package:app/features/file_explorer/bloc/file_explorer_bloc.dart';
+import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
+import 'package:app/features/file_explorer/presentation/widgets/file_explorer_error.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:app/features/file_explorer/presentation/widgets/selection/selected_item_frame.dart';
-import 'package:app/features/loadingBaner/presentation/loading_panel.dart';
+import 'package:app/features/loading_baner/presentation/loading_panel.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
@@ -15,14 +14,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'file_explorer_item/file_explorer_list_item.dart';
 
 class FileExplorerView extends StatefulWidget {
-  final Function(Selection) selectionChanged;
-  final String path;
-
-  FileExplorerView({
+  const FileExplorerView({
     Key? key,
     required this.path,
     required this.selectionChanged,
   }) : super(key: key);
+
+  final void Function(Selection) selectionChanged;
+  final String path;
 
   @override
   _FileExplorerViewState createState() => _FileExplorerViewState();
@@ -37,9 +36,9 @@ class _FileExplorerViewState extends State<FileExplorerView> {
   void initState() {
     _initializeBloc();
 
-    this._gridViewController.addListener(
-          () => this.widget.selectionChanged(this._gridViewController.value),
-        );
+    _gridViewController.addListener(
+      () => widget.selectionChanged(_gridViewController.value),
+    );
 
     super.initState();
   }
@@ -52,36 +51,34 @@ class _FileExplorerViewState extends State<FileExplorerView> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: BlocProvider.value(
-        value: this._bloc,
-        child: BlocListener<FileExplorerBloc, FileExplorerState>(
-          listener: _fileExplorerBlocListener,
-          child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
-            builder: (context, state) {
-              if (state is FetchedDataFileExplorerState) {
-                return FutureBuilder(
-                  future: _checkIfPreferredViewIsList(),
-                  builder: (context, snapshot) {
-                    if (snapshot.data != null) {
-                      return RefreshIndicator(
-                        child: _buildFileExplorerView(snapshot.data as bool),
-                        onRefresh: _refreshData,
-                      );
-                    } else {
-                      return LoadingPanel();
-                    }
-                  },
-                );
-              } else if (state is FetchingDataErrorFileExplorerState) {
-                return FileExplorerErrorWidget(
-                  errorMessage: "Check your internet connection.",
-                );
-              } else {
-                return LoadingPanel();
-              }
-            },
-          ),
+    return BlocProvider.value(
+      value: _bloc,
+      child: BlocListener<FileExplorerBloc, FileExplorerState>(
+        listener: _fileExplorerBlocListener,
+        child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
+          builder: (context, state) {
+            if (state is FetchedDataFileExplorerState) {
+              return FutureBuilder(
+                future: _checkIfPreferredViewIsList(),
+                builder: (context, snapshot) {
+                  if (snapshot.data != null) {
+                    return RefreshIndicator(
+                      onRefresh: _refreshData,
+                      child: _buildFileExplorerView(snapshot.data! as bool),
+                    );
+                  } else {
+                    return const LoadingPanel();
+                  }
+                },
+              );
+            } else if (state is FetchingDataErrorFileExplorerState) {
+              return const FileExplorerErrorWidget(
+                errorMessage: 'Check your internet connection.',
+              );
+            } else {
+              return const LoadingPanel();
+            }
+          },
         ),
       ),
     );
@@ -110,23 +107,22 @@ class _FileExplorerViewState extends State<FileExplorerView> {
     return Scrollbar(
       thickness: 7.5,
       isAlwaysShown: true,
-      radius: Radius.circular(5.0),
+      radius: const Radius.circular(5),
       controller: _scrollController,
       child: DragSelectGridView(
         scrollController: _scrollController,
-        triggerSelectionOnTap: false,
-        gridController: this._gridViewController,
-        padding: EdgeInsets.all(8),
+        gridController: _gridViewController,
+        padding: const EdgeInsets.all(8),
         itemCount: directoryContent.length,
         itemBuilder: (context, index, selected) {
-          FileExplorerItem currentItem = directoryContent[index];
+          final currentItem = directoryContent[index];
 
           if (selected) {
             return SelectedItemFrame(item: currentItem);
           } else {
             return GestureDetector(
               onTap: () {
-                if (currentItem.file.type == FileExplorerItemType.DIRECTORY) {
+                if (currentItem.file.type == FileExplorerItemType.directory) {
                   _moveToNextDirectory(currentItem.file.title);
                 }
               },
@@ -145,38 +141,37 @@ class _FileExplorerViewState extends State<FileExplorerView> {
   }
 
   List<FileExplorerItem> _getItemWidgetsList() {
-    List<FileExplorerItem> items = <FileExplorerItem>[];
+    final items = <FileExplorerItem>[];
 
-    if (this._bloc.directoryContent == null) {
+    if (_bloc.directoryContent == null) {
       return items;
     } else {
-      this._bloc.directoryContent!.forEach(
-            (FileItem item) => items.add(FileExplorerItem(file: item)),
-          );
+      for (final item in _bloc.directoryContent!) {
+        items.add(FileExplorerItem(file: item));
+      }
 
       return items;
     }
   }
 
   Future<bool> _checkIfPreferredViewIsList() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance();
 
-    return prefs.getString("preferredView") == "list";
+    return prefs.getString('preferredView') == 'list';
   }
 
   List<FileExplorerListItem> _getItemWidgetsListForListView() {
-    List<FileExplorerListItem> items = <FileExplorerListItem>[];
+    final items = <FileExplorerListItem>[];
 
-    if (this._bloc.directoryContent == null) {
+    if (_bloc.directoryContent == null) {
       return items;
     } else {
-      this._bloc.directoryContent!.forEach(
-            (FileItem item) => items.add(FileExplorerListItem(file: item)),
-          );
+      for (final item in _bloc.directoryContent!) {
+        items.add(FileExplorerListItem(file: item));
+      }
 
       items.sort(
-        (FileExplorerListItem a, FileExplorerListItem b) =>
-            a.file.type.index - b.file.type.index,
+        (a, b) => a.file.type.index - b.file.type.index,
       );
 
       return items;
@@ -185,11 +180,11 @@ class _FileExplorerViewState extends State<FileExplorerView> {
 
   void _moveToNextDirectory(String directoryName) =>
       AutoRouter.of(context).push(
-        FileExplorerRoute(path: this.widget.path + directoryName + "/"),
+        FileExplorerRoute(path: '${widget.path}$directoryName/'),
       );
 
   Future<void> _refreshData() async => setState(() {
-        this._bloc.close();
+        _bloc.close();
         _initializeBloc();
       });
 
@@ -204,7 +199,7 @@ class _FileExplorerViewState extends State<FileExplorerView> {
             );
       } else if (state is FetchingDataErrorFileExplorerState) {
         context.read<FileExplorerBloc>().add(
-              FetchDataErrorOccuredFileExplorerEvent(
+              FetchDataErrorOccurredFileExplorerEvent(
                 errorMessage: state.errorMessage,
               ),
             );
@@ -217,7 +212,7 @@ class _FileExplorerViewState extends State<FileExplorerView> {
   }
 
   void _initializeBloc() {
-    this._bloc = FileExplorerBloc(path: widget.path);
-    this._bloc.add(FetchDataFileExplorerEvent(path: widget.path));
+    _bloc = FileExplorerBloc(path: widget.path);
+    _bloc.add(FetchDataFileExplorerEvent(path: widget.path));
   }
 }
