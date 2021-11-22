@@ -1,3 +1,4 @@
+import 'package:app/common/widgets/search_button.dart';
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
 import 'package:app/features/app/widgets/app_bar/selection_app_bar.dart';
 import 'package:app/features/app/widgets/navigation_bar/bottom_navigation_bar.dart';
@@ -67,9 +68,8 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
       return PICloudAppBar(
         title: _getTitle(),
         actions: [
-          SwitchViewButton(
-            viewSwitched: () => setState(() {}),
-          ),
+          const SearchButton(),
+          SwitchViewButton(viewSwitched: () => setState(() {})),
         ],
       );
     }
