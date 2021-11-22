@@ -8,7 +8,12 @@ import 'package:flutter/material.dart';
 class FiltersPanel extends StatefulWidget {
   const FiltersPanel({
     Key? key,
+    required this.onFiltersChanged,
+    required this.filtersSettings,
   }) : super(key: key);
+
+  final Function(FiltersSettingsModel) onFiltersChanged;
+  final FiltersSettingsModel filtersSettings;
 
   @override
   _FiltersPanelState createState() => _FiltersPanelState();
@@ -20,7 +25,7 @@ class _FiltersPanelState extends State<FiltersPanel> {
 
   @override
   void initState() {
-    settings = FiltersSettingsModel.withDefaultSettings();
+    settings = widget.filtersSettings;
     super.initState();
   }
 
@@ -206,8 +211,7 @@ class _FiltersPanelState extends State<FiltersPanel> {
   }
 
   void _submit() {
-    //TODO
-
+    widget.onFiltersChanged(settings);
     _close();
   }
 

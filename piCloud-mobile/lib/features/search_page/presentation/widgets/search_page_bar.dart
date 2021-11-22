@@ -1,4 +1,5 @@
 import 'package:app/features/app/widgets/app_bar/go_back_leading.dart';
+import 'package:app/features/search_page/data/models/filters_settings_model.dart';
 import 'package:app/features/search_page/data/models/search_query_model.dart';
 import 'package:app/features/search_page/presentation/widgets/filters/filters_panel.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,6 +22,7 @@ class SearchPageBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _SearchPageBarState extends State<SearchPageBar> {
   final TextEditingController _queryController = TextEditingController();
+  FiltersSettingsModel filters = FiltersSettingsModel.withDefaultSettings();
 
   @override
   Widget build(BuildContext context) {
@@ -104,8 +106,15 @@ class _SearchPageBarState extends State<SearchPageBar> {
 
   void _openFiltersPanel() => showDialog<void>(
         context: context,
-        builder: (_) => const FiltersPanel(),
+        builder: (_) => FiltersPanel(
+          onFiltersChanged: _updateFilters,
+          filtersSettings: filters,
+        ),
       );
+
+  void _updateFilters(FiltersSettingsModel filters) {
+    this.filters = filters;
+  }
 
   void _clearQuery() => setState(_queryController.clear);
 
