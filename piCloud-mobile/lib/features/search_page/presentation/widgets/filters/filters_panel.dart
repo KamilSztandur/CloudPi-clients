@@ -25,7 +25,7 @@ class _FiltersPanelState extends State<FiltersPanel> {
 
   @override
   void initState() {
-    settings = widget.filtersSettings;
+    settings = FiltersSettingsModel.cloneFrom(widget.filtersSettings);
     super.initState();
   }
 

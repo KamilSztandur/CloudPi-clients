@@ -12,6 +12,14 @@ class FiltersSettingsModel {
     range = SearchRange.everywhere;
   }
 
+  FiltersSettingsModel.cloneFrom(FiltersSettingsModel another) {
+    allowedFileTypes = Map<FileExplorerItemType, bool>.from(
+      another.allowedFileTypes!,
+    );
+
+    range = another.range;
+  }
+
   Map<FileExplorerItemType, bool>? allowedFileTypes;
   SearchRange? range;
 
