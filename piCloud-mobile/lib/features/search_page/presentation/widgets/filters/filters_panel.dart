@@ -39,7 +39,10 @@ class _FiltersPanelState extends State<FiltersPanel> {
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.5,
         ),
-        child: _buildBody(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [_buildBody()],
+        ),
       ),
       actions: [
         ApplyChangesButton(onSubmit: _submit),
@@ -64,8 +67,8 @@ class _FiltersPanelState extends State<FiltersPanel> {
         _buildHeader('Search range'),
         _buildInFrame(_buildSearchRangeChoice()),
         _buildHeader('Allowed types'),
-        Flexible(
-          child: _buildInFrame(_buildFileTypesSelection()),
+        _buildInFrame(
+          _buildFileTypesSelection(),
         ),
       ],
     );
@@ -125,15 +128,20 @@ class _FiltersPanelState extends State<FiltersPanel> {
       );
 
   Widget _buildFileTypesSelection() {
-    return SingleChildScrollView(
-      controller: checkboxesScrollController,
-      child: Scrollbar(
+    return ConstrainedBox(
+      constraints: const BoxConstraints(
+        maxHeight: 170,
+      ),
+      child: SingleChildScrollView(
         controller: checkboxesScrollController,
-        isAlwaysShown: true,
-        child: Column(
-          children: <Widget>[
-            ..._getCheckboxes(),
-          ],
+        child: Scrollbar(
+          controller: checkboxesScrollController,
+          isAlwaysShown: true,
+          child: Column(
+            children: <Widget>[
+              ..._getCheckboxes(),
+            ],
+          ),
         ),
       ),
     );
