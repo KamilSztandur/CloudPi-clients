@@ -22,59 +22,52 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GestureDetector(
-                onTap: _pickMinDate,
-                child: Row(
-                  children: [
-                    const Icon(Icons.date_range),
-                    const SizedBox(width: 5),
-                    Text(
-                      _getMinDayText(),
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.arrow_right_alt_outlined),
-              GestureDetector(
-                onTap: _pickMaxDate,
-                child: Row(
-                  children: [
-                    Text(
-                      _getMaxDayText(),
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                    const SizedBox(width: 5),
-                    const Icon(Icons.date_range),
-                  ],
-                ),
-              ),
-            ],
+          Flexible(
+            flex: 120,
+            child: _getMinDateWidget(),
           ),
-          Align(
-            alignment: Alignment.topRight,
-            child: TextButton(
-              onPressed: _clearDateRange,
-              child: const Text(
-                'Clear date range',
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
+          const Flexible(
+            flex: 60,
+            child: Icon(Icons.arrow_right_alt_outlined),
           ),
+          Flexible(flex: 120, child: _getMaxDateWidget()),
         ],
       ),
     );
   }
+
+  Widget _getMinDateWidget() => GestureDetector(
+        onTap: _pickMinDate,
+        child: Row(
+          children: [
+            const Icon(Icons.date_range),
+            const SizedBox(width: 5),
+            Text(
+              _getMinDayText(),
+              textAlign: TextAlign.left,
+              style: const TextStyle(color: Colors.black),
+            ),
+          ],
+        ),
+      );
+
+  Widget _getMaxDateWidget() => GestureDetector(
+        onTap: _pickMaxDate,
+        child: Row(
+          children: [
+            Text(
+              _getMaxDayText(),
+              textAlign: TextAlign.right,
+              style: const TextStyle(color: Colors.black),
+            ),
+            const SizedBox(width: 5),
+            const Icon(Icons.date_range),
+          ],
+        ),
+      );
 
   String _getMaxDayText() {
     final selectedDate = widget.settings.max!;
@@ -103,7 +96,7 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
   }
 
   String _getFormattedDateText(DateTime date) =>
-      DateFormat('d.M.y').format(date);
+      DateFormat('dd.MM.yyyy').format(date);
 
   Future<void> _pickMinDate() async {
     final minDate = await showDialog<DateTime>(
@@ -139,9 +132,11 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
     }
   }
 
-  void _clearDateRange() => setState(() {
-        widget.settings
-          ..min = minPossibleDate
-          ..max = maxPossibleDate;
+  void _clearMaxDate() => setState(() {
+        widget.settings.max = maxPossibleDate;
+      });
+
+  void _clearMinDate() => setState(() {
+        widget.settings.min = minPossibleDate;
       });
 }
