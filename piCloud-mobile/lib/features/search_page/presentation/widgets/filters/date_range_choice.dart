@@ -30,10 +30,7 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
             fit: FlexFit.tight,
             child: _getMinDateWidget(),
           ),
-          const Flexible(
-            flex: 1,
-            child: Icon(Icons.arrow_right_alt_outlined),
-          ),
+          const Flexible(child: Icon(Icons.arrow_right_alt_outlined)),
           Flexible(
             flex: 2,
             fit: FlexFit.tight,
