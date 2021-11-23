@@ -212,7 +212,10 @@ class _FileExplorerViewState extends State<FileExplorerView> {
   }
 
   void _initializeBloc() {
-    _bloc = FileExplorerBloc(path: widget.path);
+    _bloc = FileExplorerBloc(
+      path: widget.path,
+      directoryManager: context.read(),
+    );
     _bloc.add(FetchDataFileExplorerEvent(path: widget.path));
   }
 }

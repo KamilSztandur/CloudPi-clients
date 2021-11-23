@@ -1,53 +1,71 @@
-import 'dart:math';
+import 'package:app/contracts/api.enums.swagger.dart';
+import 'package:app/contracts/client_index.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/models/file_item.dart';
 
 class DirectoryManager {
-  Future<List<FileItem>> getCurrentDirectoryItems(String path) async {
-    final items = await _getRawList(path);
-    final sortedItems = _sortDirectoryItemsByTypeAndName(items);
+  const DirectoryManager(this._api);
 
-    return sortedItems;
+  final Api _api;
+
+  Future<List<FileItem>?> getCurrentDirectoryItems(String path) async {
+    final items = await _getRawList(path);
+
+    if (items != null) {
+      return _sortDirectoryItemsByTypeAndName(items);
+    } else {
+      return null;
+    }
   }
 
-  // WARNING: Mock
-  Future<List<FileItem>> _getRawList(String path) async {
-    await Future<void>.delayed(const Duration(seconds: 1));
-
-    final items = <FileItem>[];
-
-    for (var i = 0; i < 20; i++) {
-      final currentType = FileExplorerItemType.values[Random().nextInt(
-        FileExplorerItemType.values.length,
-      )];
-
-      var title = currentType.toString();
-      title = '${title.substring(title.indexOf('.') + 1, title.length)} $i';
-      title = title[0] + title.substring(1).toLowerCase();
-
-      items.add(
-        FileItem(
-          title: title,
-          lastModifiedOn: DateTime.now(),
-          type: currentType,
-          size: 20,
-          thumbnailURL: null,
-        ),
-      );
-    }
-
-    items.add(
-      FileItem(
-        title: 'Francuskie zamki długa nazwa',
-        lastModifiedOn: DateTime.now(),
-        type: FileExplorerItemType.image,
-        size: 20,
-        thumbnailURL:
-            'https://www.planetware.com/wpimages/2020/02/france-in-pictures-beautiful-places-to-photograph-eiffel-tower.jpg',
-      ),
+  Future<List<FileItem>?> _getRawList(String path) async {
+    // TODO: Use authorized user
+    final result = await _api.filesystemUserUsernameGet(
+      username: 'mighty root',
+      fileStructureRoot: path,
     );
 
-    return items;
+    if (result.isSuccessful) {
+      return [
+        ...(result.body?.rootDirectory?.files ?? []).map(
+          (dto) => FileItem(
+            title: dto.details!.name!,
+            lastModifiedOn: dto.details!.modifiedAt!,
+            type: _mapItemType(dto.details!.fileType!),
+            size: dto.details!.size!.toDouble(),
+            thumbnailURL: null, // TODO: Handle thumbnails
+          ),
+        ),
+        ...(result.body?.rootDirectory?.directories ?? []).map(
+          (dto) => FileItem(
+            title: dto.details!.name!,
+            lastModifiedOn: dto.details!.modifiedAt!,
+            type: FileExplorerItemType.directory,
+            size: dto.details!.size!.toDouble(),
+            thumbnailURL: null,
+          ),
+        )
+      ];
+    } else {
+      return null;
+    }
+  }
+
+  FileExplorerItemType _mapItemType(FileInfoDtoFileType fileType) {
+    switch (fileType) {
+      case FileInfoDtoFileType.image:
+        return FileExplorerItemType.image;
+      case FileInfoDtoFileType.video:
+        return FileExplorerItemType.video;
+      case FileInfoDtoFileType.textFile:
+        return FileExplorerItemType.text;
+      case FileInfoDtoFileType.music:
+        return FileExplorerItemType.music;
+      case FileInfoDtoFileType.compressed:
+      case FileInfoDtoFileType.undefined:
+      case FileInfoDtoFileType.swaggerGeneratedUnknown:
+        return FileExplorerItemType.file;
+    }
   }
 
   List<FileItem> _sortDirectoryItemsByTypeAndName(List<FileItem> items) {
