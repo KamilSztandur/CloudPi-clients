@@ -21,8 +21,9 @@ class SearchPageBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _SearchPageBarState extends State<SearchPageBar> {
-  final TextEditingController _queryController = TextEditingController();
+  final TextEditingController _controller = TextEditingController();
   FiltersSettingsModel filters = FiltersSettingsModel.withDefaultSettings();
+  String currentQueryValue = '';
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +45,9 @@ class _SearchPageBarState extends State<SearchPageBar> {
     const fontSize = 20.0;
 
     return TextField(
-      controller: _queryController,
+      controller: _controller,
       onChanged: _onQueryChanged,
+      onSubmitted: (value) => _search(value: value),
       decoration: InputDecoration(
         hoverColor: Colors.green,
         hintText: 'Type here...',
@@ -87,12 +89,12 @@ class _SearchPageBarState extends State<SearchPageBar> {
         ),
       );
 
-  void _search() {
+  void _search({String? value}) {
     _unfocusKeyboard();
     _clearQuery();
 
     widget.queryRequested(
-      SearchQueryModel(name: _queryController.value.text),
+      SearchQueryModel(name: currentQueryValue),
     );
   }
 
@@ -112,13 +114,15 @@ class _SearchPageBarState extends State<SearchPageBar> {
         ),
       );
 
+  void _onQueryChanged(String value) => setState(() {
+        currentQueryValue = value;
+      });
+
+  void _clearQuery() => setState(_controller.clear);
+
+  bool _isQueryEmpty() => _controller.text.isEmpty;
+
   void _updateFilters(FiltersSettingsModel filters) {
     this.filters = filters;
   }
-
-  void _clearQuery() => setState(_queryController.clear);
-
-  void _onQueryChanged(String value) => setState(() {});
-
-  bool _isQueryEmpty() => _queryController.text.isEmpty;
 }

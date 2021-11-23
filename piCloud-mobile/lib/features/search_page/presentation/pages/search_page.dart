@@ -54,7 +54,7 @@ class _SearchPageState extends State<SearchPage> {
           ),
           children: <TextSpan>[
             TextSpan(
-              text: 'sample query',
+              text: _query!.name,
               style: TextStyle(
                 fontSize: 25,
                 color: Theme.of(context).primaryColorDark,
