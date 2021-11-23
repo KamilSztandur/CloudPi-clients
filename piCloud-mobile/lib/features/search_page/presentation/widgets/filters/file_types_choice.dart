@@ -18,22 +18,39 @@ class _FileTypesChoiceState extends State<FileTypesChoice> {
   final checkboxesScrollController = ScrollController();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
       constraints: const BoxConstraints(
         maxHeight: 170,
       ),
-      child: SingleChildScrollView(
-        controller: checkboxesScrollController,
-        child: Scrollbar(
-          controller: checkboxesScrollController,
-          isAlwaysShown: true,
-          child: Column(
-            children: <Widget>[
-              ..._getCheckboxes(),
-            ],
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            controller: checkboxesScrollController,
+            child: Scrollbar(
+              controller: checkboxesScrollController,
+              isAlwaysShown: true,
+              child: Column(
+                children: <Widget>[
+                  ..._getCheckboxes(),
+                ],
+              ),
+            ),
           ),
-        ),
+          const Align(
+            alignment: Alignment.topCenter,
+            child: Icon(Icons.arrow_drop_up, size: 30),
+          ),
+          const Align(
+            alignment: Alignment.bottomCenter,
+            child: Icon(Icons.arrow_drop_down, size: 30),
+          ),
+        ],
       ),
     );
   }
@@ -90,6 +107,28 @@ class _FileTypesChoiceState extends State<FileTypesChoice> {
 
       default:
         return '???';
+    }
+  }
+
+  bool _shouldDisplayUpperArrow() {
+    final isAtEdge = checkboxesScrollController.position.atEdge;
+    final isAtBeginning = checkboxesScrollController.offset == 0;
+
+    if (isAtEdge && isAtBeginning) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  bool _shouldDisplayBottomArrow() {
+    final isAtEdge = checkboxesScrollController.position.atEdge;
+    final isAtBeginning = checkboxesScrollController.offset == 0;
+
+    if (isAtEdge && isAtBeginning) {
+      return true;
+    } else {
+      return false;
     }
   }
 }
