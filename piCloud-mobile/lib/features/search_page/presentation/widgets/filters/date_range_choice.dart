@@ -26,14 +26,19 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Flexible(
-            flex: 120,
+            flex: 2,
+            fit: FlexFit.tight,
             child: _getMinDateWidget(),
           ),
           const Flexible(
-            flex: 60,
+            flex: 1,
             child: Icon(Icons.arrow_right_alt_outlined),
           ),
-          Flexible(flex: 120, child: _getMaxDateWidget()),
+          Flexible(
+            flex: 2,
+            fit: FlexFit.tight,
+            child: _getMaxDateWidget(),
+          ),
         ],
       ),
     );
@@ -57,6 +62,7 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
   Widget _getMaxDateWidget() => GestureDetector(
         onTap: _pickMaxDate,
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
               _getMaxDayText(),
