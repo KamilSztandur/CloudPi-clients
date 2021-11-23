@@ -4,6 +4,7 @@ import 'package:app/features/search_page/presentation/widgets/filters/filters_di
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class FiltersPanel extends StatefulWidget {
   const FiltersPanel({
@@ -22,6 +23,8 @@ class FiltersPanel extends StatefulWidget {
 class _FiltersPanelState extends State<FiltersPanel> {
   final checkboxesScrollController = ScrollController();
   late FiltersSettingsModel settings;
+  final DateTime minPossibleDate = DateTime(2000);
+  final DateTime maxPossibleDate = DateTime.now();
 
   @override
   void initState() {
@@ -37,7 +40,7 @@ class _FiltersPanelState extends State<FiltersPanel> {
       actionsAlignment: MainAxisAlignment.center,
       content: ConstrainedBox(
         constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.5,
+          maxHeight: MediaQuery.of(context).size.height * 0.6,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -69,6 +72,24 @@ class _FiltersPanelState extends State<FiltersPanel> {
         _buildHeader('Allowed types'),
         _buildInFrame(
           _buildFileTypesSelection(),
+        ),
+        _buildHeader('Time range'),
+        _buildInFrame(
+          _buildTimeRangeChoice(),
+        ),
+        Align(
+          alignment: Alignment.topRight,
+          child: TextButton(
+            onPressed: _clearDateRange,
+            child: const Text(
+              'Clear date range',
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.grey,
+              ),
+            ),
+          ),
         ),
       ],
     );
@@ -124,6 +145,47 @@ class _FiltersPanelState extends State<FiltersPanel> {
               );
             },
           ).toList(),
+        ),
+      );
+
+  Widget _buildTimeRangeChoice() => Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GestureDetector(
+                  onTap: _pickMinDate,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.date_range),
+                      const SizedBox(width: 5),
+                      Text(
+                        _getMinDayText(),
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.arrow_right_alt_outlined),
+                GestureDetector(
+                  onTap: _pickMaxDate,
+                  child: Row(
+                    children: [
+                      Text(
+                        _getMaxDayText(),
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                      const SizedBox(width: 5),
+                      const Icon(Icons.date_range),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       );
 
@@ -217,6 +279,75 @@ class _FiltersPanelState extends State<FiltersPanel> {
         return '???';
     }
   }
+
+  String _getMaxDayText() {
+    final selectedDate = settings.max!;
+    final now = DateTime.now();
+
+    if (selectedDate.year == now.year &&
+        selectedDate.month == now.month &&
+        selectedDate.day == now.day) {
+      return 'Now';
+    } else {
+      return _getFormattedDateText(selectedDate);
+    }
+  }
+
+  String _getMinDayText() {
+    final selectedDate = settings.min!;
+    final defaultDate = FiltersSettingsModel.withDefaultSettings().min!;
+
+    if (selectedDate.year == defaultDate.year &&
+        selectedDate.month == defaultDate.month &&
+        selectedDate.day == defaultDate.day) {
+      return 'Always';
+    } else {
+      return _getFormattedDateText(selectedDate);
+    }
+  }
+
+  String _getFormattedDateText(DateTime date) =>
+      DateFormat('d.M.y').format(date);
+
+  Future<void> _pickMinDate() async {
+    final minDate = await showDialog<DateTime>(
+      context: context,
+      builder: (_) => DatePickerDialog(
+        initialDate: settings.min!,
+        firstDate: minPossibleDate,
+        lastDate: settings.max!,
+      ),
+    );
+
+    if (minDate != null) {
+      setState(() {
+        settings.min = minDate;
+      });
+    }
+  }
+
+  Future<void> _pickMaxDate() async {
+    final maxDate = await showDialog<DateTime>(
+      context: context,
+      builder: (_) => DatePickerDialog(
+        initialDate: settings.max!,
+        firstDate: settings.min!,
+        lastDate: maxPossibleDate,
+      ),
+    );
+
+    if (maxDate != null) {
+      setState(() {
+        settings.max = maxDate;
+      });
+    }
+  }
+
+  void _clearDateRange() => setState(() {
+        settings
+          ..min = minPossibleDate
+          ..max = maxPossibleDate;
+      });
 
   void _submit() {
     widget.onFiltersChanged(settings);

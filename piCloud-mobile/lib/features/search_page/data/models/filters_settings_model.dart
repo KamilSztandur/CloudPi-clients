@@ -10,6 +10,8 @@ class FiltersSettingsModel {
   FiltersSettingsModel.withDefaultSettings() {
     allowedFileTypes = _getAllTypes();
     range = SearchRange.everywhere;
+    min = DateTime(2000);
+    max = DateTime.now();
   }
 
   FiltersSettingsModel.cloneFrom(FiltersSettingsModel another) {
@@ -18,10 +20,13 @@ class FiltersSettingsModel {
     );
 
     range = another.range;
+    min = another.min;
+    max = another.max;
   }
 
   Map<FileExplorerItemType, bool>? allowedFileTypes;
   SearchRange? range;
+  DateTime? min, max;
 
   Map<FileExplorerItemType, bool> _getAllTypes() {
     final allTypes = <FileExplorerItemType, bool>{};
