@@ -1,0 +1,1436 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "CloudPi API",
+    "version": "0.0.1"
+  },
+  "servers": [
+    {
+      "url": "http://100.106.232.78:8080/api",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Filesystem API",
+      "description": "<font color=\"#911\" size=3>\n  Endpoint method not implemented\n</font>\n<br/>\nAPI for retrieving user's file structure and modify it."
+    },
+    {
+      "name": "File API",
+      "description": "API for uploading, downloading, deleting files and directories"
+    }
+  ],
+  "paths": {
+    "/files/file": {
+      "put": {
+        "tags": [
+          "File API"
+        ],
+        "summary": "Forces file upload",
+        "description": "Allows to upload file to server. Based on filePath server check current user permissions\nand if user has rights to save file then request body is saved to disc. Unlike Post method\nPUT overrides existing files.\n",
+        "operationId": "forceUploadNewFile",
+        "parameters": [
+          {
+            "name": "fileType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "IMAGE",
+                "VIDEO",
+                "TEXT_FILE",
+                "MUSIC",
+                "COMPRESSED",
+                "UNDEFINED"
+              ]
+            }
+          },
+          {
+            "name": "filepath",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "file",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "bad path"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "File API"
+        ],
+        "summary": "Uploads file",
+        "description": "Allows to upload file to server. Based on filePath server check current user permissions\nand if user has rights to save file then request body is saved to disc.\n",
+        "operationId": "uploadNewFile",
+        "parameters": [
+          {
+            "name": "fileType",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "IMAGE",
+                "VIDEO",
+                "TEXT_FILE",
+                "MUSIC",
+                "COMPRESSED",
+                "UNDEFINED"
+              ]
+            }
+          },
+          {
+            "name": "file",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "success"
+          },
+          "400": {
+            "description": "when file path is invalid"
+          },
+          "409": {
+            "description": "when file with given filepath already exist"
+          }
+        }
+      }
+    },
+    "/user-management/": {
+      "post": {
+        "tags": [
+          "user-management-controller"
+        ],
+        "operationId": "createNewUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostUserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/refresh/refresh": {
+      "post": {
+        "tags": [
+          "login-controller"
+        ],
+        "operationId": "refreshRefreshToken",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/refresh/auth": {
+      "post": {
+        "tags": [
+          "login-controller"
+        ],
+        "operationId": "refreshAccessToken",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "login-controller"
+        ],
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/filesystem/users-drives/{username}": {
+      "post": {
+        "tags": [
+          "Filesystem API"
+        ],
+        "operationId": "changeDriveMaxSize",
+        "parameters": [
+          {
+            "name": "newAssignedSpace",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/files/image/{imageName}": {
+      "post": {
+        "tags": [
+          "File API"
+        ],
+        "summary": "Image uploads",
+        "description": "<h1>Not implemented</h1>\nAllows to upload image to server. Endpoint behave similar to POST file/{filePath}\nbut this method use user .images folder instead of precisely defined path.\n",
+        "operationId": "uploadNewImage",
+        "parameters": [
+          {
+            "name": "imageName",
+            "in": "query",
+            "description": "Name with extension of image to upload",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "funny-cat.jpg"
+          },
+          {
+            "name": "image",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "byte"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "success"
+          },
+          "400": {
+            "description": "when request does not have body or image name does not contain file extension"
+          },
+          "403": {
+            "description": "when user does not have permission to save image e.g. not enough space"
+          },
+          "409": {
+            "description": "when image with that name already exist"
+          }
+        }
+      }
+    },
+    "/files/directory": {
+      "post": {
+        "tags": [
+          "File API"
+        ],
+        "summary": "Creates empty directory",
+        "operationId": "createDirectory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/discs/{discId}/unmount": {
+      "post": {
+        "tags": [
+          "disk-info-controller"
+        ],
+        "operationId": "unmountDrive",
+        "parameters": [
+          {
+            "name": "discId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/discs/{discId}/mount": {
+      "post": {
+        "tags": [
+          "disk-info-controller"
+        ],
+        "operationId": "mountDrive",
+        "parameters": [
+          {
+            "name": "discId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/authorities/{userId}": {
+      "post": {
+        "tags": [
+          "authorities-controller"
+        ],
+        "operationId": "giveAuthorities",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/user-management/{username}": {
+      "get": {
+        "tags": [
+          "user-management-controller"
+        ],
+        "operationId": "getUserDetails",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserWithDetailsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user-management-controller"
+        ],
+        "operationId": "scheduleUserDelete",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "user-management-controller"
+        ],
+        "operationId": "updateUserDetails",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDetailsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          }
+        }
+      }
+    },
+    "/user-management/get-all": {
+      "get": {
+        "tags": [
+          "user-management-controller"
+        ],
+        "operationId": "getAllUsers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetUserResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user-management/get-all/with-details": {
+      "get": {
+        "tags": [
+          "user-management-controller"
+        ],
+        "operationId": "getAllUsersWithDetails",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetUserWithDetailsResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/filesystem/users-drives": {
+      "get": {
+        "tags": [
+          "Filesystem API"
+        ],
+        "operationId": "getUsersDrivesInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetUserDriveInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/filesystem/user/{username}": {
+      "get": {
+        "tags": [
+          "Filesystem API"
+        ],
+        "operationId": "getPartOfUsersFileStructure",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "structureLevels",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "fileStructureRoot",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "/"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileStructureDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/filesystem/info/{fileId}": {
+      "get": {
+        "tags": [
+          "Filesystem API"
+        ],
+        "operationId": "getFileInfo",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "with-permissions",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/{fileId}": {
+      "get": {
+        "tags": [
+          "file-permission-controller"
+        ],
+        "operationId": "getFilePermissions",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetFilePermissionsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/image-preview": {
+      "get": {
+        "tags": [
+          "File API"
+        ],
+        "summary": "returns requested images in reduced resolution",
+        "operationId": "getImagesPreview",
+        "parameters": [
+          {
+            "name": "previewResolution",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "imageFormat",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "imageNames",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/file/{fileId}": {
+      "get": {
+        "tags": [
+          "File API"
+        ],
+        "summary": "Downloads file",
+        "description": "Downloads file with given id.\n",
+        "operationId": "downloadFile",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "File API"
+        ],
+        "summary": "override standard description",
+        "operationId": "deleteFile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/files/directory/{directoryId}": {
+      "get": {
+        "tags": [
+          "File API"
+        ],
+        "summary": "Compresses directory and downloads it",
+        "description": "Compress directory to .7z and sends it in response body.\n",
+        "operationId": "compressAndDownloadDirectory",
+        "parameters": [
+          {
+            "name": "directoryId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "File API"
+        ],
+        "summary": "deletes empty directory",
+        "operationId": "deleteDirectory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/files/": {
+      "get": {
+        "tags": [
+          "file-permission-controller"
+        ],
+        "operationId": "getFilesPermissions",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetFilePermissionsResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discs": {
+      "get": {
+        "tags": [
+          "disk-info-controller"
+        ],
+        "operationId": "getDiscList",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DiscInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discs/{discId}": {
+      "get": {
+        "tags": [
+          "disk-info-controller"
+        ],
+        "operationId": "getDiscInfo",
+        "parameters": [
+          {
+            "name": "discId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/discs/drive/{driveId}": {
+      "get": {
+        "tags": [
+          "disk-info-controller"
+        ],
+        "operationId": "getDrivesDisc",
+        "parameters": [
+          {
+            "name": "driveId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DiscInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorities/{username}/canBeGiven": {
+      "get": {
+        "tags": [
+          "authorities-controller"
+        ],
+        "operationId": "getAvailableAuthorities",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAuthoritiesInfoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authorities/{login}": {
+      "get": {
+        "tags": [
+          "authorities-controller"
+        ],
+        "operationId": "getAuthorities",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user-management/{username}/delete-now": {
+      "delete": {
+        "tags": [
+          "user-management-controller"
+        ],
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/files/directory/{directoryId}/force": {
+      "delete": {
+        "tags": [
+          "File API"
+        ],
+        "summary": "forces to delete directory",
+        "description": "Deletes directory whether there are files in it or not",
+        "operationId": "forceDeleteDirectory",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "PostUserRequest": {
+        "required": [
+          "login",
+          "password",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "accountType": {
+            "type": "string",
+            "enum": [
+              "USER",
+              "ROOT",
+              "SERVICE_WORKER"
+            ]
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginRequest": {
+        "required": [
+          "login",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateUserDetailsRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "pathToProfilePicture": {
+            "type": "string"
+          }
+        }
+      },
+      "GetUserWithDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "isLocked": {
+            "type": "boolean"
+          },
+          "accountType": {
+            "type": "string",
+            "enum": [
+              "USER",
+              "ROOT",
+              "SERVICE_WORKER"
+            ]
+          },
+          "usersPermissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "usersRoles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "GetUserResponse": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "pathToProfilePicture": {
+            "type": "string"
+          },
+          "accountType": {
+            "type": "string",
+            "enum": [
+              "USER",
+              "ROOT",
+              "SERVICE_WORKER"
+            ]
+          }
+        }
+      },
+      "GetUserDriveInfo": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "assignedSpace": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "usedSpace": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "DirectoryInfoDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "modifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "FSDirectoryDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "details": {
+            "$ref": "#/components/schemas/DirectoryInfoDto"
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FSFileDTO"
+            }
+          },
+          "directories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FSDirectoryDTO"
+            }
+          }
+        }
+      },
+      "FSFileDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "details": {
+            "$ref": "#/components/schemas/FileInfoDto"
+          }
+        }
+      },
+      "FileInfoDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "modifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fileType": {
+            "type": "string",
+            "enum": [
+              "IMAGE",
+              "VIDEO",
+              "TEXT_FILE",
+              "MUSIC",
+              "COMPRESSED",
+              "UNDEFINED"
+            ]
+          },
+          "hasThumbnail": {
+            "type": "boolean"
+          }
+        }
+      },
+      "FileStructureDTO": {
+        "type": "object",
+        "properties": {
+          "depth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rootDirectoryPath": {
+            "type": "string"
+          },
+          "rootDirectory": {
+            "$ref": "#/components/schemas/FSDirectoryDTO"
+          }
+        }
+      },
+      "FileDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "parentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "driveId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "fileType": {
+            "type": "string",
+            "enum": [
+              "IMAGE",
+              "VIDEO",
+              "TEXT_FILE",
+              "MUSIC",
+              "COMPRESSED",
+              "UNDEFINED"
+            ]
+          },
+          "path": {
+            "type": "string"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetFilePermissionsResponse": {
+        "type": "object",
+        "properties": {
+          "discObjectId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserFilePermissions"
+            }
+          }
+        }
+      },
+      "UserFilePermissions": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "usersPermissions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "CREATE",
+                "READ",
+                "UPDATE",
+                "DELETE"
+              ]
+            }
+          }
+        }
+      },
+      "DiscInfo": {
+        "type": "object",
+        "properties": {
+          "discId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "discName": {
+            "type": "string"
+          }
+        }
+      },
+      "DiscDetails": {
+        "type": "object",
+        "properties": {
+          "discId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "discName": {
+            "type": "string"
+          },
+          "drivesOnDisc": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DriveDTO"
+            }
+          }
+        }
+      },
+      "DriveDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "assignedCapacity": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "usedCapacity": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "discId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "GetAuthoritiesInfoResponse": {
+        "type": "object",
+        "properties": {
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RoleInfo"
+            }
+          }
+        }
+      },
+      "RoleInfo": {
+        "type": "object",
+        "properties": {
+          "roleName": {
+            "type": "string"
+          },
+          "aggregatedPermissions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "CloudPiAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
