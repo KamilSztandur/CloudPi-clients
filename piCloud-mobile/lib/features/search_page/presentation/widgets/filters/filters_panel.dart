@@ -1,6 +1,10 @@
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/search_page/data/models/filters_settings_model.dart';
+import 'package:app/features/search_page/presentation/widgets/filters/date_range_choice.dart';
+import 'package:app/features/search_page/presentation/widgets/filters/file_types_choice.dart';
+import 'package:app/features/search_page/presentation/widgets/filters/filters_choice_header.dart';
 import 'package:app/features/search_page/presentation/widgets/filters/filters_dialog_control_buttons.dart';
+import 'package:app/features/search_page/presentation/widgets/filters/search_range_choice.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +25,7 @@ class FiltersPanel extends StatefulWidget {
 }
 
 class _FiltersPanelState extends State<FiltersPanel> {
-  final checkboxesScrollController = ScrollController();
   late FiltersSettingsModel settings;
-  final DateTime minPossibleDate = DateTime(2000);
-  final DateTime maxPossibleDate = DateTime.now();
 
   @override
   void initState() {
@@ -38,19 +39,8 @@ class _FiltersPanelState extends State<FiltersPanel> {
       title: _buildTitle(),
       contentPadding: const EdgeInsets.only(top: 15, right: 15, left: 15),
       actionsAlignment: MainAxisAlignment.center,
-      content: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.6,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [_buildBody()],
-        ),
-      ),
-      actions: [
-        ApplyChangesButton(onSubmit: _submit),
-        CancelButton(onCancel: _close),
-      ],
+      content: _buildWindowContent(),
+      actions: _getPossibleActions(),
     );
   }
 
@@ -62,292 +52,43 @@ class _FiltersPanelState extends State<FiltersPanel> {
         ),
       );
 
-  Widget _buildBody() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildHeader('Search range'),
-        _buildInFrame(_buildSearchRangeChoice()),
-        _buildHeader('Allowed types'),
-        _buildInFrame(
-          _buildFileTypesSelection(),
+  Widget _buildWindowContent() => ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.6,
         ),
-        _buildHeader('Time range'),
-        _buildInFrame(
-          _buildTimeRangeChoice(),
-        ),
-        Align(
-          alignment: Alignment.topRight,
-          child: TextButton(
-            onPressed: _clearDateRange,
-            child: const Text(
-              'Clear date range',
-              textAlign: TextAlign.right,
-              style: TextStyle(
-                fontSize: 15,
-                color: Colors.grey,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildInFrame(Widget child) {
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Theme.of(context).primaryColorDark,
-        ),
-        borderRadius: const BorderRadius.all(Radius.circular(5)),
-      ),
-      child: child,
-    );
-  }
-
-  Widget _buildHeader(String text) => Padding(
-        padding: const EdgeInsets.only(top: 10),
-        child: Text(
-          text,
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            color: Theme.of(context).primaryColorDark,
-            fontSize: 15,
-          ),
-        ),
-      );
-
-  Widget _buildSearchRangeChoice() => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: DropdownButton<SearchRange>(
-          value: settings.range,
-          onChanged: (newValue) {
-            setState(() {
-              settings.range = newValue ?? settings.range;
-            });
-          },
-          isExpanded: true,
-          underline: Container(),
-          icon: const Icon(Icons.expand_more),
-          iconEnabledColor: Colors.black,
-          style: const TextStyle(
-            fontSize: 15,
-            color: Colors.black,
-            overflow: TextOverflow.ellipsis,
-          ),
-          items: SearchRange.values.map<DropdownMenuItem<SearchRange>>(
-            (value) {
-              return DropdownMenuItem<SearchRange>(
-                value: value,
-                child: Text(_getRangeChoiceButtonCaption(value)),
-              );
-            },
-          ).toList(),
-        ),
-      );
-
-  Widget _buildTimeRangeChoice() => Padding(
-        padding: const EdgeInsets.all(10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GestureDetector(
-                  onTap: _pickMinDate,
-                  child: Row(
-                    children: [
-                      const Icon(Icons.date_range),
-                      const SizedBox(width: 5),
-                      Text(
-                        _getMinDayText(),
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                    ],
-                  ),
-                ),
-                const Icon(Icons.arrow_right_alt_outlined),
-                GestureDetector(
-                  onTap: _pickMaxDate,
-                  child: Row(
-                    children: [
-                      Text(
-                        _getMaxDayText(),
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                      const SizedBox(width: 5),
-                      const Icon(Icons.date_range),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
+          children: [_buildBody()],
         ),
       );
 
-  Widget _buildFileTypesSelection() {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxHeight: 170,
-      ),
-      child: SingleChildScrollView(
-        controller: checkboxesScrollController,
-        child: Scrollbar(
-          controller: checkboxesScrollController,
-          isAlwaysShown: true,
-          child: Column(
-            children: <Widget>[
-              ..._getCheckboxes(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  List<Widget> _getPossibleActions() => <Widget>[
+        ApplyChangesButton(onSubmit: _submit),
+        CancelButton(onCancel: _close),
+      ];
 
-  List<Widget> _getCheckboxes() {
-    final checkboxes = <Widget>[];
-
-    for (final type in FileExplorerItemType.values) {
-      checkboxes.add(
-        CheckboxListTile(
-          value: settings.allowedFileTypes![type],
-          title: Text(
-            _getFileTypeCheckboxTitle(type),
-            style: const TextStyle(fontSize: 15),
-          ),
-          onChanged: (newValue) {
-            setState(() {
-              settings.allowedFileTypes![type] = newValue ?? false;
-            });
-          },
-          contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-          dense: true,
-          checkColor: Colors.white,
-          activeColor: Colors.black,
-        ),
+  Widget _buildBody() => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const FiltersChoiceHeader(title: 'Search range'),
+          _buildInFrame(SearchRangeChoice(settings: settings)),
+          const FiltersChoiceHeader(title: 'Allowed types'),
+          _buildInFrame(FileTypesChoice(settings: settings)),
+          const FiltersChoiceHeader(title: 'Time range'),
+          _buildInFrame(DateRangeChoice(settings: settings)),
+        ],
       );
-    }
 
-    return checkboxes;
-  }
-
-  String _getFileTypeCheckboxTitle(FileExplorerItemType type) {
-    switch (type) {
-      case FileExplorerItemType.directory:
-        return 'Directories';
-
-      case FileExplorerItemType.image:
-        return 'Images';
-
-      case FileExplorerItemType.video:
-        return 'Videos';
-
-      case FileExplorerItemType.music:
-        return 'Sound files';
-
-      case FileExplorerItemType.pdf:
-        return 'PDF files';
-
-      case FileExplorerItemType.text:
-        return 'Text files';
-
-      case FileExplorerItemType.file:
-        return 'Other files';
-
-      default:
-        return '???';
-    }
-  }
-
-  String _getRangeChoiceButtonCaption(SearchRange type) {
-    switch (type) {
-      case SearchRange.everywhere:
-        return 'Everywhere';
-
-      case SearchRange.inThisDirectoryAndTheirSubdirectories:
-        return 'In this directory and subdirectories';
-
-      case SearchRange.onlyInThisDirectory:
-        return 'Only in this directory';
-
-      default:
-        return '???';
-    }
-  }
-
-  String _getMaxDayText() {
-    final selectedDate = settings.max!;
-    final now = DateTime.now();
-
-    if (selectedDate.year == now.year &&
-        selectedDate.month == now.month &&
-        selectedDate.day == now.day) {
-      return 'Now';
-    } else {
-      return _getFormattedDateText(selectedDate);
-    }
-  }
-
-  String _getMinDayText() {
-    final selectedDate = settings.min!;
-    final defaultDate = FiltersSettingsModel.withDefaultSettings().min!;
-
-    if (selectedDate.year == defaultDate.year &&
-        selectedDate.month == defaultDate.month &&
-        selectedDate.day == defaultDate.day) {
-      return 'Always';
-    } else {
-      return _getFormattedDateText(selectedDate);
-    }
-  }
-
-  String _getFormattedDateText(DateTime date) =>
-      DateFormat('d.M.y').format(date);
-
-  Future<void> _pickMinDate() async {
-    final minDate = await showDialog<DateTime>(
-      context: context,
-      builder: (_) => DatePickerDialog(
-        initialDate: settings.min!,
-        firstDate: minPossibleDate,
-        lastDate: settings.max!,
-      ),
-    );
-
-    if (minDate != null) {
-      setState(() {
-        settings.min = minDate;
-      });
-    }
-  }
-
-  Future<void> _pickMaxDate() async {
-    final maxDate = await showDialog<DateTime>(
-      context: context,
-      builder: (_) => DatePickerDialog(
-        initialDate: settings.max!,
-        firstDate: settings.min!,
-        lastDate: maxPossibleDate,
-      ),
-    );
-
-    if (maxDate != null) {
-      setState(() {
-        settings.max = maxDate;
-      });
-    }
-  }
-
-  void _clearDateRange() => setState(() {
-        settings
-          ..min = minPossibleDate
-          ..max = maxPossibleDate;
-      });
+  Widget _buildInFrame(Widget child) => Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Theme.of(context).primaryColorDark,
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
+        ),
+        child: child,
+      );
 
   void _submit() {
     widget.onFiltersChanged(settings);
