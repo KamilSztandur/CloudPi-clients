@@ -110,6 +110,7 @@ class _FileExplorerViewState extends State<FileExplorerView> {
       radius: const Radius.circular(5),
       controller: _scrollController,
       child: DragSelectGridView(
+        physics: const AlwaysScrollableScrollPhysics(),
         scrollController: _scrollController,
         gridController: _gridViewController,
         padding: const EdgeInsets.all(8),
@@ -183,10 +184,12 @@ class _FileExplorerViewState extends State<FileExplorerView> {
         FileExplorerRoute(path: '${widget.path}$directoryName/'),
       );
 
-  Future<void> _refreshData() async => setState(() {
-        _bloc.close();
-        _initializeBloc();
-      });
+  Future<void> _refreshData() async {
+    setState(() {
+      _bloc.close();
+      _initializeBloc();
+    });
+  }
 
   void _fileExplorerBlocListener(
     BuildContext context,
