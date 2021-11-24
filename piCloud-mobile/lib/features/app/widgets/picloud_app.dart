@@ -4,10 +4,15 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PICloudApp extends StatelessWidget {
-  PICloudApp({Key? key}) : super(key: key);
+class PICloudApp extends StatefulWidget {
+  const PICloudApp({Key? key}) : super(key: key);
 
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
+  @override
+  State<PICloudApp> createState() => _PICloudAppState();
+}
+
+class _PICloudAppState extends State<PICloudApp> {
+  final _navigatorKey = GlobalKey<NavigatorState>();
   final _appRouter = AppRouter();
 
   @override

@@ -16,7 +16,7 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
     PICloudBottomNavigationBarItem(
       icon: const Icon(Icons.home_outlined),
       label: 'Home',
-      route: HomeRoute(),
+      route: const HomeRoute(),
     ),
     PICloudBottomNavigationBarItem(
       icon: const Icon(Icons.folder_outlined),
@@ -26,17 +26,17 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
     PICloudBottomNavigationBarItem(
       icon: const Icon(Icons.folder_shared_outlined),
       label: 'Shared',
-      route: SharedRoute(),
+      route: const SharedRoute(),
     ),
     PICloudBottomNavigationBarItem(
       icon: const Icon(Icons.dashboard_outlined),
       label: 'Libraries',
-      route: LibrariesRoute(),
+      route: const LibrariesRoute(),
     ),
     PICloudBottomNavigationBarItem(
       icon: const Icon(Icons.star_outline),
       label: 'Favourites',
-      route: FavouritesRoute(),
+      route: const FavouritesRoute(),
     ),
   ];
 
