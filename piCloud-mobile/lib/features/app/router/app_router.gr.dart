@@ -21,40 +21,30 @@ class AppRouter extends _i7.RootStackRouter {
   @override
   final Map<String, _i7.PageFactory> pagesMap = {
     HomeRoute.name: (routeData) {
-      final args =
-          routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
-      return _i7.MaterialPageX<dynamic>(
-          routeData: routeData, child: _i1.HomePage(key: args.key));
+      return _i7.MaterialPageX<void>(
+          routeData: routeData, child: const _i1.HomePage());
     },
     SharedRoute.name: (routeData) {
-      final args = routeData.argsAs<SharedRouteArgs>(
-          orElse: () => const SharedRouteArgs());
-      return _i7.MaterialPageX<dynamic>(
-          routeData: routeData, child: _i2.SharedPage(key: args.key));
+      return _i7.MaterialPageX<void>(
+          routeData: routeData, child: const _i2.SharedPage());
     },
     FavouritesRoute.name: (routeData) {
-      final args = routeData.argsAs<FavouritesRouteArgs>(
-          orElse: () => const FavouritesRouteArgs());
-      return _i7.MaterialPageX<dynamic>(
-          routeData: routeData, child: _i3.FavouritesPage(key: args.key));
+      return _i7.MaterialPageX<void>(
+          routeData: routeData, child: const _i3.FavouritesPage());
     },
     FileExplorerRoute.name: (routeData) {
       final args = routeData.argsAs<FileExplorerRouteArgs>();
-      return _i7.MaterialPageX<dynamic>(
+      return _i7.MaterialPageX<void>(
           routeData: routeData,
           child: _i4.FileExplorerPage(key: args.key, path: args.path));
     },
     LibrariesRoute.name: (routeData) {
-      final args = routeData.argsAs<LibrariesRouteArgs>(
-          orElse: () => const LibrariesRouteArgs());
-      return _i7.MaterialPageX<dynamic>(
-          routeData: routeData, child: _i5.LibrariesPage(key: args.key));
+      return _i7.MaterialPageX<void>(
+          routeData: routeData, child: const _i5.LibrariesPage());
     },
     UserProfileRoute.name: (routeData) {
-      final args = routeData.argsAs<UserProfileRouteArgs>(
-          orElse: () => const UserProfileRouteArgs());
-      return _i7.MaterialPageX<dynamic>(
-          routeData: routeData, child: _i6.UserProfilePage(key: args.key));
+      return _i7.MaterialPageX<void>(
+          routeData: routeData, child: const _i6.UserProfilePage());
     }
   };
 
@@ -70,46 +60,24 @@ class AppRouter extends _i7.RootStackRouter {
 }
 
 /// generated route for [_i1.HomePage]
-class HomeRoute extends _i7.PageRouteInfo<HomeRouteArgs> {
-  HomeRoute({_i8.Key? key})
-      : super(name, path: '/', args: HomeRouteArgs(key: key));
+class HomeRoute extends _i7.PageRouteInfo<void> {
+  const HomeRoute() : super(name, path: '/');
 
   static const String name = 'HomeRoute';
 }
 
-class HomeRouteArgs {
-  const HomeRouteArgs({this.key});
-
-  final _i8.Key? key;
-}
-
 /// generated route for [_i2.SharedPage]
-class SharedRoute extends _i7.PageRouteInfo<SharedRouteArgs> {
-  SharedRoute({_i8.Key? key})
-      : super(name, path: '/shared-page', args: SharedRouteArgs(key: key));
+class SharedRoute extends _i7.PageRouteInfo<void> {
+  const SharedRoute() : super(name, path: '/shared-page');
 
   static const String name = 'SharedRoute';
 }
 
-class SharedRouteArgs {
-  const SharedRouteArgs({this.key});
-
-  final _i8.Key? key;
-}
-
 /// generated route for [_i3.FavouritesPage]
-class FavouritesRoute extends _i7.PageRouteInfo<FavouritesRouteArgs> {
-  FavouritesRoute({_i8.Key? key})
-      : super(name,
-            path: '/favourites-page', args: FavouritesRouteArgs(key: key));
+class FavouritesRoute extends _i7.PageRouteInfo<void> {
+  const FavouritesRoute() : super(name, path: '/favourites-page');
 
   static const String name = 'FavouritesRoute';
-}
-
-class FavouritesRouteArgs {
-  const FavouritesRouteArgs({this.key});
-
-  final _i8.Key? key;
 }
 
 /// generated route for [_i4.FileExplorerPage]
@@ -131,31 +99,15 @@ class FileExplorerRouteArgs {
 }
 
 /// generated route for [_i5.LibrariesPage]
-class LibrariesRoute extends _i7.PageRouteInfo<LibrariesRouteArgs> {
-  LibrariesRoute({_i8.Key? key})
-      : super(name,
-            path: '/libraries-page', args: LibrariesRouteArgs(key: key));
+class LibrariesRoute extends _i7.PageRouteInfo<void> {
+  const LibrariesRoute() : super(name, path: '/libraries-page');
 
   static const String name = 'LibrariesRoute';
 }
 
-class LibrariesRouteArgs {
-  const LibrariesRouteArgs({this.key});
-
-  final _i8.Key? key;
-}
-
 /// generated route for [_i6.UserProfilePage]
-class UserProfileRoute extends _i7.PageRouteInfo<UserProfileRouteArgs> {
-  UserProfileRoute({_i8.Key? key})
-      : super(name,
-            path: '/user-profile-page', args: UserProfileRouteArgs(key: key));
+class UserProfileRoute extends _i7.PageRouteInfo<void> {
+  const UserProfileRoute() : super(name, path: '/user-profile-page');
 
   static const String name = 'UserProfileRoute';
-}
-
-class UserProfileRouteArgs {
-  const UserProfileRouteArgs({this.key});
-
-  final _i8.Key? key;
 }
