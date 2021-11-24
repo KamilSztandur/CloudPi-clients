@@ -2,6 +2,7 @@ import 'package:app/features/file_explorer/data/models/file_item.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_list_item.dart';
 import 'package:app/features/search_page/data/models/filters_settings_model.dart';
 import 'package:app/features/search_page/data/models/search_query_model.dart';
+import 'package:app/features/search_page/data/models/search_result.dart';
 import 'package:app/features/search_page/data/search_engine.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class ResultsView extends StatefulWidget {
 
 class _ResultsViewState extends State<ResultsView> {
   final ScrollController _scrollController = ScrollController();
+  final SearchEngine _searchEngine = SearchEngine();
 
   @override
   Widget build(BuildContext context) {
@@ -102,13 +104,13 @@ class _ResultsViewState extends State<ResultsView> {
       height: double.infinity,
       width: double.infinity,
       child: FutureBuilder(
-        future: SearchEngine().getFilteredResultsForQuery(
+        future: _searchEngine.getFilteredResultsForQuery(
           widget.query!,
           widget.filters,
         ),
         builder: (context, snapshot) {
           if (snapshot.data != null) {
-            final results = snapshot.data! as List<FileItem>;
+            final results = snapshot.data! as List<SearchResult>;
 
             if (results.isEmpty) {
               return _buildNoResultsLabel();
@@ -123,7 +125,7 @@ class _ResultsViewState extends State<ResultsView> {
     );
   }
 
-  Widget _buildResultsList(List<FileItem> results) => RawScrollbar(
+  Widget _buildResultsList(List<SearchResult> results) => RawScrollbar(
         thickness: 7.5,
         isAlwaysShown: true,
         thumbColor: Theme.of(context).primaryColorDark,
@@ -176,7 +178,7 @@ class _ResultsViewState extends State<ResultsView> {
     );
   }
 
-  Widget _buildResultsListItem(FileItem item) => FileExplorerListItem(
-        file: item,
+  Widget _buildResultsListItem(SearchResult item) => FileExplorerListItem(
+        file: _searchEngine.parseSearchResultIntoFileItem(item),
       );
 }

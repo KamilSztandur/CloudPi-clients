@@ -3,9 +3,10 @@ import 'package:app/features/file_explorer/data/models/file_explorer_item_type.d
 import 'package:app/features/file_explorer/data/models/file_item.dart';
 import 'package:app/features/search_page/data/models/filters_settings_model.dart';
 import 'package:app/features/search_page/data/models/search_query_model.dart';
+import 'package:app/features/search_page/data/models/search_result.dart';
 
 class SearchEngine {
-  Future<List<FileItem>> getFilteredResultsForQuery(
+  Future<List<SearchResult>> getFilteredResultsForQuery(
     SearchQueryModel query,
     FiltersSettingsModel filters,
   ) async {
@@ -15,7 +16,7 @@ class SearchEngine {
     return sortedItems;
   }
 
-  Future<List<FileItem>> getResultsForQuery(SearchQueryModel query) async {
+  Future<List<SearchResult>> getResultsForQuery(SearchQueryModel query) async {
     final items = await _getRawList(
       query,
       FiltersSettingsModel.withDefaultSettings(),
@@ -27,13 +28,13 @@ class SearchEngine {
   }
 
   // WARNING: Mock
-  Future<List<FileItem>> _getRawList(
+  Future<List<SearchResult>> _getRawList(
     SearchQueryModel query,
     FiltersSettingsModel filters,
   ) async {
     await Future<void>.delayed(const Duration(seconds: 1));
 
-    final items = <FileItem>[];
+    final items = <SearchResult>[];
 
     for (var i = 0; i < 4; i++) {
       final currentType = FileExplorerItemType.values[Random().nextInt(
@@ -45,7 +46,7 @@ class SearchEngine {
       title = title[0] + title.substring(1).toLowerCase();
 
       items.add(
-        FileItem(
+        SearchResult(
           title: title,
           lastModifiedOn: DateTime.now(),
           type: currentType,
@@ -56,7 +57,7 @@ class SearchEngine {
     }
 
     items.add(
-      FileItem(
+      SearchResult(
         title: 'Francuskie zamki długa nazwa',
         lastModifiedOn: DateTime.now(),
         type: FileExplorerItemType.image,
@@ -69,7 +70,7 @@ class SearchEngine {
     return items;
   }
 
-  List<FileItem> _sortResultsByTypeAndName(List<FileItem> items) {
+  List<SearchResult> _sortResultsByTypeAndName(List<SearchResult> items) {
     return items
       ..sort(
         (a, b) {
@@ -82,4 +83,12 @@ class SearchEngine {
         },
       );
   }
+
+  FileItem parseSearchResultIntoFileItem(SearchResult result) => FileItem(
+        title: result.title,
+        lastModifiedOn: result.lastModifiedOn,
+        type: result.type,
+        size: result.size,
+        thumbnailURL: result.thumbnailURL,
+      );
 }
