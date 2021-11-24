@@ -106,9 +106,9 @@ class _SearchPageBarState extends State<SearchPageBar> {
     }
   }
 
-  void _openFiltersPanel() => showGeneralDialog<void>(
+  void _openFiltersPanel() => showDialog<void>(
         context: context,
-        pageBuilder: (_, anim, anim2) => FiltersPanel(
+        builder: (_) => FiltersPanel(
           onFiltersChanged: _updateFilters,
           filtersSettings: filters,
         ),
