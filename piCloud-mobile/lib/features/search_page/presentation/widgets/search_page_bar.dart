@@ -8,10 +8,14 @@ import 'package:flutter/material.dart';
 class SearchPageBar extends StatefulWidget implements PreferredSizeWidget {
   const SearchPageBar({
     Key? key,
+    required this.currentFilters,
     required this.queryRequested,
+    required this.onFiltersChanged,
   }) : super(key: key);
 
   final Function(SearchQueryModel) queryRequested;
+  final Function(FiltersSettingsModel) onFiltersChanged;
+  final FiltersSettingsModel currentFilters;
 
   @override
   _SearchPageBarState createState() => _SearchPageBarState();
@@ -22,8 +26,14 @@ class SearchPageBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _SearchPageBarState extends State<SearchPageBar> {
   final TextEditingController _controller = TextEditingController();
-  FiltersSettingsModel filters = FiltersSettingsModel.withDefaultSettings();
+  late FiltersSettingsModel filters;
   String currentQueryValue = '';
+
+  @override
+  void initState() {
+    filters = FiltersSettingsModel.cloneFrom(widget.currentFilters);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -124,5 +134,7 @@ class _SearchPageBarState extends State<SearchPageBar> {
 
   void _updateFilters(FiltersSettingsModel filters) {
     this.filters = filters;
+
+    widget.onFiltersChanged(filters);
   }
 }
