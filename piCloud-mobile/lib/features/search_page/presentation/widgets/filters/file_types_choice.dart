@@ -23,65 +23,36 @@ class _FileTypesChoiceState extends State<FileTypesChoice> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Stack(
-        children: [
-          ShaderMask(
-            shaderCallback: (rect) {
-              return LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: const [0.9, 1.0],
-                colors: [Colors.black.withOpacity(0.8), Colors.transparent],
-              ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
-            },
-            blendMode: BlendMode.dstIn,
-            child: SingleChildScrollView(
-              controller: checkboxesScrollController,
-              child: Scrollbar(
-                controller: checkboxesScrollController,
-                isAlwaysShown: true,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    ..._getCheckboxes(),
-                  ],
-                ),
+  Widget build(BuildContext context) => RawScrollbar(
+        controller: checkboxesScrollController,
+        isAlwaysShown: true,
+        thumbColor: Theme.of(context).primaryColorDark,
+        radius: const Radius.circular(10),
+        child: ListView.builder(
+          controller: checkboxesScrollController,
+          padding: EdgeInsets.zero,
+          clipBehavior: Clip.antiAlias,
+          itemCount: FileExplorerItemType.values.length,
+          itemBuilder: (context, index) {
+            final type = FileExplorerItemType.values[index];
+
+            return CheckboxListTile(
+              value: widget.settings.allowedFileTypes![type],
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+              dense: true,
+              checkColor: Colors.white,
+              activeColor: Colors.black,
+              title: Text(
+                _getFileTypeCheckboxTitle(type),
+                style: const TextStyle(fontSize: 15),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  List<Widget> _getCheckboxes() {
-    final checkboxes = <Widget>[];
-
-    for (final type in FileExplorerItemType.values) {
-      checkboxes.add(
-        CheckboxListTile(
-          value: widget.settings.allowedFileTypes![type],
-          title: Text(
-            _getFileTypeCheckboxTitle(type),
-            style: const TextStyle(fontSize: 15),
-          ),
-          onChanged: (newValue) {
-            setState(() {
-              widget.settings.allowedFileTypes![type] = newValue ?? false;
-            });
+              onChanged: (newValue) => setState(() {
+                widget.settings.allowedFileTypes![type] = newValue ?? false;
+              }),
+            );
           },
-          contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-          dense: true,
-          checkColor: Colors.white,
-          activeColor: Colors.black,
         ),
       );
-    }
-
-    return checkboxes;
-  }
 
   String _getFileTypeCheckboxTitle(FileExplorerItemType type) {
     switch (type) {

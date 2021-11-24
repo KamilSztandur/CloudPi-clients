@@ -74,22 +74,29 @@ class _FiltersPanelState extends State<FiltersPanel> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildInFrame(
-            SearchRangeChoice(settings: settings),
-            'Search range',
-            false,
+          Flexible(
+            fit: FlexFit.tight,
+            child: _buildInFrame(
+              SearchRangeChoice(settings: settings),
+              'Search range',
+              false,
+            ),
           ),
           Flexible(
+            flex: 2,
             child: _buildInFrame(
               FileTypesChoice(settings: settings),
               'Allowed types',
               true,
             ),
           ),
-          _buildInFrame(
-            DateRangeChoice(settings: settings),
-            'Time range',
-            false,
+          Flexible(
+            fit: FlexFit.tight,
+            child: _buildInFrame(
+              DateRangeChoice(settings: settings),
+              'Time range',
+              false,
+            ),
           ),
         ],
       );
