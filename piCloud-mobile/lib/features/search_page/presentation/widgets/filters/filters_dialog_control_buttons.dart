@@ -10,11 +10,14 @@ class ApplyChangesButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: onSubmit,
-        child: const Text('Apply changes'),
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+      child: SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: onSubmit,
+          child: const Text('Apply changes'),
+        ),
       ),
     );
   }

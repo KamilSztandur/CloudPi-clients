@@ -24,31 +24,32 @@ class _FileTypesChoiceState extends State<FileTypesChoice> {
 
   @override
   Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxHeight: 170,
-      ),
+    return Expanded(
       child: Stack(
         children: [
-          SingleChildScrollView(
-            controller: checkboxesScrollController,
-            child: Scrollbar(
+          ShaderMask(
+            shaderCallback: (rect) {
+              return LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: const [0.9, 1.0],
+                colors: [Colors.black.withOpacity(0.8), Colors.transparent],
+              ).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
+            },
+            blendMode: BlendMode.dstIn,
+            child: SingleChildScrollView(
               controller: checkboxesScrollController,
-              isAlwaysShown: true,
-              child: Column(
-                children: <Widget>[
-                  ..._getCheckboxes(),
-                ],
+              child: Scrollbar(
+                controller: checkboxesScrollController,
+                isAlwaysShown: true,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    ..._getCheckboxes(),
+                  ],
+                ),
               ),
             ),
-          ),
-          const Align(
-            alignment: Alignment.topCenter,
-            child: Icon(Icons.arrow_drop_up, size: 30),
-          ),
-          const Align(
-            alignment: Alignment.bottomCenter,
-            child: Icon(Icons.arrow_drop_down, size: 30),
           ),
         ],
       ),

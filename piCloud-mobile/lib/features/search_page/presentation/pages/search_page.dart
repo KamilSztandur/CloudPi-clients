@@ -1,4 +1,6 @@
 import 'package:app/features/search_page/data/models/search_query_model.dart';
+import 'package:app/features/search_page/data/models/search_result.dart';
+import 'package:app/features/search_page/presentation/widgets/results_view.dart';
 import 'package:app/features/search_page/presentation/widgets/search_page_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +15,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   SearchQueryModel? _query;
+  List<SearchResult>? _results;
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +23,10 @@ class _SearchPageState extends State<SearchPage> {
       appBar: SearchPageBar(queryRequested: _handleQueryRequest),
       body: Stack(
         children: [
-          Container(),
-          if (_query != null)
-            Align(
-              alignment: Alignment.topCenter,
-              child: _buildSearchResultsHeader(),
-            ),
+          ResultsView(
+            results: _results,
+            query: _query,
+          ),
         ],
       ),
     );
@@ -36,34 +37,7 @@ class _SearchPageState extends State<SearchPage> {
 
     setState(() {
       _query = query;
+      _results = <SearchResult>[SearchResult()];
     });
-  }
-
-  Widget _buildSearchResultsHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: RichText(
-        textAlign: TextAlign.center,
-        overflow: TextOverflow.ellipsis,
-        maxLines: 2,
-        text: TextSpan(
-          text: 'Search results for\n',
-          style: TextStyle(
-            fontSize: 15,
-            color: Theme.of(context).primaryColorDark,
-          ),
-          children: <TextSpan>[
-            TextSpan(
-              text: _query!.name,
-              style: TextStyle(
-                fontSize: 25,
-                color: Theme.of(context).primaryColorDark,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

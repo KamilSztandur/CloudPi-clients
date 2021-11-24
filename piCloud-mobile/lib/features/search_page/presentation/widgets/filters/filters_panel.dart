@@ -1,4 +1,3 @@
-import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/search_page/data/models/filters_settings_model.dart';
 import 'package:app/features/search_page/presentation/widgets/filters/date_range_choice.dart';
 import 'package:app/features/search_page/presentation/widgets/filters/file_types_choice.dart';
@@ -8,7 +7,6 @@ import 'package:app/features/search_page/presentation/widgets/filters/search_ran
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class FiltersPanel extends StatefulWidget {
   const FiltersPanel({
@@ -37,10 +35,19 @@ class _FiltersPanelState extends State<FiltersPanel> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: _buildTitle(),
-      contentPadding: const EdgeInsets.only(top: 15, right: 15, left: 15),
-      actionsAlignment: MainAxisAlignment.center,
-      content: _buildWindowContent(),
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxWidth: 600,
+          maxHeight: 650,
+        ),
+        child: _buildWindowContent(),
+      ),
       actions: _getPossibleActions(),
+      actionsAlignment: MainAxisAlignment.center,
+      contentPadding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+      buttonPadding: EdgeInsets.zero,
+      titlePadding: const EdgeInsets.only(top: 15),
+      insetPadding: const EdgeInsets.all(10),
     );
   }
 
@@ -52,14 +59,10 @@ class _FiltersPanelState extends State<FiltersPanel> {
         ),
       );
 
-  Widget _buildWindowContent() => ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.6,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [_buildBody()],
-        ),
+  Widget _buildWindowContent() => SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height * 0.65,
+        child: _buildBody(),
       );
 
   List<Widget> _getPossibleActions() => <Widget>[
@@ -68,27 +71,49 @@ class _FiltersPanelState extends State<FiltersPanel> {
       ];
 
   Widget _buildBody() => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const FiltersChoiceHeader(title: 'Search range'),
-          _buildInFrame(SearchRangeChoice(settings: settings)),
-          const FiltersChoiceHeader(title: 'Allowed types'),
-          _buildInFrame(FileTypesChoice(settings: settings)),
-          const FiltersChoiceHeader(title: 'Time range'),
-          _buildInFrame(DateRangeChoice(settings: settings)),
+          _buildInFrame(
+            SearchRangeChoice(settings: settings),
+            'Search range',
+            false,
+          ),
+          Flexible(
+            child: _buildInFrame(
+              FileTypesChoice(settings: settings),
+              'Allowed types',
+              true,
+            ),
+          ),
+          _buildInFrame(
+            DateRangeChoice(settings: settings),
+            'Time range',
+            false,
+          ),
         ],
       );
 
-  Widget _buildInFrame(Widget child) => Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Theme.of(context).primaryColorDark,
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(5)),
+  Widget _buildInFrame(Widget child, String title, bool expandable) {
+    final frame = Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Theme.of(context).primaryColorDark,
         ),
-        child: child,
-      );
+        borderRadius: const BorderRadius.all(Radius.circular(5)),
+      ),
+      child: child,
+    );
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        FiltersChoiceHeader(title: title),
+        if (expandable) Expanded(child: frame) else frame,
+      ],
+    );
+  }
 
   void _submit() {
     widget.onFiltersChanged(settings);

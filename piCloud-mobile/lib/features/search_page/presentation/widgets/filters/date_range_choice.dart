@@ -25,14 +25,18 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          const Flexible(child: Icon(Icons.date_range)),
           Flexible(
-            flex: 2,
+            flex: 6,
             fit: FlexFit.tight,
             child: _getMinDateWidget(),
           ),
-          const Flexible(child: Icon(Icons.arrow_right_alt_outlined)),
+          const Flexible(
+            flex: 4,
+            child: Icon(Icons.arrow_right_alt_outlined),
+          ),
           Flexible(
-            flex: 2,
+            flex: 8,
             fit: FlexFit.tight,
             child: _getMaxDateWidget(),
           ),
@@ -43,32 +47,19 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
 
   Widget _getMinDateWidget() => GestureDetector(
         onTap: _pickMinDate,
-        child: Row(
-          children: [
-            const Icon(Icons.date_range),
-            const SizedBox(width: 5),
-            Text(
-              _getMinDayText(),
-              textAlign: TextAlign.left,
-              style: const TextStyle(color: Colors.black),
-            ),
-          ],
+        child: Text(
+          _getMinDayText(),
+          textAlign: TextAlign.left,
+          style: const TextStyle(color: Colors.black),
         ),
       );
 
   Widget _getMaxDateWidget() => GestureDetector(
         onTap: _pickMaxDate,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              _getMaxDayText(),
-              textAlign: TextAlign.right,
-              style: const TextStyle(color: Colors.black),
-            ),
-            const SizedBox(width: 5),
-            const Icon(Icons.date_range),
-          ],
+        child: Text(
+          _getMaxDayText(),
+          textAlign: TextAlign.right,
+          style: const TextStyle(color: Colors.black),
         ),
       );
 
