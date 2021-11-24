@@ -10,8 +10,10 @@ class FiltersSettingsModel {
   FiltersSettingsModel.withDefaultSettings() {
     allowedFileTypes = _getAllTypes();
     range = SearchRange.everywhere;
-    min = DateTime(2000);
-    max = DateTime.now();
+    minDate = DateTime(2000);
+    maxDate = DateTime.now();
+    matchLetterCases = true;
+    matchWholeWords = true;
   }
 
   FiltersSettingsModel.cloneFrom(FiltersSettingsModel another) {
@@ -20,13 +22,16 @@ class FiltersSettingsModel {
     );
 
     range = another.range;
-    min = another.min;
-    max = another.max;
+    minDate = another.minDate;
+    maxDate = another.maxDate;
+    matchLetterCases = another.matchLetterCases;
+    matchWholeWords = another.matchWholeWords;
   }
 
   Map<FileExplorerItemType, bool>? allowedFileTypes;
   SearchRange? range;
-  DateTime? min, max;
+  DateTime? minDate, maxDate;
+  bool? matchLetterCases, matchWholeWords;
 
   Map<FileExplorerItemType, bool> _getAllTypes() {
     final allTypes = <FileExplorerItemType, bool>{};

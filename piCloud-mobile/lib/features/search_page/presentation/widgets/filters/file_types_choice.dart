@@ -1,5 +1,6 @@
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/search_page/data/models/filters_settings_model.dart';
+import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
 
 class FileTypesChoice extends StatefulWidget {
@@ -16,11 +17,7 @@ class FileTypesChoice extends StatefulWidget {
 
 class _FileTypesChoiceState extends State<FileTypesChoice> {
   final checkboxesScrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  final _gridViewController = DragSelectGridViewController();
 
   @override
   Widget build(BuildContext context) => RawScrollbar(
@@ -28,29 +25,38 @@ class _FileTypesChoiceState extends State<FileTypesChoice> {
         isAlwaysShown: true,
         thumbColor: Theme.of(context).primaryColorDark,
         radius: const Radius.circular(10),
-        child: ListView.builder(
-          controller: checkboxesScrollController,
+        child: DragSelectGridView(
+          scrollController: checkboxesScrollController,
+          gridController: _gridViewController,
           padding: EdgeInsets.zero,
-          clipBehavior: Clip.antiAlias,
           itemCount: FileExplorerItemType.values.length,
-          itemBuilder: (context, index) {
+          itemBuilder: (context, index, selected) {
             final type = FileExplorerItemType.values[index];
 
-            return CheckboxListTile(
-              value: widget.settings.allowedFileTypes![type],
-              contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-              dense: true,
-              checkColor: Colors.white,
-              activeColor: Colors.black,
-              title: Text(
-                _getFileTypeCheckboxTitle(type),
-                style: const TextStyle(fontSize: 15),
-              ),
+            final title = Text(
+              _getFileTypeCheckboxTitle(type),
+              style: const TextStyle(fontSize: 15),
+            );
+
+            final checkBox = Checkbox(
+              value: widget.settings.allowedFileTypes![type] ?? false,
               onChanged: (newValue) => setState(() {
                 widget.settings.allowedFileTypes![type] = newValue ?? false;
               }),
+              activeColor: Colors.black,
+              hoverColor: Colors.white,
+            );
+
+            return Row(
+              children: [checkBox, title],
             );
           },
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200,
+            crossAxisSpacing: 2,
+            mainAxisSpacing: 2,
+            mainAxisExtent: 40,
+          ),
         ),
       );
 

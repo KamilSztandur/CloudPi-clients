@@ -11,7 +11,7 @@ class FiltersChoiceHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 35, bottom: 5),
+      padding: const EdgeInsets.only(top: 10, bottom: 5),
       child: Text(
         title,
         textAlign: TextAlign.left,

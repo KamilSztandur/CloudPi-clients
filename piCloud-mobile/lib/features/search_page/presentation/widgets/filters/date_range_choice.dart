@@ -64,7 +64,7 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
       );
 
   String _getMaxDayText() {
-    final selectedDate = widget.settings.max!;
+    final selectedDate = widget.settings.maxDate!;
     final now = DateTime.now();
 
     if (selectedDate.year == now.year &&
@@ -77,8 +77,8 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
   }
 
   String _getMinDayText() {
-    final selectedDate = widget.settings.min!;
-    final defaultDate = FiltersSettingsModel.withDefaultSettings().min!;
+    final selectedDate = widget.settings.minDate!;
+    final defaultDate = FiltersSettingsModel.withDefaultSettings().minDate!;
 
     if (selectedDate.year == defaultDate.year &&
         selectedDate.month == defaultDate.month &&
@@ -96,15 +96,15 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
     final minDate = await showDialog<DateTime>(
       context: context,
       builder: (_) => DatePickerDialog(
-        initialDate: widget.settings.min!,
+        initialDate: widget.settings.minDate!,
         firstDate: minPossibleDate,
-        lastDate: widget.settings.max!,
+        lastDate: widget.settings.maxDate!,
       ),
     );
 
     if (minDate != null) {
       setState(() {
-        widget.settings.min = minDate;
+        widget.settings.minDate = minDate;
       });
     }
   }
@@ -113,24 +113,24 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
     final maxDate = await showDialog<DateTime>(
       context: context,
       builder: (_) => DatePickerDialog(
-        initialDate: widget.settings.max!,
-        firstDate: widget.settings.min!,
+        initialDate: widget.settings.maxDate!,
+        firstDate: widget.settings.minDate!,
         lastDate: maxPossibleDate,
       ),
     );
 
     if (maxDate != null) {
       setState(() {
-        widget.settings.max = maxDate;
+        widget.settings.maxDate = maxDate;
       });
     }
   }
 
   void _clearMaxDate() => setState(() {
-        widget.settings.max = maxPossibleDate;
+        widget.settings.maxDate = maxPossibleDate;
       });
 
   void _clearMinDate() => setState(() {
-        widget.settings.min = minPossibleDate;
+        widget.settings.minDate = minPossibleDate;
       });
 }

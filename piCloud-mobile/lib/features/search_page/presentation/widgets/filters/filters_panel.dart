@@ -3,6 +3,7 @@ import 'package:app/features/search_page/presentation/widgets/filters/date_range
 import 'package:app/features/search_page/presentation/widgets/filters/file_types_choice.dart';
 import 'package:app/features/search_page/presentation/widgets/filters/filters_choice_header.dart';
 import 'package:app/features/search_page/presentation/widgets/filters/filters_dialog_control_buttons.dart';
+import 'package:app/features/search_page/presentation/widgets/filters/misc_settings_choice.dart';
 import 'package:app/features/search_page/presentation/widgets/filters/search_range_choice.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,13 +39,13 @@ class _FiltersPanelState extends State<FiltersPanel> {
       content: ConstrainedBox(
         constraints: const BoxConstraints(
           maxWidth: 600,
-          maxHeight: 650,
+          maxHeight: 550,
         ),
         child: _buildWindowContent(),
       ),
       actions: _getPossibleActions(),
       actionsAlignment: MainAxisAlignment.center,
-      contentPadding: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
+      contentPadding: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
       buttonPadding: EdgeInsets.zero,
       titlePadding: const EdgeInsets.only(top: 15),
       insetPadding: const EdgeInsets.all(10),
@@ -74,28 +75,31 @@ class _FiltersPanelState extends State<FiltersPanel> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Flexible(
-            fit: FlexFit.tight,
-            child: _buildInFrame(
-              SearchRangeChoice(settings: settings),
-              'Search range',
-              false,
-            ),
+          const FiltersChoiceHeader(title: 'Search range'),
+          _buildInFrame(
+            SearchRangeChoice(settings: settings),
+            'SearchRange',
+            false,
           ),
-          Flexible(
-            flex: 2,
+          const FiltersChoiceHeader(title: 'Miscellaneous'),
+          _buildInFrame(
+            SizedBox(height: 75, child: MiscSettingsChoice(settings: settings)),
+            'Miscellaneous',
+            false,
+          ),
+          const FiltersChoiceHeader(title: 'Time range'),
+          _buildInFrame(
+            DateRangeChoice(settings: settings),
+            'Time range',
+            false,
+          ),
+          const FiltersChoiceHeader(title: 'Allowed types'),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxHeight: 180),
             child: _buildInFrame(
               FileTypesChoice(settings: settings),
               'Allowed types',
               true,
-            ),
-          ),
-          Flexible(
-            fit: FlexFit.tight,
-            child: _buildInFrame(
-              DateRangeChoice(settings: settings),
-              'Time range',
-              false,
             ),
           ),
         ],
@@ -112,14 +116,11 @@ class _FiltersPanelState extends State<FiltersPanel> {
       child: child,
     );
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        FiltersChoiceHeader(title: title),
-        if (expandable) Expanded(child: frame) else frame,
-      ],
-    );
+    if (expandable) {
+      return Expanded(child: frame);
+    } else {
+      return frame;
+    }
   }
 
   void _submit() {
