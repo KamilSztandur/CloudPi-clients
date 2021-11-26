@@ -36,7 +36,7 @@ class SearchEngine {
 
     final items = <SearchResult>[];
 
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < 10; i++) {
       final currentType = FileExplorerItemType.values[Random().nextInt(
         FileExplorerItemType.values.length,
       )];

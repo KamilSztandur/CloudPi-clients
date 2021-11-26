@@ -1,9 +1,8 @@
-import 'package:app/features/file_explorer/data/models/file_item.dart';
-import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_list_item.dart';
 import 'package:app/features/search_page/data/models/filters_settings_model.dart';
 import 'package:app/features/search_page/data/models/search_query_model.dart';
 import 'package:app/features/search_page/data/models/search_result.dart';
 import 'package:app/features/search_page/data/search_engine.dart';
+import 'package:app/features/search_page/presentation/widgets/result/result_item.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
 
@@ -135,11 +134,11 @@ class _ResultsViewState extends State<ResultsView> {
           scrollController: _scrollController,
           padding: const EdgeInsets.all(8),
           itemCount: results.length,
-          itemBuilder: (context, index, selected) => _buildResultsListItem(
-            results[index],
+          itemBuilder: (context, index, selected) => ResultItem(
+            item: results[index],
           ),
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 500,
+            maxCrossAxisExtent: 10000,
             crossAxisSpacing: 1,
             mainAxisSpacing: 1,
             mainAxisExtent: 90,
@@ -177,8 +176,4 @@ class _ResultsViewState extends State<ResultsView> {
       ),
     );
   }
-
-  Widget _buildResultsListItem(SearchResult item) => FileExplorerListItem(
-        file: _searchEngine.parseSearchResultIntoFileItem(item),
-      );
 }
