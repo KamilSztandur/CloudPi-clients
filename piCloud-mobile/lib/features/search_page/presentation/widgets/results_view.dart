@@ -1,7 +1,6 @@
-import 'package:app/features/search_page/data/models/filters_settings_model.dart';
+import 'package:app/features/search_page/bloc/search_bloc.dart';
 import 'package:app/features/search_page/data/models/search_query_model.dart';
 import 'package:app/features/search_page/data/models/search_result.dart';
-import 'package:app/features/search_page/data/search_engine.dart';
 import 'package:app/features/search_page/presentation/widgets/result/result_item.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
@@ -9,12 +8,10 @@ import 'package:flutter/material.dart';
 class ResultsView extends StatefulWidget {
   const ResultsView({
     Key? key,
-    required this.query,
-    required this.filters,
+    required this.searchState,
   }) : super(key: key);
 
-  final FiltersSettingsModel filters;
-  final SearchQueryModel? query;
+  final SearchState searchState;
 
   @override
   _ResultsViewState createState() => _ResultsViewState();
@@ -22,19 +19,31 @@ class ResultsView extends StatefulWidget {
 
 class _ResultsViewState extends State<ResultsView> {
   final ScrollController _scrollController = ScrollController();
-  final SearchEngine _searchEngine = SearchEngine();
-
   @override
   Widget build(BuildContext context) {
-    if (widget.query == null) {
+    if (widget.searchState is InitialSearchState) {
       return _buildNoResultsLabel();
-    } else {
+    } else if (widget.searchState is SearchingSearchState) {
+      return _buildSearchingIndicator();
+    } else if (widget.searchState is SearchErrorSearchState) {
+      return ErrorWidget(widget.searchState.props[0] as String);
+    } else if (widget.searchState is SearchFinishedSearchState) {
       return Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           _buildSearchResultsHeader(),
-          Expanded(child: _buildResultsListView()),
+          Expanded(
+            child: _buildResultsList(
+              widget.searchState.props[2] as List<SearchResult>,
+            ),
+          )
         ],
       );
+    } else if (widget.searchState
+        is SearchFinishedButNoResultsFoundSearchState) {
+      return _buildNoResultsLabel();
+    } else {
+      return Container();
     }
   }
 
@@ -64,7 +73,7 @@ class _ResultsViewState extends State<ResultsView> {
             ),
             children: <TextSpan>[
               TextSpan(
-                text: widget.query!.name,
+                text: (widget.searchState.props[0] as SearchQueryModel).name,
                 style: TextStyle(
                   fontSize: 25,
                   color: Theme.of(context).primaryColorDark,
@@ -94,32 +103,6 @@ class _ResultsViewState extends State<ResultsView> {
             color: Colors.white,
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildResultsListView() {
-    return SizedBox(
-      height: double.infinity,
-      width: double.infinity,
-      child: FutureBuilder(
-        future: _searchEngine.getFilteredResultsForQuery(
-          widget.query!,
-          widget.filters,
-        ),
-        builder: (context, snapshot) {
-          if (snapshot.data != null) {
-            final results = snapshot.data! as List<SearchResult>;
-
-            if (results.isEmpty) {
-              return _buildNoResultsLabel();
-            } else {
-              return _buildResultsList(results);
-            }
-          } else {
-            return _buildSearchingIndicator();
-          }
-        },
       ),
     );
   }

@@ -12,7 +12,6 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc() : super(InitialSearchState());
 
   final SearchEngine _searchEngine = SearchEngine();
-  List<SearchResult>? _results;
 
   @override
   Stream<SearchState> mapEventToState(SearchEvent event) async* {
@@ -20,47 +19,38 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
       yield InitialSearchState();
     } else if (event is QueryRequestedSearchEvent) {
       yield* _executeQuery(event);
-    } else if (event is SearchingErrorSearchEvent) {
-      yield* _onQueryError(event);
-    } else if (event is SearchingFinishedSearchEvent) {
-      yield* _onQueryDone(event);
-    } else if (event is SearchingFinishedButNoResultsFoundSearchEvent) {
-      yield* _onQueryNoResultsFound(event);
     }
   }
 
   Stream<SearchState> _executeQuery(QueryRequestedSearchEvent event) async* {
-    yield SearchingSearchState();
-
     try {
-      _results = await _searchEngine.getFilteredResultsForQuery(
-        event.query,
-        event.filters,
-      );
+      yield SearchingSearchState(query: event.query, filters: event.filters);
 
-      if (_results!.isEmpty) {
-        yield SearchFinishedButNoResultsFoundSearchState();
-      } else {
-        yield SearchFinishedSearchState();
+      try {
+        final results = await _searchEngine.getFilteredResultsForQuery(
+          event.query,
+          event.filters,
+        );
+
+        if (results.isEmpty) {
+          yield SearchFinishedButNoResultsFoundSearchState(
+            query: event.query,
+            filters: event.filters,
+          );
+        } else {
+          yield SearchFinishedSearchState(
+            query: event.query,
+            filters: event.filters,
+            results: results,
+          );
+        }
+      } catch (exception) {
+        yield const SearchErrorSearchState(message: 'Searching failed.');
       }
     } catch (exception) {
-      yield const SearchErrorSearchState(message: 'Searching failed');
+      yield const SearchErrorSearchState(
+        message: 'Could not load query params.',
+      );
     }
   }
-
-  Stream<SearchState> _onQueryError(SearchingErrorSearchEvent event) async* {
-    yield const SearchErrorSearchState(message: 'Searching failed');
-  }
-
-  Stream<SearchState> _onQueryDone(SearchingFinishedSearchEvent event) async* {
-    yield SearchFinishedSearchState();
-  }
-
-  Stream<SearchState> _onQueryNoResultsFound(
-    SearchingFinishedButNoResultsFoundSearchEvent event,
-  ) async* {
-    yield SearchFinishedButNoResultsFoundSearchState();
-  }
-
-  List<SearchResult> getResults() => _results ?? <SearchResult>[];
 }

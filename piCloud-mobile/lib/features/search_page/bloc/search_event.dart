@@ -24,24 +24,3 @@ class QueryRequestedSearchEvent extends SearchEvent {
   @override
   List<Object> get props => [query, filters];
 }
-
-class SearchingErrorSearchEvent extends SearchEvent {
-  const SearchingErrorSearchEvent({
-    required this.message,
-  });
-
-  final String message;
-
-  @override
-  List<Object> get props => [message];
-}
-
-class SearchingFinishedSearchEvent extends SearchEvent {
-  @override
-  List<Object> get props => [];
-}
-
-class SearchingFinishedButNoResultsFoundSearchEvent extends SearchEvent {
-  @override
-  List<Object> get props => [];
-}
