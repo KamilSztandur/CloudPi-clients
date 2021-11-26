@@ -8,13 +8,16 @@ part 'file_explorer_state.dart';
 
 class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
   FileExplorerBloc({
-    required this.path,
-  }) : super(FileExplorerInitialState());
+    required String path,
+    required DirectoryManager directoryManager,
+  })  : _path = path,
+        _directoryManager = directoryManager,
+        super(FileExplorerInitialState());
 
-  final _directoryManager = DirectoryManager();
+  final String _path;
+  final DirectoryManager _directoryManager;
 
   List<FileItem>? directoryContent;
-  final String path;
 
   @override
   Stream<FileExplorerState> mapEventToState(FileExplorerEvent event) async* {
@@ -35,7 +38,8 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
     yield FetchingDataFileExplorerState();
 
     try {
-      directoryContent = await _directoryManager.getCurrentDirectoryItems(path);
+      directoryContent =
+          await _directoryManager.getCurrentDirectoryItems(_path);
 
       yield FetchedDataFileExplorerState();
     } catch (exception) {

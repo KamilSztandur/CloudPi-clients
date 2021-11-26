@@ -7,6 +7,8 @@ analyzer:
   exclude:
     - "**/*.g.dart"
     - "**/*.gr.dart"
+    - "**/*.swagger.dart"
+    - "**/*.chopper.dart"
 
 linter:
   rules:
