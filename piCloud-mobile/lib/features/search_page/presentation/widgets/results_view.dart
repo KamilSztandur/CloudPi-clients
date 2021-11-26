@@ -22,11 +22,11 @@ class _ResultsViewState extends State<ResultsView> {
   @override
   Widget build(BuildContext context) {
     if (widget.searchState is InitialSearchState) {
-      return _buildNoResultsLabel();
+      return _initialBackgroundLabel();
     } else if (widget.searchState is SearchingSearchState) {
       return _buildSearchingIndicator();
     } else if (widget.searchState is SearchErrorSearchState) {
-      return ErrorWidget(widget.searchState.props[0] as String);
+      return _buildErrorLabel();
     } else if (widget.searchState is SearchFinishedSearchState) {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -45,6 +45,28 @@ class _ResultsViewState extends State<ResultsView> {
     } else {
       return Container();
     }
+  }
+
+  Widget _initialBackgroundLabel() {
+    final size = MediaQuery.of(context).size.shortestSide * 0.6;
+
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.grey.withOpacity(0.35),
+        ),
+        padding: EdgeInsets.all(size * 0.15),
+        height: size,
+        width: size,
+        child: const FittedBox(
+          child: Icon(
+            Icons.search,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildSearchResultsHeader() => Container(
@@ -88,22 +110,88 @@ class _ResultsViewState extends State<ResultsView> {
   Widget _buildNoResultsLabel() {
     final size = MediaQuery.of(context).size.shortestSide * 0.6;
 
-    return Center(
-      child: Container(
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.grey.withOpacity(0.35),
-        ),
-        padding: EdgeInsets.all(size * 0.15),
-        height: size,
-        width: size,
-        child: const FittedBox(
-          child: Icon(
-            Icons.search,
-            color: Colors.white,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Center(
+          child: RichText(
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            text: TextSpan(
+              text: 'No results for \n',
+              style: TextStyle(
+                fontSize: 25,
+                color: Theme.of(context).primaryColorDark,
+              ),
+              children: <TextSpan>[
+                TextSpan(
+                  text: (widget.searchState.props[0] as SearchQueryModel).name,
+                  style: TextStyle(
+                    fontSize: 35,
+                    color: Theme.of(context).primaryColorDark,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+        Center(
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey.withOpacity(0.35),
+            ),
+            padding: EdgeInsets.all(size * 0.15),
+            height: size,
+            width: size,
+            child: const FittedBox(
+              child: Icon(
+                Icons.sentiment_dissatisfied_outlined,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildErrorLabel() {
+    final size = MediaQuery.of(context).size.shortestSide * 0.6;
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Center(
+          child: Text(
+            widget.searchState.props[0] as String,
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.red.shade900,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        Center(
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.red.withOpacity(0.35),
+            ),
+            padding: EdgeInsets.all(size * 0.15),
+            height: size,
+            width: size,
+            child: const FittedBox(
+              child: Icon(
+                Icons.error_outline_outlined,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
