@@ -32,13 +32,9 @@ class _SearchPageState extends State<SearchPage> {
         onFiltersChanged: (filters) => _filters = filters,
         currentFilters: _filters,
       ),
-      body: Stack(
-        children: [
-          ResultsView(
-            query: _query,
-            filters: _filters,
-          ),
-        ],
+      body: ResultsView(
+        query: _query,
+        filters: _filters,
       ),
     );
   }
