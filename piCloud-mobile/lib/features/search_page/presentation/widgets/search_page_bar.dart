@@ -27,7 +27,6 @@ class SearchPageBar extends StatefulWidget implements PreferredSizeWidget {
 class _SearchPageBarState extends State<SearchPageBar> {
   final TextEditingController _controller = TextEditingController();
   late FiltersSettingsModel filters;
-  String currentQueryValue = '';
 
   @override
   void initState() {
@@ -42,10 +41,7 @@ class _SearchPageBarState extends State<SearchPageBar> {
       leading: const GoBackLeading(),
       title: _buildQueryTextField(),
       actions: <Widget>[
-        if (!_isQueryEmpty()) ...[
-          _buildClearQueryButton(),
-          _buildSearchButton(),
-        ],
+        if (!_isQueryEmpty()) _buildClearQueryButton(),
         _buildEditFiltersButton(),
       ],
     );
@@ -58,30 +54,32 @@ class _SearchPageBarState extends State<SearchPageBar> {
       controller: _controller,
       onChanged: _onQueryChanged,
       onSubmitted: (value) => _search(value: value),
+      style: const TextStyle(
+        fontSize: fontSize,
+        color: Colors.white,
+        decoration: TextDecoration.none,
+      ),
       decoration: InputDecoration(
-        hoverColor: Colors.green,
+        filled: true,
         hintText: 'Type here...',
         hintStyle: TextStyle(
           color: Colors.white.withOpacity(0.9),
           fontSize: fontSize,
           fontStyle: FontStyle.italic,
         ),
-        border: InputBorder.none,
-      ),
-      style: TextStyle(
-        color: Colors.white.withOpacity(0.9),
-        fontSize: fontSize,
+        fillColor: Theme.of(context).primaryColorLight.withOpacity(0.3),
+        contentPadding: const EdgeInsets.only(left: 15, bottom: 10, top: 10),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25),
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderRadius: BorderRadius.circular(25),
+          borderSide: BorderSide.none,
+        ),
       ),
     );
   }
-
-  Widget _buildSearchButton() => IconButton(
-        onPressed: _search,
-        icon: const Icon(
-          Icons.send,
-          color: Colors.white,
-        ),
-      );
 
   Widget _buildClearQueryButton() => IconButton(
         onPressed: _clearQuery,
@@ -100,12 +98,9 @@ class _SearchPageBarState extends State<SearchPageBar> {
       );
 
   void _search({String? value}) {
-    _unfocusKeyboard();
     _clearQuery();
 
-    widget.queryRequested(
-      SearchQueryModel(name: currentQueryValue),
-    );
+    widget.queryRequested(SearchQueryModel(name: value));
   }
 
   void _unfocusKeyboard() {
@@ -124,11 +119,12 @@ class _SearchPageBarState extends State<SearchPageBar> {
         ),
       );
 
-  void _onQueryChanged(String value) => setState(() {
-        currentQueryValue = value;
-      });
+  void _onQueryChanged(String value) => setState(() {});
 
-  void _clearQuery() => setState(_controller.clear);
+  void _clearQuery() {
+    _unfocusKeyboard();
+    setState(_controller.clear);
+  }
 
   bool _isQueryEmpty() => _controller.text.isEmpty;
 
