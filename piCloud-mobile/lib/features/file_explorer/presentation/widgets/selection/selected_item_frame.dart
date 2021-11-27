@@ -16,16 +16,14 @@ class SelectedItemFrame extends StatelessWidget {
     return Stack(
       children: [
         Center(child: _SelectedFileBackground()),
-        Center(child: item)
-        /*  TODO: Fix for mobile - unknown error widget appears.
-      Positioned(
-        top: _selectedIconOffset,
-        right: _selectedIconOffset,
-        child: _SelectedFileIcon(
-          size: 25.0,
+        Center(child: item),
+        Positioned(
+          top: _selectedIconOffset,
+          right: _selectedIconOffset,
+          child: _SelectedFileIcon(
+            size: 25.0,
+          ),
         ),
-      ),
-      */
       ],
     );
   }
@@ -67,14 +65,18 @@ class _SelectedFileIcon extends StatelessWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.all(3),
-        child: Expanded(
-          child: FittedBox(
-            fit: BoxFit.fill,
-            child: Icon(
-              Icons.check,
-              color: Theme.of(context).primaryColor,
+        child: Column(
+          children: [
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.fill,
+                child: Icon(
+                  Icons.check,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

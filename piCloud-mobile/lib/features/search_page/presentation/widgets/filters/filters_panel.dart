@@ -117,7 +117,7 @@ class _FiltersPanelState extends State<FiltersPanel> {
     );
 
     if (expandable) {
-      return Expanded(child: frame);
+      return Column(children: [Expanded(child: frame)]);
     } else {
       return frame;
     }
