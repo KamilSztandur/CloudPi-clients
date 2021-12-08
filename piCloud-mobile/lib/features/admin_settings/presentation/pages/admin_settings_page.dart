@@ -1,7 +1,7 @@
-import 'package:app/features/admin_settings/presentation/widgets/memory_settings.dart';
-import 'package:app/features/admin_settings/presentation/widgets/misc_settings.dart';
-import 'package:app/features/admin_settings/presentation/widgets/permissions_settings.dart';
-import 'package:app/features/admin_settings/presentation/widgets/users_settings.dart';
+import 'package:app/features/admin_settings/presentation/widgets/panels/memory_settings.dart';
+import 'package:app/features/admin_settings/presentation/widgets/panels/misc_settings.dart';
+import 'package:app/features/admin_settings/presentation/widgets/panels/permissions_settings.dart';
+import 'package:app/features/admin_settings/presentation/widgets/panels/users_settings.dart';
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
