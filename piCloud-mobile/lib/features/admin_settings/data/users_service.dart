@@ -5,7 +5,7 @@ class UsersService {
     await Future<void>.delayed(const Duration(seconds: 1));
     //TODO
 
-    return 5;
+    return _getMockedUsers().length;
   }
 
   Future<List<User>> getAllRegisteredUsers() async {
