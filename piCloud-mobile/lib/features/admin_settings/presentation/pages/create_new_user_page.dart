@@ -1,3 +1,4 @@
+import 'package:app/features/admin_settings/data/models/user.dart';
 import 'package:app/features/admin_settings/presentation/widgets/user_wizard/input_field.dart';
 import 'package:app/features/admin_settings/presentation/widgets/user_wizard/memory_allocation_input.dart';
 import 'package:app/features/admin_settings/presentation/widgets/user_wizard/password_input_field.dart';
@@ -16,7 +17,22 @@ class CreateNewUserPage extends StatefulWidget {
 }
 
 class _CreateNewUserPageState extends State<CreateNewUserPage> {
-  ScrollController scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
+  late User user;
+
+  @override
+  void initState() {
+    user = User(
+      nickname: '',
+      username: '',
+      password: '',
+      accountType: AccountType.user,
+      email: '',
+      allocatedMemoryInMb: 0,
+    );
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +42,7 @@ class _CreateNewUserPageState extends State<CreateNewUserPage> {
         actions: [],
       ),
       body: SingleChildScrollView(
-        controller: scrollController,
+        controller: _scrollController,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -35,42 +51,46 @@ class _CreateNewUserPageState extends State<CreateNewUserPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                const Flexible(
+                Flexible(
                   child: InputField(
                     headerText: 'Username',
-                    hintTexti: 'Username',
+                    hintText: 'Username',
+                    onChanged: _onUsernameChanged,
                   ),
                 ),
                 Container(
                   height: 75,
                   padding: const EdgeInsets.only(right: 20),
-                  child: UserAvatarInput(imagePicked: _imagePicked),
+                  child: UserAvatarInput(
+                    imagePicked: _onUserAvatarChanged,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 10),
-            const InputField(
+            InputField(
               headerText: 'Nickname',
-              hintTexti: 'Nickname',
+              hintText: 'Nickname',
+              onChanged: _onNicknameChanged,
             ),
             const SizedBox(height: 10),
-            const InputFieldPassword(
+            InputFieldPassword(
               headerText: 'Password',
               hintTexti: 'At least 8 Charecter',
+              onPasswordChanged: _onPasswordChanged,
             ),
             const SizedBox(height: 10),
-            const InputField(
+            InputField(
               headerText: 'Email',
-              hintTexti: 'jan@kowalski.com',
+              hintText: 'jan@kowalski.com',
+              onChanged: _onEmailChanged,
             ),
             const SizedBox(height: 10),
             MemoryAllocationInput(
               defaultValue: 1024,
               maxValue: 10240,
               headerText: 'Memory allocation',
-              onValueChanged: (value) {
-                //TODO
-              },
+              onValueChanged: _onMemoryAllocationChanged,
             ),
             const SizedBox(height: 25),
             _getCreateButton(),
@@ -123,15 +143,67 @@ class _CreateNewUserPageState extends State<CreateNewUserPage> {
     );
   }
 
-  void _imagePicked(Image image) {
-    //TODO
-  }
+  void _onNicknameChanged(String value) => user.nickname = value;
+
+  void _onUsernameChanged(String value) => user.username = value;
+
+  void _onPasswordChanged(String value) => user.password = value;
+
+  void _onEmailChanged(String value) => user.email = value;
+
+  void _onUserAvatarChanged(Image value) => user.profilePic = value;
+
+  void _onMemoryAllocationChanged(double value) =>
+      user.allocatedMemoryInMb = value;
+
+  void _onCancelPressed() => AutoRouter.of(context).pop();
 
   void _onCreatePressed() {
-    //TODO
+    final errorMessage = _getWarningMessageForUserData();
+
+    if (errorMessage == null) {
+      //TODO
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+    }
   }
 
-  void _onCancelPressed() {
-    AutoRouter.of(context).pop();
+  String? _getWarningMessageForUserData() {
+    final allValuesFilled = user.nickname.isNotEmpty &&
+        user.username.isNotEmpty &&
+        user.password.isNotEmpty &&
+        user.allocatedMemoryInMb > 0 &&
+        user.email!.isNotEmpty;
+
+    if (allValuesFilled) {
+      final alphanumericPattern = RegExp(r'^[a-zA-Z0-9]+$');
+      final alphanumericAndSpacePattern = RegExp(r'^[a-zA-Z0-9 ]+$');
+      final passwordPattern = RegExp(r'^[a-zA-Z0-9!@#\$%\^&]+$');
+      final emailPattern = RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$',
+      );
+
+      if (!alphanumericPattern.hasMatch(user.username)) {
+        return 'Invalid username.';
+      }
+
+      if (!alphanumericAndSpacePattern.hasMatch(user.nickname)) {
+        return 'Invalid nickname.';
+      }
+
+      if (!passwordPattern.hasMatch(user.password)) {
+        return 'Invalid password.';
+      }
+
+      if (!emailPattern.hasMatch(user.email!)) {
+        return 'Invalid email.';
+      }
+
+      return null;
+    } else {
+      return 'Fill all required fields.';
+    }
   }
 }

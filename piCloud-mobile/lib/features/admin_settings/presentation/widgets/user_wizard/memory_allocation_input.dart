@@ -71,13 +71,7 @@ class _MemoryAlocationState extends State<MemoryAllocationInput> {
                   value: currentValue,
                   max: widget.maxValue,
                   divisions: 100,
-                  onChanged: (value) {
-                    setState(() {
-                      currentValue = value;
-                    });
-
-                    widget.onValueChanged(value);
-                  },
+                  onChanged: _onChanged,
                 ),
               ],
             ),
@@ -85,5 +79,13 @@ class _MemoryAlocationState extends State<MemoryAllocationInput> {
         ),
       ],
     );
+  }
+
+  void _onChanged(double value) {
+    setState(() {
+      currentValue = value;
+    });
+
+    widget.onValueChanged(value);
   }
 }

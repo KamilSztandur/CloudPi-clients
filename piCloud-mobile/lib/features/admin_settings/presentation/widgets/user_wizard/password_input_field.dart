@@ -6,10 +6,12 @@ class InputFieldPassword extends StatefulWidget {
     Key? key,
     required this.headerText,
     required this.hintTexti,
+    required this.onPasswordChanged,
   }) : super(key: key);
 
   final String headerText;
   final String hintTexti;
+  final Function(String) onPasswordChanged;
 
   @override
   State<InputFieldPassword> createState() => _InputFieldPasswordState();
@@ -52,7 +54,7 @@ class _InputFieldPasswordState extends State<InputFieldPassword> {
             child: TextField(
               controller: _controller,
               obscureText: _visible,
-              onChanged: (value) => setState(() {}),
+              onChanged: _onChanged,
               decoration: InputDecoration(
                 hintText: widget.hintTexti,
                 border: InputBorder.none,
@@ -88,6 +90,12 @@ class _InputFieldPasswordState extends State<InputFieldPassword> {
         ),
       ],
     );
+  }
+
+  void _onChanged(String value) {
+    setState(() {
+      widget.onPasswordChanged(value);
+    });
   }
 
   String _getPasswordInfo() {

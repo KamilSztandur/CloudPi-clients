@@ -4,11 +4,13 @@ class InputField extends StatelessWidget {
   const InputField({
     Key? key,
     required this.headerText,
-    required this.hintTexti,
+    required this.hintText,
+    required this.onChanged,
   }) : super(key: key);
 
+  final Function(String) onChanged;
   final String headerText;
-  final String hintTexti;
+  final String hintText;
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +43,9 @@ class InputField extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: TextField(
+              onChanged: onChanged,
               decoration: InputDecoration(
-                hintText: hintTexti,
+                hintText: hintText,
                 border: InputBorder.none,
               ),
             ),

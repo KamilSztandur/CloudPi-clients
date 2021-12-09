@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class User {
   User({
     required this.nickname,
@@ -5,6 +7,7 @@ class User {
     required this.password,
     required this.accountType,
     required this.email,
+    required this.allocatedMemoryInMb,
   });
 
   String nickname;
@@ -12,6 +15,8 @@ class User {
   String password;
   AccountType accountType;
   String? email;
+  Image? profilePic;
+  double allocatedMemoryInMb;
 }
 
 enum AccountType { user, admin, service }
