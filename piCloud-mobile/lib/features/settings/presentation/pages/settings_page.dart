@@ -46,8 +46,8 @@ class _SettingsPageState extends State<SettingsPage> {
         subPanel: Container(),
       ),
       SettingsPanel(
-        header: 'Appearance',
-        icon: MdiIcons.eyeOutline,
+        header: 'Display',
+        icon: MdiIcons.brush,
         subPanel: Container(),
       ),
       SettingsPanel(

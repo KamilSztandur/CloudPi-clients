@@ -67,7 +67,7 @@ class _Header extends StatelessWidget {
             size: 30,
             color: Colors.black,
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 20),
           Text(
             header,
             style: const TextStyle(
