@@ -56,7 +56,7 @@ class _CreateNewUserPageState extends State<CreateNewUserPage> {
                 Flexible(
                   child: InputField(
                     headerText: 'Username',
-                    hintText: 'Username',
+                    hintText: 'johnsmith',
                     onChanged: _onUsernameChanged,
                   ),
                 ),
@@ -72,7 +72,7 @@ class _CreateNewUserPageState extends State<CreateNewUserPage> {
             const SizedBox(height: 10),
             InputField(
               headerText: 'Nickname',
-              hintText: 'Nickname',
+              hintText: 'John Smith',
               onChanged: _onNicknameChanged,
             ),
             const SizedBox(height: 10),
@@ -84,7 +84,7 @@ class _CreateNewUserPageState extends State<CreateNewUserPage> {
             const SizedBox(height: 10),
             InputField(
               headerText: 'Email',
-              hintText: 'jan@kowalski.com',
+              hintText: 'john@smith.eu',
               onChanged: _onEmailChanged,
             ),
             const SizedBox(height: 10),
