@@ -1,3 +1,4 @@
+import 'package:app/common/core/config.dart';
 import 'package:flutter/material.dart';
 import 'package:password_strength/password_strength.dart';
 
@@ -101,6 +102,10 @@ class _InputFieldPasswordState extends State<InputFieldPassword> {
   String _getPasswordInfo() {
     if (_controller.text.isEmpty) {
       return '';
+    }
+
+    if (_controller.text.length < Config.minPasswordLength) {
+      return 'Min. 6 characters';
     }
 
     final strength = estimatePasswordStrength(_controller.text);

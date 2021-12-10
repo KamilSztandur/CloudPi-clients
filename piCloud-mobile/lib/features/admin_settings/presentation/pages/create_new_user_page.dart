@@ -1,3 +1,4 @@
+import 'package:app/common/core/config.dart';
 import 'package:app/features/admin_settings/data/models/user.dart';
 import 'package:app/features/admin_settings/presentation/widgets/user_wizard/input_field.dart';
 import 'package:app/features/admin_settings/presentation/widgets/user_wizard/memory_allocation_input.dart';
@@ -18,6 +19,7 @@ class CreateNewUserPage extends StatefulWidget {
 
 class _CreateNewUserPageState extends State<CreateNewUserPage> {
   final ScrollController _scrollController = ScrollController();
+
   late User user;
 
   @override
@@ -180,7 +182,7 @@ class _CreateNewUserPageState extends State<CreateNewUserPage> {
     if (allValuesFilled) {
       final alphanumericPattern = RegExp(r'^[a-zA-Z0-9]+$');
       final alphanumericAndSpacePattern = RegExp(r'^[a-zA-Z0-9 ]+$');
-      final passwordPattern = RegExp(r'^[a-zA-Z0-9!@#\$%\^&]+$');
+      final passwordPattern = RegExp(r'^[a-zA-Z0-9!@#\$%\^&_\-?]+$');
       final emailPattern = RegExp(
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$',
       );
@@ -195,6 +197,10 @@ class _CreateNewUserPageState extends State<CreateNewUserPage> {
 
       if (!passwordPattern.hasMatch(user.password)) {
         return 'Invalid password.';
+      }
+
+      if (user.password.length < Config.minPasswordLength) {
+        return "Pasword's too short (min. 6 characters).";
       }
 
       if (!emailPattern.hasMatch(user.email!)) {
