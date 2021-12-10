@@ -1,5 +1,4 @@
 import 'package:app/common/core/config.dart';
-import 'package:app/features/admin_settings/presentation/pages/admin_settings_page.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:app/features/app/widgets/app_bar/user_profile_image.dart';
 import 'package:app/features/drawer/main_drawer_item.dart';
@@ -113,13 +112,11 @@ class MainDrawer extends StatelessWidget {
     //TODO
   }
 
-  void _onSettingsTapped(BuildContext context) {
-    //TODO
-  }
+  void _onSettingsTapped(BuildContext context) =>
+      AutoRouter.of(context).navigate(const SettingsRoute());
 
-  void _onCloudSettingsTapped(BuildContext context) {
-    AutoRouter.of(context).navigate(const AdminSettingsRoute());
-  }
+  void _onCloudSettingsTapped(BuildContext context) =>
+      AutoRouter.of(context).navigate(const CloudSettingsRoute());
 
   void _onAboutTapped(BuildContext context) => showAboutDialog(
         context: context,

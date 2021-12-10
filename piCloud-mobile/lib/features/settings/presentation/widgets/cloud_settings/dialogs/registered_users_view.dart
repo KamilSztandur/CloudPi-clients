@@ -1,5 +1,5 @@
-import 'package:app/features/admin_settings/data/models/user.dart';
-import 'package:app/features/admin_settings/data/users_service.dart';
+import 'package:app/features/create_new_user/data/models/user.dart';
+import 'package:app/features/settings/data/admin_services/users_service.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 

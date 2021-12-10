@@ -1,10 +1,10 @@
 import 'package:app/common/core/config.dart';
-import 'package:app/features/admin_settings/data/models/user.dart';
-import 'package:app/features/admin_settings/presentation/widgets/user_wizard/input_field.dart';
-import 'package:app/features/admin_settings/presentation/widgets/user_wizard/memory_allocation_input.dart';
-import 'package:app/features/admin_settings/presentation/widgets/user_wizard/password_input_field.dart';
-import 'package:app/features/admin_settings/presentation/widgets/user_wizard/user_avatar_input.dart';
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
+import 'package:app/features/create_new_user/data/models/user.dart';
+import 'package:app/features/create_new_user/presentation/widgets/input_field.dart';
+import 'package:app/features/create_new_user/presentation/widgets/memory_allocation_input.dart';
+import 'package:app/features/create_new_user/presentation/widgets/password_input_field.dart';
+import 'package:app/features/create_new_user/presentation/widgets/user_avatar_input.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 

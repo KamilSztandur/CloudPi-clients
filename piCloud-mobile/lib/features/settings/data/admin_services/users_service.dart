@@ -1,4 +1,4 @@
-import 'package:app/features/admin_settings/data/models/user.dart';
+import 'package:app/features/create_new_user/data/models/user.dart';
 
 class UsersService {
   Future<int> getRegisteredUsersAmount() async {
