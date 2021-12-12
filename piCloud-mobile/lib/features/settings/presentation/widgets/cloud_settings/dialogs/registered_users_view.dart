@@ -157,7 +157,7 @@ class _RegisteredUsersViewState extends State<RegisteredUsersView> {
   }
 
   void _onEditPressed(User user) =>
-      AutoRouter.of(context).navigate(CreateNewUserRoute(user: user));
+      AutoRouter.of(context).navigate(UserWizardRoute(user: user));
 
   void _onDeletePressed(User user) => Future<void>.delayed(
         // Do not remove Future. Showdialog needs time.

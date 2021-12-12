@@ -98,7 +98,7 @@ class _UserSettingsPanelState extends State<UserSettingsPanel> {
 
   void _viewAllUsers() => showUsers(context);
 
-  void _addNewUser() => AutoRouter.of(context).navigate(CreateNewUserRoute());
+  void _addNewUser() => AutoRouter.of(context).navigate(UserWizardRoute());
 
   void showUsers(BuildContext context) => showDialog<void>(
         context: context,
