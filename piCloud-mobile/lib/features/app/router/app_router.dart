@@ -1,5 +1,5 @@
 import 'package:app/features/app/router/guards/admin_guard.dart';
-import 'package:app/features/create_new_user/presentation/pages/create_new_user_page.dart';
+import 'package:app/features/create_new_user/presentation/pages/user_wizard_page.dart';
 import 'package:app/features/favourites_page/presentation/pages/favourites_page.dart';
 import 'package:app/features/file_explorer/presentation/pages/file_explorer_page.dart';
 import 'package:app/features/home_page/presentation/pages/home_page.dart';
@@ -29,7 +29,7 @@ import 'package:auto_route/auto_route.dart';
       guards: [AdminGuard],
     ),
     AutoRoute<void>(
-      page: CreateNewUserPage,
+      page: UserWizardPage,
       fullscreenDialog: true,
       guards: [AdminGuard],
     ),

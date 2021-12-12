@@ -1,7 +1,7 @@
 import 'package:app/features/app/router/app_router.gr.dart';
-import 'package:app/features/create_new_user/data/models/user.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
 import 'package:app/features/settings/presentation/widgets/cloud_settings/dialogs/submit_user_delete.dart';
+import 'package:app/features/user_wizard/data/models/user.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -136,6 +136,8 @@ class _RegisteredUsersViewState extends State<RegisteredUsersView> {
   }
 
   void _onOptionSelected(String value, User user) {
+    AutoRouter.of(context).pop();
+
     switch (value) {
       case 'Edit':
         _onEditPressed(user);
@@ -154,19 +156,17 @@ class _RegisteredUsersViewState extends State<RegisteredUsersView> {
     }
   }
 
-  void _onEditPressed(User user) => Future.delayed(Duration.zero, () {
-        AutoRouter.of(context).pop();
-        AutoRouter.of(context).navigate(CreateNewUserRoute(user: user));
-      });
+  void _onEditPressed(User user) =>
+      AutoRouter.of(context).navigate(CreateNewUserRoute(user: user));
 
-  // Do not remove Future
-  void _onDeletePressed(User user) => Future.delayed(Duration.zero, () {
-        AutoRouter.of(context).pop();
-        showDialog<void>(
+  void _onDeletePressed(User user) => Future<void>.delayed(
+        // Do not remove Future. Showdialog needs time.
+        Duration.zero,
+        () => showDialog<void>(
           context: context,
           builder: (context) => DeleteUserView(user: user),
-        );
-      });
+        ),
+      );
 
   void _onInfoPressed(User user) {
     //TODO

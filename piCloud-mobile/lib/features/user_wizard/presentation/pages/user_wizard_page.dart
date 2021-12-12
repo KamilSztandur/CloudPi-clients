@@ -1,15 +1,15 @@
-import 'package:app/common/core/config.dart';
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
-import 'package:app/features/create_new_user/data/models/user.dart';
-import 'package:app/features/create_new_user/presentation/widgets/input_field.dart';
-import 'package:app/features/create_new_user/presentation/widgets/memory_allocation_input.dart';
-import 'package:app/features/create_new_user/presentation/widgets/password_input_field.dart';
-import 'package:app/features/create_new_user/presentation/widgets/user_avatar_input.dart';
+import 'package:app/features/settings/data/admin_services/users_service.dart';
+import 'package:app/features/user_wizard/data/models/user.dart';
+import 'package:app/features/user_wizard/presentation/widgets/input_field.dart';
+import 'package:app/features/user_wizard/presentation/widgets/memory_allocation_input.dart';
+import 'package:app/features/user_wizard/presentation/widgets/password_input_field.dart';
+import 'package:app/features/user_wizard/presentation/widgets/user_avatar_input.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-class CreateNewUserPage extends StatefulWidget {
-  const CreateNewUserPage({
+class UserWizardPage extends StatefulWidget {
+  const UserWizardPage({
     Key? key,
     this.user,
   }) : super(key: key);
@@ -17,34 +17,17 @@ class CreateNewUserPage extends StatefulWidget {
   final User? user;
 
   @override
-  _CreateNewUserPageState createState() => _CreateNewUserPageState();
+  _UserWizardPageState createState() => _UserWizardPageState();
 }
 
-class _CreateNewUserPageState extends State<CreateNewUserPage> {
+class _UserWizardPageState extends State<UserWizardPage> {
   final ScrollController _scrollController = ScrollController();
+  final UsersService service = UsersService();
   late User user;
 
   @override
   void initState() {
-    if (widget.user == null) {
-      user = User(
-        nickname: '',
-        username: '',
-        password: '',
-        accountType: AccountType.user,
-        email: '',
-        allocatedMemoryInMb: 0,
-      );
-    } else {
-      user = User(
-        nickname: widget.user!.nickname,
-        username: widget.user!.username,
-        password: widget.user!.password,
-        accountType: widget.user!.accountType,
-        email: widget.user!.email,
-        allocatedMemoryInMb: widget.user!.allocatedMemoryInMb,
-      );
-    }
+    _initializeDefaultUserData();
 
     super.initState();
   }
@@ -52,9 +35,8 @@ class _CreateNewUserPageState extends State<CreateNewUserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PICloudAppBar(
-        title: 'New user wizard',
-        actions: [],
+      appBar: PICloudAppBar(
+        title: widget.user == null ? 'Create new user' : 'Edit user',
       ),
       body: SingleChildScrollView(
         controller: _scrollController,
@@ -178,13 +160,13 @@ class _CreateNewUserPageState extends State<CreateNewUserPage> {
   void _onCancelPressed() => AutoRouter.of(context).pop();
 
   void _onCreatePressed() {
-    final errorMessage = _getWarningMessageForUserData();
+    final errorMessage = service.getWarningMessageForUserData(user);
 
     if (errorMessage == null) {
       if (_isThisNewUserCreation()) {
-        //TODO
+        service.addUser(user);
       } else {
-        //TODO
+        service.editUser(user);
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -195,44 +177,25 @@ class _CreateNewUserPageState extends State<CreateNewUserPage> {
 
   bool _isThisNewUserCreation() => widget.user == null;
 
-  String? _getWarningMessageForUserData() {
-    final allValuesFilled = user.nickname.isNotEmpty &&
-        user.username.isNotEmpty &&
-        user.password.isNotEmpty &&
-        user.allocatedMemoryInMb > 0 &&
-        user.email!.isNotEmpty;
-
-    if (allValuesFilled) {
-      final alphanumericPattern = RegExp(r'^[a-zA-Z0-9]+$');
-      final alphanumericAndSpacePattern = RegExp(r'^[a-zA-Z0-9 ]+$');
-      final passwordPattern = RegExp(r'^[a-zA-Z0-9!@#\$%\^&_\-?]+$');
-      final emailPattern = RegExp(
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$',
+  void _initializeDefaultUserData() {
+    if (widget.user == null) {
+      user = User(
+        nickname: '',
+        username: '',
+        password: '',
+        accountType: AccountType.user,
+        email: '',
+        allocatedMemoryInMb: 0,
       );
-
-      if (!alphanumericPattern.hasMatch(user.username)) {
-        return 'Invalid username.';
-      }
-
-      if (!alphanumericAndSpacePattern.hasMatch(user.nickname)) {
-        return 'Invalid nickname.';
-      }
-
-      if (!passwordPattern.hasMatch(user.password)) {
-        return 'Invalid password.';
-      }
-
-      if (user.password.length < Config.minPasswordLength) {
-        return "Pasword's too short (min. 6 characters).";
-      }
-
-      if (!emailPattern.hasMatch(user.email!)) {
-        return 'Invalid email.';
-      }
-
-      return null;
     } else {
-      return 'Fill all required fields.';
+      user = User(
+        nickname: widget.user!.nickname,
+        username: widget.user!.username,
+        password: widget.user!.password,
+        accountType: widget.user!.accountType,
+        email: widget.user!.email,
+        allocatedMemoryInMb: widget.user!.allocatedMemoryInMb,
+      );
     }
   }
 }

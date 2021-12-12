@@ -1,5 +1,5 @@
-import 'package:app/features/create_new_user/data/models/user.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
+import 'package:app/features/user_wizard/data/models/user.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +17,8 @@ class DeleteUserView extends StatefulWidget {
 }
 
 class _DeleteUserViewState extends State<DeleteUserView> {
+  final UsersService service = UsersService();
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -99,7 +101,8 @@ class _DeleteUserViewState extends State<DeleteUserView> {
   }
 
   void _onDeletePressed() {
-    //TODO
+    service.deleteUser(widget.user.username);
+    AutoRouter.of(context).pop();
   }
 
   void _onCancelPressed() => AutoRouter.of(context).pop();
