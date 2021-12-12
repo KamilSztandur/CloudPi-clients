@@ -1,25 +1,33 @@
+import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:app/features/create_new_user/data/models/user.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
+import 'package:app/features/settings/presentation/widgets/cloud_settings/dialogs/submit_user_delete.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-class RegisteredUsersView extends StatelessWidget {
-  RegisteredUsersView({
+class RegisteredUsersView extends StatefulWidget {
+  const RegisteredUsersView({
     Key? key,
   }) : super(key: key);
 
+  @override
+  _RegisteredUsersViewState createState() => _RegisteredUsersViewState();
+}
+
+class _RegisteredUsersViewState extends State<RegisteredUsersView> {
   final UsersService service = UsersService();
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      insetPadding: EdgeInsets.zero,
       title: const Text(
         'Registered Users',
         textAlign: TextAlign.center,
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [_buildUsersList(context)],
+        children: [_buildUsersList()],
       ),
       actionsAlignment: MainAxisAlignment.center,
       contentPadding: const EdgeInsets.only(
@@ -41,12 +49,10 @@ class RegisteredUsersView extends StatelessWidget {
     );
   }
 
-  Widget _buildUsersList(BuildContext context) {
-    final size = MediaQuery.of(context).size.shortestSide * 0.7;
-
+  Widget _buildUsersList() {
     return Container(
-      height: size * 1.2,
-      width: size,
+      height: MediaQuery.of(context).size.height * 0.7,
+      width: MediaQuery.of(context).size.width * 0.85,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black.withOpacity(0.4)),
         borderRadius: const BorderRadius.all(Radius.circular(5)),
@@ -72,19 +78,98 @@ class RegisteredUsersView extends StatelessWidget {
       child: ListView.builder(
         shrinkWrap: true,
         itemCount: users.length,
-        itemBuilder: (context, index) {
-          final user = users[index];
-
-          return ListTile(
-            leading: CircleAvatar(
-              foregroundImage: Image.asset('assets/profilepic.jpg').image,
-            ),
-            title: Text(user.nickname),
-            subtitle: Text(_getAccountTypeSubtlitle(user.accountType)),
-          );
-        },
+        itemBuilder: (context, index) => _buildTile(users[index]),
       ),
     );
+  }
+
+  Widget _buildTile(User user) {
+    return ListTile(
+      leading: CircleAvatar(
+        foregroundImage: Image.asset('assets/profilepic.jpg').image,
+      ),
+      title: Text(user.nickname),
+      subtitle: Text(_getAccountTypeSubtlitle(user.accountType)),
+      trailing: _buildOptionsMenu(user),
+    );
+  }
+
+  Widget _buildOptionsMenu(User user) {
+    return PopupMenuButton<String>(
+      onSelected: (result) => _onOptionSelected(result, user),
+      itemBuilder: (context) => [
+        PopupMenuItem<String>(
+          value: 'Edit',
+          child: Row(
+            children: const [
+              Icon(Icons.edit_outlined),
+              SizedBox(width: 10),
+              Text('Edit'),
+              SizedBox(width: 30),
+            ],
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'Delete',
+          child: Row(
+            children: const [
+              Icon(Icons.delete_outline),
+              SizedBox(width: 10),
+              Text('Delete'),
+              SizedBox(width: 10),
+            ],
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'Info',
+          child: Row(
+            children: const [
+              Icon(Icons.info_outline),
+              SizedBox(width: 10),
+              Text('Info'),
+              SizedBox(width: 10),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _onOptionSelected(String value, User user) {
+    switch (value) {
+      case 'Edit':
+        _onEditPressed(user);
+        break;
+
+      case 'Delete':
+        _onDeletePressed(user);
+        break;
+
+      case 'Info':
+        _onInfoPressed(user);
+        break;
+
+      default:
+      //Do Nothing
+    }
+  }
+
+  void _onEditPressed(User user) => Future.delayed(Duration.zero, () {
+        AutoRouter.of(context).pop();
+        AutoRouter.of(context).navigate(CreateNewUserRoute(user: user));
+      });
+
+  // Do not remove Future
+  void _onDeletePressed(User user) => Future.delayed(Duration.zero, () {
+        AutoRouter.of(context).pop();
+        showDialog<void>(
+          context: context,
+          builder: (context) => DeleteUserView(user: user),
+        );
+      });
+
+  void _onInfoPressed(User user) {
+    //TODO
   }
 
   Widget _loadingIndicator() {

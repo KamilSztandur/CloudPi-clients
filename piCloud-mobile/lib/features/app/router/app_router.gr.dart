@@ -7,6 +7,7 @@
 import 'package:auto_route/auto_route.dart' as _i10;
 import 'package:flutter/material.dart' as _i11;
 
+import '../../create_new_user/data/models/user.dart' as _i13;
 import '../../create_new_user/presentation/pages/create_new_user_page.dart'
     as _i9;
 import '../../favourites_page/presentation/pages/favourites_page.dart' as _i3;
@@ -68,9 +69,11 @@ class AppRouter extends _i10.RootStackRouter {
           fullscreenDialog: true);
     },
     CreateNewUserRoute.name: (routeData) {
+      final args = routeData.argsAs<CreateNewUserRouteArgs>(
+          orElse: () => const CreateNewUserRouteArgs());
       return _i10.MaterialPageX<void>(
           routeData: routeData,
-          child: const _i9.CreateNewUserPage(),
+          child: _i9.CreateNewUserPage(key: args.key, user: args.user),
           fullscreenDialog: true);
     }
   };
@@ -159,8 +162,19 @@ class CloudSettingsRoute extends _i10.PageRouteInfo<void> {
 }
 
 /// generated route for [_i9.CreateNewUserPage]
-class CreateNewUserRoute extends _i10.PageRouteInfo<void> {
-  const CreateNewUserRoute() : super(name, path: '/create-new-user-page');
+class CreateNewUserRoute extends _i10.PageRouteInfo<CreateNewUserRouteArgs> {
+  CreateNewUserRoute({_i11.Key? key, _i13.User? user})
+      : super(name,
+            path: '/create-new-user-page',
+            args: CreateNewUserRouteArgs(key: key, user: user));
 
   static const String name = 'CreateNewUserRoute';
+}
+
+class CreateNewUserRouteArgs {
+  const CreateNewUserRouteArgs({this.key, this.user});
+
+  final _i11.Key? key;
+
+  final _i13.User? user;
 }

@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 
 class InputField extends StatelessWidget {
-  const InputField({
+  InputField({
     Key? key,
     required this.headerText,
     required this.hintText,
     required this.onChanged,
+    this.initialValue,
   }) : super(key: key);
 
   final Function(String) onChanged;
+  final TextEditingController _controller = TextEditingController();
   final String headerText;
   final String hintText;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
+    _controller.text = initialValue ?? '';
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -43,6 +48,7 @@ class InputField extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: TextField(
+              controller: _controller,
               onChanged: onChanged,
               decoration: InputDecoration(
                 hintText: hintText,

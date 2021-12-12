@@ -11,7 +11,10 @@ import 'package:flutter/material.dart';
 class CreateNewUserPage extends StatefulWidget {
   const CreateNewUserPage({
     Key? key,
+    this.user,
   }) : super(key: key);
+
+  final User? user;
 
   @override
   _CreateNewUserPageState createState() => _CreateNewUserPageState();
@@ -19,19 +22,29 @@ class CreateNewUserPage extends StatefulWidget {
 
 class _CreateNewUserPageState extends State<CreateNewUserPage> {
   final ScrollController _scrollController = ScrollController();
-
   late User user;
 
   @override
   void initState() {
-    user = User(
-      nickname: '',
-      username: '',
-      password: '',
-      accountType: AccountType.user,
-      email: '',
-      allocatedMemoryInMb: 0,
-    );
+    if (widget.user == null) {
+      user = User(
+        nickname: '',
+        username: '',
+        password: '',
+        accountType: AccountType.user,
+        email: '',
+        allocatedMemoryInMb: 0,
+      );
+    } else {
+      user = User(
+        nickname: widget.user!.nickname,
+        username: widget.user!.username,
+        password: widget.user!.password,
+        accountType: widget.user!.accountType,
+        email: widget.user!.email,
+        allocatedMemoryInMb: widget.user!.allocatedMemoryInMb,
+      );
+    }
 
     super.initState();
   }
@@ -58,6 +71,7 @@ class _CreateNewUserPageState extends State<CreateNewUserPage> {
                     headerText: 'Username',
                     hintText: 'johnsmith',
                     onChanged: _onUsernameChanged,
+                    initialValue: user.username,
                   ),
                 ),
                 Container(
@@ -74,22 +88,25 @@ class _CreateNewUserPageState extends State<CreateNewUserPage> {
               headerText: 'Nickname',
               hintText: 'John Smith',
               onChanged: _onNicknameChanged,
+              initialValue: user.nickname,
             ),
             const SizedBox(height: 10),
             InputFieldPassword(
               headerText: 'Password',
               hintTexti: 'At least 8 Charecter',
               onPasswordChanged: _onPasswordChanged,
+              initialValue: user.password,
             ),
             const SizedBox(height: 10),
             InputField(
               headerText: 'Email',
               hintText: 'john@smith.eu',
               onChanged: _onEmailChanged,
+              initialValue: user.email,
             ),
             const SizedBox(height: 10),
             MemoryAllocationInput(
-              defaultValue: 1024,
+              defaultValue: user.allocatedMemoryInMb,
               maxValue: 10240,
               headerText: 'Memory allocation',
               onValueChanged: _onMemoryAllocationChanged,
@@ -164,13 +181,19 @@ class _CreateNewUserPageState extends State<CreateNewUserPage> {
     final errorMessage = _getWarningMessageForUserData();
 
     if (errorMessage == null) {
-      //TODO
+      if (_isThisNewUserCreation()) {
+        //TODO
+      } else {
+        //TODO
+      }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),
       );
     }
   }
+
+  bool _isThisNewUserCreation() => widget.user == null;
 
   String? _getWarningMessageForUserData() {
     final allValuesFilled = user.nickname.isNotEmpty &&
