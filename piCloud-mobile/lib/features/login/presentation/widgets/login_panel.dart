@@ -20,8 +20,7 @@ class LoginPanel extends StatefulWidget {
 class _LoginPanelState extends State<LoginPanel> {
   late LoginProgressIndicator loginIndicator;
   late LoginBloc _bloc;
-  String? _username;
-  String? _password;
+  String? _username, _password;
 
   @override
   void initState() {
@@ -57,24 +56,28 @@ class _LoginPanelState extends State<LoginPanel> {
                 top: 30,
               ),
               actionsPadding: const EdgeInsets.only(bottom: 10),
-              content: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.85,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      UsernameInputField(
-                        onChanged: (value) => _username = value,
-                        onSubmitted: _onLoginPressed,
-                      ),
-                      const SizedBox(height: 10),
-                      PasswordInputField(
-                        onPasswordChanged: (value) => _password = value,
-                        onSubmitted: _onLoginPressed,
-                      ),
-                      const SizedBox(height: 10),
-                      _getLoginMessageIfAny(state),
-                      const SizedBox(height: 10),
-                    ],
+              content: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 450),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.85,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        UsernameInputField(
+                          defaultValue: _username,
+                          onChanged: (value) => _username = value,
+                          onSubmitted: _onLoginPressed,
+                        ),
+                        const SizedBox(height: 10),
+                        PasswordInputField(
+                          onPasswordChanged: (value) => _password = value,
+                          onSubmitted: _onLoginPressed,
+                        ),
+                        const SizedBox(height: 10),
+                        _getLoginMessageIfAny(state),
+                        const SizedBox(height: 10),
+                      ],
+                    ),
                   ),
                 ),
               ),

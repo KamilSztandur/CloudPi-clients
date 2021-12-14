@@ -5,14 +5,20 @@ class UsernameInputField extends StatelessWidget {
     Key? key,
     required this.onChanged,
     required this.onSubmitted,
+    required this.defaultValue,
   }) : super(key: key);
 
   final Function(String) onChanged;
   final TextEditingController _controller = TextEditingController();
   final VoidCallback onSubmitted;
+  final String? defaultValue;
 
   @override
   Widget build(BuildContext context) {
+    if (defaultValue != null) {
+      _controller.text = defaultValue!;
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
