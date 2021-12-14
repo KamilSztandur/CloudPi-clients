@@ -20,8 +20,7 @@ class LoginPanel extends StatefulWidget {
 class _LoginPanelState extends State<LoginPanel> {
   late LoginProgressIndicator loginIndicator;
   late LoginBloc _bloc;
-  String? _username;
-  String? _password;
+  String? _username, _password;
 
   @override
   void initState() {
@@ -65,6 +64,7 @@ class _LoginPanelState extends State<LoginPanel> {
                     child: Column(
                       children: [
                         UsernameInputField(
+                          defaultValue: _username,
                           onChanged: (value) => _username = value,
                           onSubmitted: _onLoginPressed,
                         ),
