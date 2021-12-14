@@ -3,7 +3,7 @@ import 'package:app/features/favourites_page/presentation/pages/favourites_page.
 import 'package:app/features/file_explorer/presentation/pages/file_explorer_page.dart';
 import 'package:app/features/home_page/presentation/pages/home_page.dart';
 import 'package:app/features/libraries_page/presentation/pages/libraries_page.dart';
-import 'package:app/features/log_in/presentation/pages/log_in_page.dart';
+import 'package:app/features/login/presentation/pages/login_page.dart';
 import 'package:app/features/settings/presentation/pages/cloud_settings_page.dart';
 import 'package:app/features/settings/presentation/pages/settings_page.dart';
 import 'package:app/features/shared_page/presentation/pages/shared_page.dart';

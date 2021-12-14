@@ -1,4 +1,4 @@
-import 'package:app/features/log_in/data/login_service.dart';
+import 'package:app/features/login/data/login_service.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 

@@ -1,9 +1,8 @@
 import 'package:app/features/app/router/app_router.gr.dart';
-import 'package:app/features/log_in/bloc/login_bloc.dart';
-import 'package:app/features/log_in/data/login_service.dart';
-import 'package:app/features/log_in/presentation/widgets/login_button.dart';
-import 'package:app/features/log_in/presentation/widgets/password_input_field.dart';
-import 'package:app/features/log_in/presentation/widgets/username_input_field.dart';
+import 'package:app/features/login/bloc/login_bloc.dart';
+import 'package:app/features/login/presentation/widgets/login_button.dart';
+import 'package:app/features/login/presentation/widgets/password_input_field.dart';
+import 'package:app/features/login/presentation/widgets/username_input_field.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,8 +20,8 @@ class LoginPanel extends StatefulWidget {
 class _LoginPanelState extends State<LoginPanel> {
   late LoginProgressIndicator loginIndicator;
   late LoginBloc _bloc;
-  String? username;
-  String? password;
+  String? _username;
+  String? _password;
 
   @override
   void initState() {
@@ -64,12 +63,15 @@ class _LoginPanelState extends State<LoginPanel> {
                   child: Column(
                     children: [
                       UsernameInputField(
-                        onChanged: (value) => username = value,
+                        onChanged: (value) => _username = value,
+                        onSubmitted: _onLoginPressed,
                       ),
                       const SizedBox(height: 10),
                       PasswordInputField(
-                        onPasswordChanged: (value) => password = value,
+                        onPasswordChanged: (value) => _password = value,
+                        onSubmitted: _onLoginPressed,
                       ),
+                      const SizedBox(height: 10),
                       _getLoginMessageIfAny(state),
                       const SizedBox(height: 10),
                     ],
@@ -105,8 +107,8 @@ class _LoginPanelState extends State<LoginPanel> {
   void _onLoginPressed() => setState(() {
         _bloc.add(
           LoginRequestedEvent(
-            password: password ?? '',
-            username: username ?? '',
+            password: _password ?? '',
+            username: _username ?? '',
           ),
         );
       });

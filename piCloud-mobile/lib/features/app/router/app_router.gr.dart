@@ -11,7 +11,7 @@ import '../../favourites_page/presentation/pages/favourites_page.dart' as _i4;
 import '../../file_explorer/presentation/pages/file_explorer_page.dart' as _i5;
 import '../../home_page/presentation/pages/home_page.dart' as _i2;
 import '../../libraries_page/presentation/pages/libraries_page.dart' as _i6;
-import '../../log_in/presentation/pages/log_in_page.dart' as _i1;
+import '../../login/presentation/pages/login_page.dart' as _i1;
 import '../../settings/presentation/pages/cloud_settings_page.dart' as _i9;
 import '../../settings/presentation/pages/settings_page.dart' as _i8;
 import '../../shared_page/presentation/pages/shared_page.dart' as _i3;

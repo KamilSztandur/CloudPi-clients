@@ -4,10 +4,12 @@ class UsernameInputField extends StatelessWidget {
   UsernameInputField({
     Key? key,
     required this.onChanged,
+    required this.onSubmitted,
   }) : super(key: key);
 
   final Function(String) onChanged;
   final TextEditingController _controller = TextEditingController();
+  final VoidCallback onSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,7 @@ class UsernameInputField extends StatelessWidget {
             child: TextField(
               controller: _controller,
               onChanged: onChanged,
+              onSubmitted: (value) => onSubmitted(),
               decoration: const InputDecoration(
                 hintText: 'Username',
                 border: InputBorder.none,
