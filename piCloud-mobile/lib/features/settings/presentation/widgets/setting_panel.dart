@@ -61,17 +61,17 @@ class _Header extends StatelessWidget {
       padding: const EdgeInsets.all(10),
       child: Row(
         children: [
-          const SizedBox(width: 17.5),
+          const SizedBox(width: 10),
           Icon(
             icon,
-            size: 30,
+            size: 32.5,
             color: Colors.black,
           ),
           const SizedBox(width: 20),
           Text(
             header,
             style: const TextStyle(
-              fontSize: 17.5,
+              fontSize: 19,
             ),
             softWrap: true,
             maxLines: 2,

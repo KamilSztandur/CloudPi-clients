@@ -38,6 +38,7 @@ class _UserSettingsPanelState extends State<UserSettingsPanel> {
       onTap: _addNewUser,
       child: const Icon(
         Icons.person_add_alt_1_outlined,
+        size: 25,
       ),
     );
 
@@ -59,6 +60,7 @@ class _UserSettingsPanelState extends State<UserSettingsPanel> {
                   '$amount',
                   style: TextStyle(
                     color: Theme.of(context).primaryColor,
+                    fontSize: 17.5,
                   ),
                 );
               } else {
@@ -72,7 +74,10 @@ class _UserSettingsPanelState extends State<UserSettingsPanel> {
               }
             },
           ),
-          const Icon(Icons.keyboard_arrow_right)
+          const Icon(
+            Icons.keyboard_arrow_right,
+            size: 22.5,
+          )
         ],
       ),
     );
@@ -88,7 +93,7 @@ class _UserSettingsPanelState extends State<UserSettingsPanel> {
         children: [
           Text(
             header,
-            style: const TextStyle(fontSize: 15),
+            style: const TextStyle(fontSize: 17.5),
           ),
           action,
         ],
