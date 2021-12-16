@@ -37,7 +37,7 @@ class _UserSettingsPanelState extends State<UserSettingsPanel> {
     final addUserButton = GestureDetector(
       onTap: _addNewUser,
       child: const Icon(
-        Icons.person_add_alt_1_outlined,
+        Icons.person_add_alt_1,
         size: 25,
       ),
     );
@@ -82,7 +82,7 @@ class _UserSettingsPanelState extends State<UserSettingsPanel> {
       ),
     );
 
-    return _buildRow('All users', viewUsersButton);
+    return _buildRow('Browse all users', viewUsersButton);
   }
 
   Widget _buildRow(String header, Widget action) {
@@ -101,11 +101,11 @@ class _UserSettingsPanelState extends State<UserSettingsPanel> {
     );
   }
 
-  void _viewAllUsers() => showUsers(context);
+  void _viewAllUsers() => _showUsers(context);
 
   void _addNewUser() => AutoRouter.of(context).navigate(UserWizardRoute());
 
-  void showUsers(BuildContext context) => showDialog<void>(
+  void _showUsers(BuildContext context) => showDialog<void>(
         context: context,
         builder: (context) => const RegisteredUsersView(),
       );
