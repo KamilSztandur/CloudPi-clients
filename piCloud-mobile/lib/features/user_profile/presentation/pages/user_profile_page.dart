@@ -2,7 +2,9 @@ import 'package:app/features/app/widgets/app_bar/appbar.dart';
 import 'package:app/features/app/widgets/navigation_bar/bottom_navigation_bar.dart';
 import 'package:app/features/drawer/main_drawer.dart';
 import 'package:app/features/file_explorer/bloc/file_explorer_bloc.dart';
+import 'package:app/features/loading_baner/presentation/loading_panel.dart';
 import 'package:app/features/user_profile/bloc/user_profile_page_bloc.dart';
+import 'package:app/features/user_profile/data/models/user_profile_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,7 +21,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
 
   @override
   void initState() {
-    _initBloc();
+    _bloc = UserProfilePageBloc();
+    _bloc.add(FetchDataUserProfilePageEvent());
     super.initState();
   }
 
@@ -37,62 +40,59 @@ class _UserProfilePageState extends State<UserProfilePage> {
         actions: const [],
       ),
       drawer: const MainDrawer(),
-      body: BlocProvider(
-        create: (context) => UserProfilePageBloc(),
-        child: _getBody(),
-      ),
+      body: _getBody(),
+
       //bottomNavigationBar: const PICloudBottomNavigationBar(),
     );
   }
 
-  Container _getBody() {
-    return Container(
-      child: BlocProvider.value(
-        value: _bloc,
-        child: BlocListener<UserProfilePageBloc, UserProfilePageState>(
-          listener: (context, state) => {
-            setState(() {
-              if (state is UserProfilePageInitialState) {
-                context
-                    .read<UserProfilePageBloc>()
-                    .add(InitializeUserProfilePageEvent());
-              } else if (state is UserProfilePageFetchingDataState) {
-                context
-                    .read<UserProfilePageBloc>()
-                    .add(FetchDataUserProfilePageEvent());
-              } else if (state is UserProfilePageFetchingDataErrorState) {
-                context
-                    .read<UserProfilePageBloc>()
-                    .add(FetchDataErrorOccurredUserProfilePageEvent());
-              } else if (state is UserProfilePageFetchingDataFinishedState) {
-                context
-                    .read<UserProfilePageBloc>()
-                    .add(FetchingDataFinishedUserProfilePageEvent());
-              }
-            })
+  Widget _getBody() {
+    return BlocProvider.value(
+      value: _bloc,
+      child: BlocListener<UserProfilePageBloc, UserProfilePageState>(
+        listener: _userProfilePageBlocListener,
+        child: BlocBuilder<UserProfilePageBloc, UserProfilePageState>(
+          builder: (context, state) {
+            if (state is UserProfilePageFetchingDataFinishedState) {
+              return _getContent(state.userData);
+            } else {
+              return const LoadingPanel();
+            }
           },
-          child: BlocBuilder<UserProfilePageBloc, UserProfilePageState>(
-            builder: (context, state) {
-              if (state is UserProfilePageInitialState) {
-                return const Text('INIT');
-              } else if (state is UserProfilePageFetchingDataState) {
-                return const Text('FETCHING DATA');
-              } else if (state is UserProfilePageFetchingDataErrorState) {
-                return const Text('ERROR! D:');
-              } else if (state is UserProfilePageFetchingDataFinishedState) {
-                return Text(state.userData.username);
-              } else {
-                return const Text('ELSEEEEE');
-              }
-            },
-          ),
         ),
       ),
     );
   }
 
-  void _initBloc() {
-    _bloc = UserProfilePageBloc();
-    _bloc.add(FetchDataUserProfilePageEvent());
+  ListView _getContent(UserProfileData data) {
+    return ListView(
+      children: [
+        Text(data.username),
+        Text(data.nickname),
+        Text(data.email),
+        Text(data.image),
+        Text(data.typeOfAccount),
+      ],
+    );
+  }
+
+  void _userProfilePageBlocListener(
+    BuildContext context,
+    UserProfilePageState state,
+  ) {
+    setState(() {
+      if (state is UserProfilePageInitialState) {
+        context
+            .read<UserProfilePageBloc>()
+            .add(InitializeUserProfilePageEvent());
+      } else if (state is UserProfilePageFetchingDataErrorState) {
+        //TODO
+
+      } else if (state is FetchingDataFinishedUserProfilePageEvent) {
+        context
+            .read<UserProfilePageBloc>()
+            .add(FetchingDataFinishedUserProfilePageEvent());
+      }
+    });
   }
 }

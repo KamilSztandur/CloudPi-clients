@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app/features/user_profile/data/models/user_profile_data.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -33,7 +35,7 @@ class UserProfilePageBloc
 
     try {
       _userData = UserProfileData(
-        username: _getUsernameMock(),
+        username: await _getUsernameMock(),
         nickname: _getNickNameMock(),
         email: _getEmailMock(),
         image: _getImageMock(),
@@ -60,7 +62,8 @@ class UserProfilePageBloc
     yield UserProfilePageFetchingDataFinishedState(userData: _userData);
   }
 
-  String _getUsernameMock() {
+  Future<String> _getUsernameMock() async {
+    sleep(const Duration(seconds: 1));
     return 'Adam44';
   }
 
