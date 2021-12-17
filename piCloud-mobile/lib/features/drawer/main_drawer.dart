@@ -1,6 +1,8 @@
 import 'package:app/common/core/config.dart';
+import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:app/features/app/widgets/app_bar/user_profile_image.dart';
 import 'package:app/features/drawer/main_drawer_item.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -64,7 +66,7 @@ class MainDrawer extends StatelessWidget {
         MainDrawerItem(
           value: 'User Profile',
           icon: Icons.account_box_outlined,
-          onPressed: _onUserProfileTapped,
+          onPressed: () => _onUserProfileTapped(context),
         ),
         MainDrawerItem(
           value: 'Settings',
@@ -106,9 +108,8 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
-  void _onUserProfileTapped() {
-    //TODO
-  }
+  void _onUserProfileTapped(BuildContext context) =>
+      AutoRouter.of(context).push(const UserProfileRoute());
 
   void _onSettingsTapped() {
     //TODO
