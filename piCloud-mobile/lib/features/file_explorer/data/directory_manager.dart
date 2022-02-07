@@ -22,11 +22,12 @@ class DirectoryManager {
   Future<List<FileItem>?> _getRawList(String path) async {
     return [
       FileItem(
-        title: "amkoled.jpg",
+        title: 'cloudy.jpg',
         lastModifiedOn: DateTime.now(),
         type: FileExplorerItemType.image,
         size: 1024,
-        thumbnailURL: null, // TODO: Handle thumbnails
+        thumbnailURL:
+            'https://img.redro.pl/obrazy/clouded-leopard-in-tree-700-113986304.jpg', // TODO: Handle thumbnails
       ),
     ];
     /*

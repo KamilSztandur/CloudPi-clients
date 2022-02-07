@@ -30,7 +30,7 @@ class MediaDownloadSuccessState extends MediaReaderState {
     required this.resourceBytes,
   });
 
-  final Uint16List resourceBytes;
+  final Uint8List resourceBytes;
 
   @override
   List<Object> get props => [resourceBytes];
