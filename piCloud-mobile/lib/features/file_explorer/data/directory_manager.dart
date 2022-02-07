@@ -2,6 +2,7 @@ import 'package:app/contracts/api.enums.swagger.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/models/file_item.dart';
+import 'package:file_picker/file_picker.dart';
 
 class DirectoryManager {
   const DirectoryManager(this._api);
@@ -19,6 +20,16 @@ class DirectoryManager {
   }
 
   Future<List<FileItem>?> _getRawList(String path) async {
+    return [
+      FileItem(
+        title: "amkoled.jpg",
+        lastModifiedOn: DateTime.now(),
+        type: FileExplorerItemType.image,
+        size: 1024,
+        thumbnailURL: null, // TODO: Handle thumbnails
+      ),
+    ];
+    /*
     // TODO: Use authorized user
     final result = await _api.filesystemUserUsernameGet(
       username: 'mighty root',
@@ -49,6 +60,7 @@ class DirectoryManager {
     } else {
       return null;
     }
+    */
   }
 
   FileExplorerItemType _mapItemType(FileInfoDtoFileType fileType) {
