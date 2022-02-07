@@ -29,6 +29,13 @@ class DirectoryManager {
         thumbnailURL:
             'https://img.redro.pl/obrazy/clouded-leopard-in-tree-700-113986304.jpg', // TODO: Handle thumbnails
       ),
+      FileItem(
+        title: 'pan tadeusz.txt',
+        lastModifiedOn: DateTime.now(),
+        type: FileExplorerItemType.text,
+        size: 1024,
+        thumbnailURL: null,
+      ),
     ];
     /*
     // TODO: Use authorized user

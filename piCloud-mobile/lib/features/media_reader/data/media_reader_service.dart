@@ -1,29 +1,31 @@
 import 'dart:typed_data';
 import 'package:app/features/media_reader/data/media_reader_supported_types.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 
 class MediaReaderService {
-  MimeTypeResolver typeResolver = MimeTypeResolver();
+  final _typeResolver = MimeTypeResolver();
+
+  final testImageURL =
+      'https://img.redro.pl/obrazy/clouded-leopard-in-tree-700-113986304.jpg';
+
+  final testTextURL = 'https://wolnelektury.pl/media/book/txt/pan-tadeusz.txt';
 
   //TODO
   Future<Uint8List> downloadBytes(Uri resoruce) async {
     await Future<void>.delayed(const Duration(seconds: 2));
-    const testURL =
-        'https://img.redro.pl/obrazy/clouded-leopard-in-tree-700-113986304.jpg';
 
-    final imageData = await NetworkAssetBundle(
-      Uri.parse(testURL),
+    final resourceData = await NetworkAssetBundle(
+      Uri.parse(testTextURL),
     ).load('');
 
-    final bytes = imageData.buffer.asUint8List();
+    final bytes = resourceData.buffer.asUint8List();
 
     return bytes;
   }
 
   MediaReaderSupportedTypes defineMediaType(String name) {
-    final result = typeResolver.lookup(name);
+    final result = _typeResolver.lookup(name);
 
     if (result != null) {
       if (result.contains('image')) {

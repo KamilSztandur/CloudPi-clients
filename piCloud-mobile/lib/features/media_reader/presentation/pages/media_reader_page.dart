@@ -1,8 +1,13 @@
+import 'dart:typed_data';
+
 import 'package:app/features/app/widgets/app_bar/preview_app_bar.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_error.dart';
 import 'package:app/features/loading_baner/presentation/loading_panel.dart';
 import 'package:app/features/media_reader/bloc/media_reader_bloc.dart';
+import 'package:app/features/media_reader/data/media_reader_service.dart';
+import 'package:app/features/media_reader/data/media_reader_supported_types.dart';
 import 'package:app/features/media_reader/presentation/widgets/image_preview.dart';
+import 'package:app/features/media_reader/presentation/widgets/txt_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,6 +27,7 @@ class MediaReaderPage extends StatefulWidget {
 
 class _MediaReaderPageState extends State<MediaReaderPage> {
   late MediaReaderBloc _bloc;
+  final service = MediaReaderService();
 
   @override
   void initState() {
@@ -43,8 +49,7 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
               builder: (context, state) {
                 if (state is MediaDownloadSuccessState) {
                   final resourceBytes = state.resourceBytes;
-
-                  return ImagePreview(resourceBytes: resourceBytes);
+                  return _buildPreviewForResourceOfType(resourceBytes);
                 } else if (state is MediaDownloadFailureState) {
                   return const FileExplorerErrorWidget(
                     errorMessage: 'Check your internet connection.',
@@ -58,6 +63,30 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
         ),
       ),
     );
+  }
+
+  Widget _buildPreviewForResourceOfType(Uint8List resourceBytes) {
+    final type = service.defineMediaType(widget.resourceName);
+
+    switch (type) {
+      case MediaReaderSupportedTypes.image:
+        return ImagePreview(resourceBytes: resourceBytes);
+
+      case MediaReaderSupportedTypes.audio:
+        return ErrorWidget('Not supported yet');
+
+      case MediaReaderSupportedTypes.video:
+        return ErrorWidget('Not supported yet');
+
+      case MediaReaderSupportedTypes.txt:
+        return TextPreview(resourceBytes: resourceBytes);
+
+      case MediaReaderSupportedTypes.pdf:
+        return ErrorWidget('Not supported yet');
+
+      case MediaReaderSupportedTypes.file:
+        return ErrorWidget('Not supported yet');
+    }
   }
 
   void _mediaReaderBlocListener(BuildContext ctx, MediaReaderState state) =>
