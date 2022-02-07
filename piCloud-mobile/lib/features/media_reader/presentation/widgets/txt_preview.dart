@@ -15,12 +15,16 @@ class TextPreview extends StatefulWidget {
 }
 
 class _TextPreviewState extends State<TextPreview> {
+  final ScrollController _controller = ScrollController();
+
   @override
   Widget build(BuildContext context) => InteractiveViewer(
         minScale: 0.5,
         maxScale: 2,
         child: SingleChildScrollView(
+          controller: _controller,
           child: Scrollbar(
+            controller: _controller,
             isAlwaysShown: true,
             child: SelectableText(
               _getText(),

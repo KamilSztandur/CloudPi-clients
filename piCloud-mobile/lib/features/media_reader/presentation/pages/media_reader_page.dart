@@ -7,6 +7,7 @@ import 'package:app/features/media_reader/bloc/media_reader_bloc.dart';
 import 'package:app/features/media_reader/data/media_reader_service.dart';
 import 'package:app/features/media_reader/data/media_reader_supported_types.dart';
 import 'package:app/features/media_reader/presentation/widgets/image_preview.dart';
+import 'package:app/features/media_reader/presentation/widgets/no_preview_available.dart';
 import 'package:app/features/media_reader/presentation/widgets/txt_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -82,10 +83,16 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
         return TextPreview(resourceBytes: resourceBytes);
 
       case MediaReaderSupportedTypes.pdf:
-        return ErrorWidget('Not supported yet');
+        return NoPreviewAvailable(
+          path: widget.path,
+          resourceName: widget.resourceName,
+        );
 
       case MediaReaderSupportedTypes.file:
-        return ErrorWidget('Not supported yet');
+        return NoPreviewAvailable(
+          path: widget.path,
+          resourceName: widget.resourceName,
+        );
     }
   }
 
