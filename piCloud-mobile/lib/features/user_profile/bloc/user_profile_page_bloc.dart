@@ -63,7 +63,7 @@ class UserProfilePageBloc
   }
 
   Future<String> _getUsernameMock() async {
-    sleep(const Duration(seconds: 1));
+    await Future<void>.delayed(const Duration(seconds: 1));
     return 'Adam44';
   }
 
