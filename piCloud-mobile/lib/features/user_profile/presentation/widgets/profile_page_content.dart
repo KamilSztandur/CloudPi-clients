@@ -76,7 +76,6 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
           ProfilePageItem(label: 'Username', value: data.username),
           ProfilePageItem(label: 'Nickname', value: data.nickname),
           ProfilePageItem(label: 'E-mail', value: data.email),
-          //ProfilePageItem(label: 'image', value: data.image),
           ProfilePageItem(label: 'Account Type', value: data.typeOfAccount),
         ],
       ),

@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:app/features/user_profile/data/models/user_profile_data.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -38,7 +36,6 @@ class UserProfilePageBloc
         username: await _getUsernameMock(),
         nickname: _getNickNameMock(),
         email: _getEmailMock(),
-        image: _getImageMock(),
         typeOfAccount: _getTypeOfAccountMock(),
       );
 
@@ -73,10 +70,6 @@ class UserProfilePageBloc
 
   String _getEmailMock() {
     return 'e-mail@example.ru';
-  }
-
-  String _getImageMock() {
-    return 'Tu będzie obrazek';
   }
 
   String _getTypeOfAccountMock() {
