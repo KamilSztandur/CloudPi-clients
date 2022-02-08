@@ -71,12 +71,12 @@ class MainDrawer extends StatelessWidget {
         MainDrawerItem(
           value: 'Settings',
           icon: Icons.settings_outlined,
-          onPressed: _onSettingsTapped,
+          onPressed: () => _onSettingsTapped(context),
         ),
         MainDrawerItem(
           value: 'Cloud Settings',
           icon: Icons.admin_panel_settings_outlined,
-          onPressed: _onCloudSettingsTapped,
+          onPressed: () => _onCloudSettingsTapped(context),
         ),
         MainDrawerItem(
           value: 'About',
@@ -86,7 +86,7 @@ class MainDrawer extends StatelessWidget {
         MainDrawerItem(
           value: 'Logout',
           icon: Icons.logout_outlined,
-          onPressed: _onLogoutTapped,
+          onPressed: () => _onLogoutTapped(context),
         ),
       ],
     );
@@ -111,13 +111,11 @@ class MainDrawer extends StatelessWidget {
   void _onUserProfileTapped(BuildContext context) =>
       AutoRouter.of(context).push(const UserProfileRoute());
 
-  void _onSettingsTapped() {
-    //TODO
-  }
+  void _onSettingsTapped(BuildContext context) =>
+      AutoRouter.of(context).navigate(const SettingsRoute());
 
-  void _onCloudSettingsTapped() {
-    //TODO
-  }
+  void _onCloudSettingsTapped(BuildContext context) =>
+      AutoRouter.of(context).navigate(const CloudSettingsRoute());
 
   void _onAboutTapped(BuildContext context) => showAboutDialog(
         context: context,
@@ -126,7 +124,7 @@ class MainDrawer extends StatelessWidget {
         applicationVersion: Config.version,
       );
 
-  void _onLogoutTapped() {
+  void _onLogoutTapped(BuildContext context) {
     //TODO
   }
 }

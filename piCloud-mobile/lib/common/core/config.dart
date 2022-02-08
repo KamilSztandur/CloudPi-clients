@@ -3,4 +3,5 @@ class Config {
   static const String applicationName = 'PiCloud Mobile';
   static const String applicationLegalese =
       'PICloud cloud service based on Raspberry Pi';
+  static const int minPasswordLength = 6;
 }
