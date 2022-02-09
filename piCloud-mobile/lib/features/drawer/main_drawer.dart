@@ -109,7 +109,7 @@ class MainDrawer extends StatelessWidget {
   }
 
   void _onUserProfileTapped(BuildContext context) =>
-      AutoRouter.of(context).push(const UserProfileRoute());
+      AutoRouter.of(context).navigate(const UserProfileRoute());
 
   void _onSettingsTapped(BuildContext context) =>
       AutoRouter.of(context).navigate(const SettingsRoute());

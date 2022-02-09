@@ -1,5 +1,4 @@
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
-import 'package:app/features/app/widgets/navigation_bar/bottom_navigation_bar.dart';
 import 'package:app/features/drawer/main_drawer.dart';
 import 'package:app/features/user_profile/presentation/widgets/profile_page_content.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +15,6 @@ class UserProfilePage extends StatelessWidget {
       ),
       drawer: MainDrawer(),
       body: ProfilePageContent(),
-      bottomNavigationBar: PICloudBottomNavigationBar(),
     );
   }
 }

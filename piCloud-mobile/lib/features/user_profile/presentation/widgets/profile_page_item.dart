@@ -10,28 +10,27 @@ class ProfilePageItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 75,
+      height: 90,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const Spacer(flex: 2),
-          _getFlexibleText(label, 22),
-          _getFlexibleText(value, 20),
+          const Spacer(flex: 3),
+          _getFlexibleText(label, 22, 14),
+          _getFlexibleText(value, 20, 16),
         ],
       ),
     );
   }
 
-  Flexible _getFlexibleText(String text, double fontSize) {
+  Flexible _getFlexibleText(String text, double fontSize, int flex) {
     return Flexible(
-      flex: 12,
+      flex: flex,
       child: Container(
         alignment: Alignment.centerLeft,
         child: Text(
           text,
           style: TextStyle(
             fontSize: fontSize,
-            color: Colors.white,
           ),
         ),
       ),

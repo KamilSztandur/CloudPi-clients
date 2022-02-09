@@ -39,8 +39,7 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
         child: BlocBuilder<UserProfilePageBloc, UserProfilePageState>(
           builder: (context, state) {
             if (state is UserProfilePageFetchingDataFinishedState) {
-              return _getContent(
-                  state.userData, Theme.of(context).primaryColor);
+              return _getContent(state.userData);
             } else {
               return const LoadingPanel();
             }
@@ -50,35 +49,32 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
     );
   }
 
-  Container _getContent(UserProfileData data, Color primaryColor) {
-    return Container(
-      decoration: BoxDecoration(color: primaryColor),
-      child: ListView(
-        children: [
-          const SizedBox(height: 20),
-          const Center(
-            child: SizedBox(
-              width: 150,
-              height: 142,
-              child: UserProfileImage(size: 20),
-            ),
+  ListView _getContent(UserProfileData data) {
+    return ListView(
+      children: [
+        const SizedBox(height: 20),
+        const Center(
+          child: SizedBox(
+            width: 150,
+            height: 142,
+            child: UserProfileImage(size: 20),
           ),
-          Container(
-            height: 40,
-            decoration: const BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: Colors.white38,
-                ),
+        ),
+        Container(
+          height: 30,
+          decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.black26,
               ),
             ),
           ),
-          ProfilePageItem(label: 'Username', value: data.username),
-          ProfilePageItem(label: 'Nickname', value: data.nickname),
-          ProfilePageItem(label: 'E-mail', value: data.email),
-          ProfilePageItem(label: 'Account Type', value: data.typeOfAccount),
-        ],
-      ),
+        ),
+        ProfilePageItem(label: 'Username', value: data.username),
+        ProfilePageItem(label: 'Nickname', value: data.nickname),
+        ProfilePageItem(label: 'E-mail', value: data.email),
+        ProfilePageItem(label: 'Account Type', value: data.typeOfAccount),
+      ],
     );
   }
 
