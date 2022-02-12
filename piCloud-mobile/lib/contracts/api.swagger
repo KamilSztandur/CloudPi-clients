@@ -13,30 +13,556 @@
   "tags": [
     {
       "name": "Filesystem API",
-      "description": "<font color=\"#911\" size=3>\n  Endpoint method not implemented\n</font>\n<br/>\nAPI for retrieving user's file structure and modify it."
+      "description": "API for retrieving user's file structure and file/directory info and modify it."
     },
     {
       "name": "File API",
-      "description": "API for uploading, downloading, deleting files and directories"
+      "description": "API for uploading, downloading and deleting files"
+    },
+    {
+      "name": "User Management API",
+      "description": "API for various operations with users"
     }
   ],
   "paths": {
-    "/files/file": {
+    "/filesystem/directory": {
       "put": {
+        "tags": [
+          "Filesystem API"
+        ],
+        "summary": "creates a directory",
+        "description": "Creates a new directory at directory provided as request parameter",
+        "operationId": "createDirectory",
+        "parameters": [
+          {
+            "name": "directoryPath",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileInfoDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/new": {
+      "post": {
+        "tags": [
+          "User Management API"
+        ],
+        "summary": "Creates user with given values",
+        "description": "Creates user with parameters specified in the request body",
+        "operationId": "createNewUser",
+        "parameters": [
+          {
+            "name": "user",
+            "description": "JSON object of users registration data"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostUserRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/refresh/refresh-token": {
+      "post": {
+        "tags": [
+          "authentication-api-controller"
+        ],
+        "operationId": "refreshRefreshToken",
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/refresh/auth-token": {
+      "post": {
+        "tags": [
+          "authentication-api-controller"
+        ],
+        "operationId": "refreshAuthToken",
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "post": {
+        "tags": [
+          "authentication-api-controller"
+        ],
+        "operationId": "logout",
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "tags": [
+          "authentication-api-controller"
+        ],
+        "operationId": "login",
+        "parameters": [
+          {
+            "name": "dontLogout",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/filesystem/{username}": {
+      "get": {
+        "tags": [
+          "Filesystem API"
+        ],
+        "summary": "retrieves info about virtual drive for specified user",
+        "description": "Return information about filesystem for user with username provided in path",
+        "operationId": "getUsersVirtualDrivesInfo",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilesystemInfoDTO"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Filesystem API"
+        ],
+        "summary": "changes max space for virtual drive",
+        "description": "Changes max space for filesystem for user with provided username - new assigned space has to be greater or equal to the space filled by all files",
+        "operationId": "changeVirtualDriveMaxSize",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "newAssignedSpace",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/files/image/{imageName}": {
+      "post": {
         "tags": [
           "File API"
         ],
-        "summary": "Forces file upload",
-        "description": "Allows to upload file to server. Based on filePath server check current user permissions\nand if user has rights to save file then request body is saved to disc. Unlike Post method\nPUT overrides existing files.\n",
-        "operationId": "forceUploadNewFile",
+        "summary": "STABILITY: In early development",
+        "description": "<h2>STABILITY: </h2>In early development",
+        "operationId": "uploadNewImage",
+        "parameters": [
+          {
+            "name": "imageName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileInfoDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/file": {
+      "post": {
+        "tags": [
+          "File API"
+        ],
+        "summary": "STABILITY: Usually very basic hand testing",
+        "description": "<h2>STABILITY: </h2>Usually very basic hand testing",
+        "operationId": "uploadNewFile",
         "parameters": [
           {
             "name": "fileType",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "string",
+              "default": "UNDEFINED",
               "enum": [
+                "DIRECTORY",
                 "IMAGE",
                 "VIDEO",
                 "TEXT_FILE",
@@ -53,333 +579,63 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "file",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "binary"
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "400": {
-            "description": "bad path"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "File API"
-        ],
-        "summary": "Uploads file",
-        "description": "Allows to upload file to server. Based on filePath server check current user permissions\nand if user has rights to save file then request body is saved to disc.\n",
-        "operationId": "uploadNewFile",
-        "parameters": [
-          {
-            "name": "fileType",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "IMAGE",
-                "VIDEO",
-                "TEXT_FILE",
-                "MUSIC",
-                "COMPRESSED",
-                "UNDEFINED"
-              ]
-            }
-          },
-          {
-            "name": "file",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "binary"
-            }
           }
         ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
               "schema": {
-                "type": "string"
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
               }
             }
           }
         },
         "responses": {
-          "201": {
-            "description": "success"
-          },
-          "400": {
-            "description": "when file path is invalid"
-          },
-          "409": {
-            "description": "when file with given filepath already exist"
-          }
-        }
-      }
-    },
-    "/user-management/": {
-      "post": {
-        "tags": [
-          "user-management-controller"
-        ],
-        "operationId": "createNewUser",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PostUserRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Created"
-          }
-        }
-      }
-    },
-    "/refresh/refresh": {
-      "post": {
-        "tags": [
-          "login-controller"
-        ],
-        "operationId": "refreshRefreshToken",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/refresh/auth": {
-      "post": {
-        "tags": [
-          "login-controller"
-        ],
-        "operationId": "refreshAccessToken",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/login": {
-      "post": {
-        "tags": [
-          "login-controller"
-        ],
-        "operationId": "login",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/filesystem/users-drives/{username}": {
-      "post": {
-        "tags": [
-          "Filesystem API"
-        ],
-        "operationId": "changeDriveMaxSize",
-        "parameters": [
-          {
-            "name": "newAssignedSpace",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/files/image/{imageName}": {
-      "post": {
-        "tags": [
-          "File API"
-        ],
-        "summary": "Image uploads",
-        "description": "<h1>Not implemented</h1>\nAllows to upload image to server. Endpoint behave similar to POST file/{filePath}\nbut this method use user .images folder instead of precisely defined path.\n",
-        "operationId": "uploadNewImage",
-        "parameters": [
-          {
-            "name": "imageName",
-            "in": "query",
-            "description": "Name with extension of image to upload",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "example": "funny-cat.jpg"
-          },
-          {
-            "name": "image",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "byte"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "201": {
-            "description": "success"
-          },
-          "400": {
-            "description": "when request does not have body or image name does not contain file extension"
-          },
-          "403": {
-            "description": "when user does not have permission to save image e.g. not enough space"
-          },
-          "409": {
-            "description": "when image with that name already exist"
-          }
-        }
-      }
-    },
-    "/files/directory": {
-      "post": {
-        "tags": [
-          "File API"
-        ],
-        "summary": "Creates empty directory",
-        "operationId": "createDirectory",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/discs/{discId}/unmount": {
-      "post": {
-        "tags": [
-          "disk-info-controller"
-        ],
-        "operationId": "unmountDrive",
-        "parameters": [
-          {
-            "name": "discId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/discs/{discId}/mount": {
-      "post": {
-        "tags": [
-          "disk-info-controller"
-        ],
-        "operationId": "mountDrive",
-        "parameters": [
-          {
-            "name": "discId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/authorities/{userId}": {
-      "post": {
-        "tags": [
-          "authorities-controller"
-        ],
-        "operationId": "giveAuthorities",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/user-management/{username}": {
-      "get": {
-        "tags": [
-          "user-management-controller"
-        ],
-        "operationId": "getUserDetails",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetUserWithDetailsResponse"
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileInfoDTO"
                 }
               }
             }
@@ -388,9 +644,130 @@
       },
       "delete": {
         "tags": [
-          "user-management-controller"
+          "File API"
         ],
-        "operationId": "scheduleUserDelete",
+        "summary": "STABILITY: In early development",
+        "description": "<h2>STABILITY: </h2>In early development",
+        "operationId": "deleteFiles",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "uuid"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/drive/new": {
+      "post": {
+        "tags": [
+          "drive-api-impl"
+        ],
+        "operationId": "createNewDrive",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostDriveRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DriveDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{username}": {
+      "delete": {
+        "tags": [
+          "User Management API"
+        ],
+        "summary": "deletes user with provided username",
+        "description": "Deletes user whose username matches the one specified in the path",
+        "operationId": "deleteUser",
         "parameters": [
           {
             "name": "username",
@@ -402,6 +779,36 @@
           }
         ],
         "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
           "200": {
             "description": "OK"
           }
@@ -409,13 +816,15 @@
       },
       "patch": {
         "tags": [
-          "user-management-controller"
+          "User Management API"
         ],
+        "summary": "updates user with provided username",
+        "description": "Updates details like username, email and path to profile picture of auser with specified username",
         "operationId": "updateUserDetails",
         "parameters": [
           {
             "name": "username",
-            "in": "query",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string"
@@ -426,103 +835,307 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateUserDetailsRequest"
+                "$ref": "#/components/schemas/PatchUserRequest"
               }
             }
           },
           "required": true
         },
         "responses": {
-          "202": {
-            "description": "Accepted"
-          }
-        }
-      }
-    },
-    "/user-management/get-all": {
-      "get": {
-        "tags": [
-          "user-management-controller"
-        ],
-        "operationId": "getAllUsers",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetUserResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user-management/get-all/with-details": {
-      "get": {
-        "tags": [
-          "user-management-controller"
-        ],
-        "operationId": "getAllUsersWithDetails",
-        "responses": {
-          "200": {
-            "description": "OK",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetUserWithDetailsResponse"
-                  }
+                  "$ref": "#/components/schemas/ErrorBody"
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/filesystem/users-drives": {
-      "get": {
-        "tags": [
-          "Filesystem API"
-        ],
-        "operationId": "getUsersDrivesInfo",
-        "responses": {
-          "200": {
-            "description": "OK",
+          },
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetUserDriveInfo"
-                  }
+                  "$ref": "#/components/schemas/ErrorBody"
                 }
               }
             }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created"
           }
         }
       }
     },
-    "/filesystem/user/{username}": {
-      "get": {
+    "/filesystem/move": {
+      "patch": {
         "tags": [
           "Filesystem API"
         ],
-        "operationId": "getPartOfUsersFileStructure",
+        "summary": "moves file",
+        "description": "Moves a file to place specified in path - possible file rename with this method",
+        "operationId": "moveFile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveFileRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/user/{usernames}/details": {
+      "get": {
+        "tags": [
+          "User Management API"
+        ],
+        "summary": "returns all details of user with provided username",
+        "description": "Returns all details of user whose username matches the one specified in the URI path",
+        "operationId": "getUserDetails",
         "parameters": [
           {
-            "name": "username",
+            "name": "usernames",
+            "in": "path",
+            "description": "One or more usernames whose details you want to acquire",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDetailsDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/": {
+      "get": {
+        "tags": [
+          "User Management API"
+        ],
+        "summary": "Returns all users",
+        "description": " Returns all basic user objects with their usernames, account types and paths to profile pictures.",
+        "operationId": "getAllUsers",
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserIdDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/filesystem/file/{fileId}": {
+      "get": {
+        "tags": [
+          "Filesystem API"
+        ],
+        "summary": "retrieves information about requested file",
+        "operationId": "getFileInfo",
+        "parameters": [
+          {
+            "name": "fileId",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
+          {
+            "name": "with-permissions",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileInfoDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/filesystem/file-structure": {
+      "get": {
+        "tags": [
+          "Filesystem API"
+        ],
+        "summary": "retrieves file structure",
+        "description": "Returns file structure based on requested depth level and root - if a file has no children or depth level is too low to show them, children value is returned as empty list",
+        "operationId": "getFileStructure",
+        "parameters": [
           {
             "name": "structureLevels",
             "in": "query",
@@ -544,6 +1157,36 @@
           }
         ],
         "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -557,103 +1200,69 @@
         }
       }
     },
-    "/filesystem/info/{fileId}": {
-      "get": {
-        "tags": [
-          "Filesystem API"
-        ],
-        "operationId": "getFileInfo",
-        "parameters": [
-          {
-            "name": "fileId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "with-permissions",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/FileDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/files/{fileId}": {
-      "get": {
-        "tags": [
-          "file-permission-controller"
-        ],
-        "operationId": "getFilePermissions",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetFilePermissionsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/files/image-preview": {
       "get": {
         "tags": [
           "File API"
         ],
-        "summary": "returns requested images in reduced resolution",
+        "summary": "STABILITY: In early development",
+        "description": "<h2>STABILITY: </h2>In early development",
         "operationId": "getImagesPreview",
         "parameters": [
           {
             "name": "previewResolution",
             "in": "query",
-            "required": true,
+            "required": false,
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 64
             }
           },
           {
-            "name": "imageFormat",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "imageNames",
+            "name": "imageIds",
             "in": "query",
             "required": true,
             "schema": {
               "type": "array",
               "items": {
-                "type": "string"
+                "type": "string",
+                "format": "uuid"
               }
             }
           }
         ],
         "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -661,22 +1270,11 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string",
-                    "format": "binary"
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "byte"
+                    }
                   }
                 }
               }
@@ -690,20 +1288,51 @@
         "tags": [
           "File API"
         ],
-        "summary": "Downloads file",
-        "description": "Downloads file with given id.\n",
+        "summary": "STABILITY: In early development",
+        "description": "<h2>STABILITY: </h2>In early development",
         "operationId": "downloadFile",
         "parameters": [
           {
             "name": "fileId",
-            "in": "query",
+            "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
         "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -721,18 +1350,51 @@
         "tags": [
           "File API"
         ],
-        "summary": "override standard description",
+        "summary": "STABILITY: In early development",
+        "description": "<h2>STABILITY: </h2>In early development",
         "operationId": "deleteFile",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
-        },
+        ],
         "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
           "200": {
             "description": "OK"
           }
@@ -744,13 +1406,13 @@
         "tags": [
           "File API"
         ],
-        "summary": "Compresses directory and downloads it",
-        "description": "Compress directory to .7z and sends it in response body.\n",
+        "summary": "Not implemented",
+        "description": "<h2><font color=\"#911\">Method not implemented</font> [priority: high]</h2>\n",
         "operationId": "compressAndDownloadDirectory",
         "parameters": [
           {
             "name": "directoryId",
-            "in": "query",
+            "in": "path",
             "required": true,
             "schema": {
               "type": "string"
@@ -758,6 +1420,36 @@
           }
         ],
         "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
           "200": {
             "description": "OK",
             "content": {
@@ -770,215 +1462,124 @@
             }
           }
         }
-      },
+      }
+    },
+    "/drive": {
+      "get": {
+        "tags": [
+          "drive-api-impl"
+        ],
+        "operationId": "getAllDrives",
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DriveDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/drive/discs": {
+      "get": {
+        "tags": [
+          "drive-api-impl"
+        ],
+        "operationId": "getAllDiscs",
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DiscDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/filesystem/directory/{directoryId}": {
       "delete": {
         "tags": [
-          "File API"
+          "Filesystem API"
         ],
-        "summary": "deletes empty directory",
+        "summary": "deletes directory with provided id",
         "operationId": "deleteDirectory",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/files/": {
-      "get": {
-        "tags": [
-          "file-permission-controller"
-        ],
-        "operationId": "getFilesPermissions",
         "parameters": [
           {
-            "name": "fileId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "integer",
-                "format": "int32"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/GetFilePermissionsResponse"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/discs": {
-      "get": {
-        "tags": [
-          "disk-info-controller"
-        ],
-        "operationId": "getDiscList",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DiscInfo"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/discs/{discId}": {
-      "get": {
-        "tags": [
-          "disk-info-controller"
-        ],
-        "operationId": "getDiscInfo",
-        "parameters": [
-          {
-            "name": "discId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/DiscDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/discs/drive/{driveId}": {
-      "get": {
-        "tags": [
-          "disk-info-controller"
-        ],
-        "operationId": "getDrivesDisc",
-        "parameters": [
-          {
-            "name": "driveId",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DiscInfo"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/authorities/{username}/canBeGiven": {
-      "get": {
-        "tags": [
-          "authorities-controller"
-        ],
-        "operationId": "getAvailableAuthorities",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAuthoritiesInfoResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/authorities/{login}": {
-      "get": {
-        "tags": [
-          "authorities-controller"
-        ],
-        "operationId": "getAuthorities",
-        "parameters": [
-          {
-            "name": "username",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/user-management/{username}/delete-now": {
-      "delete": {
-        "tags": [
-          "user-management-controller"
-        ],
-        "operationId": "deleteUser",
-        "parameters": [
-          {
-            "name": "username",
+            "name": "directoryId",
             "in": "path",
             "required": true,
             "schema": {
@@ -987,30 +1588,36 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/files/directory/{directoryId}/force": {
-      "delete": {
-        "tags": [
-          "File API"
-        ],
-        "summary": "forces to delete directory",
-        "description": "Deletes directory whether there are files in it or not",
-        "operationId": "forceDeleteDirectory",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "string"
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
               }
             }
-          }
-        },
-        "responses": {
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
           "200": {
             "description": "OK"
           }
@@ -1020,44 +1627,89 @@
   },
   "components": {
     "schemas": {
+      "ErrorBody": {
+        "type": "object",
+        "properties": {
+          "errorCode": {
+            "type": "string"
+          }
+        }
+      },
+      "FileInfoDTO": {
+        "type": "object",
+        "properties": {
+          "pubId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "parentUUID": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hasThumbnail": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "DIRECTORY",
+              "IMAGE",
+              "VIDEO",
+              "TEXT_FILE",
+              "MUSIC",
+              "COMPRESSED",
+              "UNDEFINED"
+            ]
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "modifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "PostUserRequest": {
         "required": [
-          "login",
+          "nickname",
           "password",
           "username"
         ],
         "type": "object",
         "properties": {
-          "login": {
-            "type": "string"
-          },
           "username": {
             "type": "string"
           },
-          "password": {
+          "nickname": {
             "type": "string"
           },
-          "accountType": {
-            "type": "string",
-            "enum": [
-              "USER",
-              "ROOT",
-              "SERVICE_WORKER"
-            ]
-          },
           "email": {
+            "type": "string"
+          },
+          "password": {
             "type": "string"
           }
         }
       },
       "LoginRequest": {
         "required": [
-          "login",
-          "password"
+          "username"
         ],
         "type": "object",
         "properties": {
-          "login": {
+          "username": {
             "type": "string"
           },
           "password": {
@@ -1065,362 +1717,180 @@
           }
         }
       },
-      "UpdateUserDetailsRequest": {
+      "PostDriveRequest": {
+        "required": [
+          "path"
+        ],
         "type": "object",
         "properties": {
-          "username": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "pathToProfilePicture": {
-            "type": "string"
-          }
-        }
-      },
-      "GetUserWithDetailsResponse": {
-        "type": "object",
-        "properties": {
-          "username": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "isLocked": {
-            "type": "boolean"
-          },
-          "accountType": {
-            "type": "string",
-            "enum": [
-              "USER",
-              "ROOT",
-              "SERVICE_WORKER"
-            ]
-          },
-          "usersPermissions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "usersRoles": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "GetUserResponse": {
-        "type": "object",
-        "properties": {
-          "username": {
-            "type": "string"
-          },
-          "pathToProfilePicture": {
-            "type": "string"
-          },
-          "accountType": {
-            "type": "string",
-            "enum": [
-              "USER",
-              "ROOT",
-              "SERVICE_WORKER"
-            ]
-          }
-        }
-      },
-      "GetUserDriveInfo": {
-        "type": "object",
-        "properties": {
-          "username": {
-            "type": "string"
-          },
-          "assignedSpace": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "usedSpace": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
-      "DirectoryInfoDto": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "modifiedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
-      },
-      "FSDirectoryDTO": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "details": {
-            "$ref": "#/components/schemas/DirectoryInfoDto"
-          },
-          "files": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FSFileDTO"
-            }
-          },
-          "directories": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FSDirectoryDTO"
-            }
-          }
-        }
-      },
-      "FSFileDTO": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "details": {
-            "$ref": "#/components/schemas/FileInfoDto"
-          }
-        }
-      },
-      "FileInfoDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "modifiedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "fileType": {
-            "type": "string",
-            "enum": [
-              "IMAGE",
-              "VIDEO",
-              "TEXT_FILE",
-              "MUSIC",
-              "COMPRESSED",
-              "UNDEFINED"
-            ]
-          },
-          "hasThumbnail": {
-            "type": "boolean"
-          }
-        }
-      },
-      "FileStructureDTO": {
-        "type": "object",
-        "properties": {
-          "depth": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "rootDirectoryPath": {
-            "type": "string"
-          },
-          "rootDirectory": {
-            "$ref": "#/components/schemas/FSDirectoryDTO"
-          }
-        }
-      },
-      "FileDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "parentId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "driveId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "fileName": {
-            "type": "string"
-          },
-          "fileType": {
-            "type": "string",
-            "enum": [
-              "IMAGE",
-              "VIDEO",
-              "TEXT_FILE",
-              "MUSIC",
-              "COMPRESSED",
-              "UNDEFINED"
-            ]
-          },
           "path": {
             "type": "string"
           },
           "size": {
+            "minimum": 1,
             "type": "integer",
             "format": "int64"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "modifiedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "GetFilePermissionsResponse": {
-        "type": "object",
-        "properties": {
-          "discObjectId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "permissions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/UserFilePermissions"
-            }
-          }
-        }
-      },
-      "UserFilePermissions": {
-        "type": "object",
-        "properties": {
-          "username": {
-            "type": "string"
-          },
-          "usersPermissions": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "CREATE",
-                "READ",
-                "UPDATE",
-                "DELETE"
-              ]
-            }
-          }
-        }
-      },
-      "DiscInfo": {
-        "type": "object",
-        "properties": {
-          "discId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "discName": {
-            "type": "string"
-          }
-        }
-      },
-      "DiscDetails": {
-        "type": "object",
-        "properties": {
-          "discId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "discName": {
-            "type": "string"
-          },
-          "drivesOnDisc": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DriveDTO"
-            }
           }
         }
       },
       "DriveDTO": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
+          "pubId": {
+            "type": "string",
+            "format": "uuid"
           },
-          "assignedCapacity": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "usedCapacity": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "discId": {
-            "type": "integer",
-            "format": "int64"
-          }
-        }
-      },
-      "GetAuthoritiesInfoResponse": {
-        "type": "object",
-        "properties": {
-          "permissions": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "roles": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RoleInfo"
-            }
-          }
-        }
-      },
-      "RoleInfo": {
-        "type": "object",
-        "properties": {
-          "roleName": {
+          "path": {
             "type": "string"
           },
-          "aggregatedPermissions": {
+          "assignedSpace": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "freeSpace": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PatchUserRequest": {
+        "type": "object",
+        "properties": {
+          "nickname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "pathToProfilePicture": {
+            "type": "string"
+          }
+        }
+      },
+      "MoveFileRequest": {
+        "type": "object",
+        "properties": {
+          "filePubId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "newPath": {
+            "type": "string"
+          }
+        }
+      },
+      "UserDetailsDTO": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "pathToProfilePicture": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "pubId": {
+            "type": "string"
+          },
+          "roles": {
+            "uniqueItems": true,
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "enum": [
+                "ADMIN",
+                "MODERATOR",
+                "USER",
+                "BOT"
+              ]
             }
+          }
+        }
+      },
+      "UserIdDTO": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "pubId": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          },
+          "pathToProfilePicture": {
+            "type": "string"
+          }
+        }
+      },
+      "FilesystemInfoDTO": {
+        "type": "object",
+        "properties": {
+          "ownerUsername": {
+            "type": "string"
+          },
+          "totalSpace": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "freeSpace": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "FileStructureDTO": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "root": {
+            "$ref": "#/components/schemas/FilesystemObjectDTO"
+          }
+        }
+      },
+      "FilesystemObjectDTO": {
+        "type": "object",
+        "properties": {
+          "pubId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "children": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilesystemObjectDTO"
+            }
+          }
+        }
+      },
+      "DiscDTO": {
+        "type": "object",
+        "properties": {
+          "discName": {
+            "type": "string"
+          },
+          "discSize": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "discSpaceAvailable": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       }
