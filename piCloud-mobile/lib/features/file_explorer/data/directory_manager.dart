@@ -20,7 +20,7 @@ class DirectoryManager {
 
   Future<List<FileItem>?> _getRawList(String path) async {
     // TODO: Use authorized user
-    final result = await _api.filesystemUserUsernameGet(
+    /*final result = await _api.filesystemUserUsernameGet(
       username: 'mighty root',
       fileStructureRoot: path,
     );
@@ -46,11 +46,12 @@ class DirectoryManager {
           ),
         )
       ];
-    } else {
-      return null;
-    }
+    } else {*/
+    return null;
+    //}
   }
 
+/*
   FileExplorerItemType _mapItemType(FileInfoDtoFileType fileType) {
     switch (fileType) {
       case FileInfoDtoFileType.image:
@@ -67,7 +68,7 @@ class DirectoryManager {
         return FileExplorerItemType.file;
     }
   }
-
+*/
   List<FileItem> _sortDirectoryItemsByTypeAndName(List<FileItem> items) {
     return items
       ..sort(

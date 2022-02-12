@@ -1,3 +1,4 @@
+import 'package:app/contracts/client_index.dart';
 import 'package:app/features/user_profile/data/models/user_profile_data.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -7,8 +8,9 @@ part 'user_profile_page_state.dart';
 
 class UserProfilePageBloc
     extends Bloc<UserProfilePageEvent, UserProfilePageState> {
-  UserProfilePageBloc() : super(UserProfilePageInitialState());
+  UserProfilePageBloc(this._api) : super(UserProfilePageInitialState());
 
+  final Api _api;
   late UserProfileData _userData;
 
   @override
@@ -32,18 +34,23 @@ class UserProfilePageBloc
     yield UserProfilePageFetchingDataState();
 
     try {
+      final response =
+          await _api.userUsernamesDetailsGet(usernames: ['mighty root']);
+
+      final responseData = response.body![0];
+
       _userData = UserProfileData(
-        username: await _getUsernameMock(),
-        nickname: _getNickNameMock(),
-        email: _getEmailMock(),
-        typeOfAccount: _getTypeOfAccountMock(),
+        username: responseData.username!,
+        nickname: responseData.nickname!,
+        email: responseData.email!,
+        typeOfAccount: responseData.roles![0].toString(),
       );
 
       yield UserProfilePageFetchingDataFinishedState(
         userData: _userData,
       );
     } catch (exception) {
-      //TODO
+      yield UserProfilePageFetchingDataErrorState();
     }
   }
 
