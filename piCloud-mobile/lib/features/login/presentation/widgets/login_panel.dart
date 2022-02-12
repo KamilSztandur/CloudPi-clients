@@ -26,6 +26,10 @@ class _LoginPanelState extends State<LoginPanel> {
   @override
   void initState() {
     loginIndicator = LoginProgressIndicator();
+    _bloc.add(
+      const CheckIfAlreadyLoggedEvent(),
+    );
+
     super.initState();
   }
 
@@ -43,49 +47,62 @@ class _LoginPanelState extends State<LoginPanel> {
         listener: _blocListener,
         child: BlocBuilder<LoginBloc, LoginState>(
           builder: (context, state) {
-            return AlertDialog(
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              insetPadding: const EdgeInsets.symmetric(vertical: 20),
-              contentPadding: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-                top: 30,
-              ),
-              actionsPadding: const EdgeInsets.only(bottom: 10),
-              content: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 450),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.85,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        UsernameInputField(
-                          defaultValue: _username,
-                          onChanged: (value) => _username = value,
-                          onSubmitted: _onLoginPressed,
-                        ),
-                        const SizedBox(height: 10),
-                        PasswordInputField(
-                          onPasswordChanged: (value) => _password = value,
-                          onSubmitted: _onLoginPressed,
-                        ),
-                        const SizedBox(height: 10),
-                        _getLoginMessageIfAny(state),
-                        const SizedBox(height: 10),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              actions: [LoginButton(onPressed: _onLoginPressed)],
-            );
+            if (state is LoginRequiredState) {
+              return _buildLoginPanel(state);
+            } else if (state is UserIsAlreadyLoggedState) {
+              return Text(
+                'Welcome!',
+                style: Theme.of(context).textTheme.headline4,
+              );
+            } else {
+              return const CircularProgressIndicator(color: Colors.white);
+            }
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildLoginPanel(LoginState state) {
+    return AlertDialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+      ),
+      insetPadding: const EdgeInsets.symmetric(vertical: 20),
+      contentPadding: const EdgeInsets.only(
+        left: 10,
+        right: 10,
+        top: 30,
+      ),
+      actionsPadding: const EdgeInsets.only(bottom: 10),
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 450),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.85,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                UsernameInputField(
+                  defaultValue: _username,
+                  onChanged: (value) => _username = value,
+                  onSubmitted: _onLoginPressed,
+                ),
+                const SizedBox(height: 10),
+                PasswordInputField(
+                  onPasswordChanged: (value) => _password = value,
+                  onSubmitted: _onLoginPressed,
+                ),
+                const SizedBox(height: 10),
+                _getLoginMessageIfAny(state),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        ),
+      ),
+      actions: [LoginButton(onPressed: _onLoginPressed)],
     );
   }
 
@@ -117,6 +134,10 @@ class _LoginPanelState extends State<LoginPanel> {
       });
 
   void _blocListener(BuildContext context, LoginState state) => setState(() {
+        if (state is UserIsAlreadyLoggedState) {
+          AutoRouter.of(context).replaceAll(const [HomeRoute()]);
+        }
+
         if (state is LoginInProgressLoginState) {
           loginIndicator.show(context);
         } else if (state is LoginSuccessLoginState) {

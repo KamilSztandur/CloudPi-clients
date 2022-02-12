@@ -4,10 +4,6 @@ class LoginService {
   const LoginService(this._authManager);
 
   final AuthManager _authManager;
-
-  static const mockUsername = 'admin';
-  static const mockPassword = 'admin1';
-
   Future<bool> logIn(String username, String password) async {
     await _authManager.login(
       username: username,
@@ -15,5 +11,19 @@ class LoginService {
     );
 
     return _authManager.loggedIn.value;
+  }
+
+  Future<bool> isLoggedIn() async {
+    const maxAttemptsAmount = 1000;
+
+    for (var i = 0; i < maxAttemptsAmount; i++) {
+      await Future<void>.delayed(const Duration(milliseconds: 50));
+
+      if (_authManager.loggedIn.hasValue) {
+        return _authManager.loggedIn.value;
+      }
+    }
+
+    return false;
   }
 }
