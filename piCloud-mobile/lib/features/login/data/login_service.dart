@@ -1,15 +1,19 @@
+import 'package:app/common/auth/auth_manager.dart';
+
 class LoginService {
+  const LoginService(this._authManager);
+
+  final AuthManager _authManager;
+
   static const mockUsername = 'admin';
   static const mockPassword = 'admin1';
 
-  //TODO
   Future<bool> logIn(String username, String password) async {
-    await Future<void>.delayed(const Duration(seconds: 2));
+    await _authManager.login(
+      username: username,
+      password: password,
+    );
 
-    if (username == mockUsername && password == mockPassword) {
-      return true;
-    } else {
-      return false;
-    }
+    return _authManager.loggedIn.value;
   }
 }
