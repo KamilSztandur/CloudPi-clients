@@ -38,7 +38,6 @@ class UserProfilePageBloc
 
     try {
       final username = await _authManager.getUsernameOfLoggedUser();
-
       final response =
           await _api.userUsernamesDetailsGet(usernames: [username!]);
 
@@ -69,22 +68,5 @@ class UserProfilePageBloc
     FetchingDataFinishedUserProfilePageEvent event,
   ) async* {
     yield UserProfilePageFetchingDataFinishedState(userData: _userData);
-  }
-
-  Future<String> _getUsernameMock() async {
-    await Future<void>.delayed(const Duration(seconds: 1));
-    return 'Adam44';
-  }
-
-  String _getNickNameMock() {
-    return 'w4r1ac1k';
-  }
-
-  String _getEmailMock() {
-    return 'e-mail@example.ru';
-  }
-
-  String _getTypeOfAccountMock() {
-    return 'typ konta';
   }
 }

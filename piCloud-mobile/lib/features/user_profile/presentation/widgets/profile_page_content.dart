@@ -1,5 +1,4 @@
 import 'package:app/common/auth/auth_manager.dart';
-import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/widgets/app_bar/user_profile_image.dart';
 import 'package:app/features/loading_baner/presentation/loading_panel.dart';
 import 'package:app/features/user_profile/bloc/user_profile_page_bloc.dart';
@@ -42,6 +41,8 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
           builder: (context, state) {
             if (state is UserProfilePageFetchingDataFinishedState) {
               return _getContent(state.userData);
+            } else if (state is UserProfilePageFetchingDataErrorState) {
+              return _getErrorView();
             } else {
               return const LoadingPanel();
             }
@@ -77,6 +78,15 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
         ProfilePageItem(label: 'E-mail', value: data.email),
         ProfilePageItem(label: 'Account Type', value: data.typeOfAccount),
       ],
+    );
+  }
+
+  Center _getErrorView() {
+    return const Center(
+      child: Text(
+        'Error occurred!',
+        style: TextStyle(fontSize: 30),
+      ),
     );
   }
 

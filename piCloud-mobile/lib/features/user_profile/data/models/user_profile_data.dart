@@ -1,7 +1,3 @@
-import 'dart:ffi';
-
-import 'dart:typed_data';
-
 class UserProfileData {
   const UserProfileData({
     required this.username,

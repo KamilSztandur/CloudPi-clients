@@ -1,3 +1,4 @@
+import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:app/features/app/widgets/app_bar/user_profile_image.dart';
@@ -5,6 +6,7 @@ import 'package:app/features/drawer/main_drawer_item.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/src/provider.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({
@@ -19,7 +21,16 @@ class MainDrawer extends StatelessWidget {
         color: Theme.of(context).primaryColor,
         child: Column(
           children: [
-            _getDrawerHeader(),
+            FutureBuilder(
+              future: _getDrawerHeader(context.read<AuthManager>()),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data! as Widget;
+                } else {
+                  return const Text('Loading...');
+                }
+              },
+            ),
             _getDrawerOptions(context),
             const Spacer(flex: 3),
             _getVersionInfoLabel(),
@@ -29,7 +40,7 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
-  Widget _getDrawerHeader() {
+  Future<Widget> _getDrawerHeader(AuthManager authManager) async {
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -40,19 +51,19 @@ class MainDrawer extends StatelessWidget {
         child: DrawerHeader(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              SizedBox(
+            children: [
+              const SizedBox(
                 height: 70,
                 width: 74,
                 child: UserProfileImage(size: 60),
               ),
               Text(
-                'Adam44', //Mock or sth, should get username from user's data
-                style: TextStyle(
+                await authManager.getUsernameOfLoggedUser() ?? ':D', //xD
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,
                 ),
-              )
+              ),
             ],
           ),
         ),
