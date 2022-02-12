@@ -14,6 +14,27 @@ class InitialLoginState extends LoginState {
   List<Object> get props => [];
 }
 
+class CheckingIfUserIsAlreadyLoggedInState extends LoginState {
+  const CheckingIfUserIsAlreadyLoggedInState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class UserIsAlreadyLoggedState extends LoginState {
+  const UserIsAlreadyLoggedState();
+
+  @override
+  List<Object> get props => [];
+}
+
+class LoginRequiredState extends LoginState {
+  const LoginRequiredState();
+
+  @override
+  List<Object> get props => [];
+}
+
 class LoginInProgressLoginState extends LoginState {
   const LoginInProgressLoginState();
 
