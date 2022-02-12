@@ -465,13 +465,76 @@
         }
       }
     },
+    "/filesystem/search": {
+      "post": {
+        "tags": [
+          "Filesystem API"
+        ],
+        "operationId": "searchInUserFiles",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FileQueryDTO"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FileInfoDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/files/image/{imageName}": {
       "post": {
         "tags": [
           "File API"
         ],
-        "summary": "STABILITY: In early development",
-        "description": "<h2>STABILITY: </h2>In early development",
+        "summary": "uploads new image",
+        "description": "Uploads new image to ~/images/ directory",
         "operationId": "uploadNewImage",
         "parameters": [
           {
@@ -550,8 +613,8 @@
         "tags": [
           "File API"
         ],
-        "summary": "STABILITY: Usually very basic hand testing",
-        "description": "<h2>STABILITY: </h2>Usually very basic hand testing",
+        "summary": "uploads new file",
+        "description": "Uploads new file to the filesystem basing on provided path and filetype",
         "operationId": "uploadNewFile",
         "parameters": [
           {
@@ -646,8 +709,7 @@
         "tags": [
           "File API"
         ],
-        "summary": "STABILITY: In early development",
-        "description": "<h2>STABILITY: </h2>In early development",
+        "summary": "deletes files with provided UUIDs in the body",
         "operationId": "deleteFiles",
         "requestBody": {
           "content": {
@@ -940,7 +1002,7 @@
         ],
         "summary": "returns all details of user with provided username",
         "description": "Returns all details of user whose username matches the one specified in the URI path",
-        "operationId": "getUserDetails",
+        "operationId": "getUsersDetails",
         "parameters": [
           {
             "name": "usernames",
@@ -1205,8 +1267,8 @@
         "tags": [
           "File API"
         ],
-        "summary": "STABILITY: In early development",
-        "description": "<h2>STABILITY: </h2>In early development",
+        "summary": "creates image preview with provided resolution",
+        "description": "returns base64 encoded resized images for files with provided UUIDs in the body",
         "operationId": "getImagesPreview",
         "parameters": [
           {
@@ -1288,8 +1350,8 @@
         "tags": [
           "File API"
         ],
-        "summary": "STABILITY: In early development",
-        "description": "<h2>STABILITY: </h2>In early development",
+        "summary": "downloads a file",
+        "description": "Returns a binary of file with provided UUID",
         "operationId": "downloadFile",
         "parameters": [
           {
@@ -1350,8 +1412,7 @@
         "tags": [
           "File API"
         ],
-        "summary": "STABILITY: In early development",
-        "description": "<h2>STABILITY: </h2>In early development",
+        "summary": "deletes a file with provided UUID",
         "operationId": "deleteFile",
         "parameters": [
           {
@@ -1406,8 +1467,6 @@
         "tags": [
           "File API"
         ],
-        "summary": "Not implemented",
-        "description": "<h2><font color=\"#911\">Method not implemented</font> [priority: high]</h2>\n",
         "operationId": "compressAndDownloadDirectory",
         "parameters": [
           {
@@ -1717,6 +1776,50 @@
           }
         }
       },
+      "FileQueryDTO": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "DIRECTORY",
+              "IMAGE",
+              "VIDEO",
+              "TEXT_FILE",
+              "MUSIC",
+              "COMPRESSED",
+              "UNDEFINED"
+            ]
+          },
+          "created": {
+            "$ref": "#/components/schemas/TimePeriod"
+          },
+          "lastModified": {
+            "$ref": "#/components/schemas/TimePeriod"
+          }
+        },
+        "description": "All values are nullable (but if created or lastModified is supplied it has to contain both from and to dates)."
+      },
+      "TimePeriod": {
+        "required": [
+          "from",
+          "to"
+        ],
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "to": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "PostDriveRequest": {
         "required": [
           "path"
@@ -1866,9 +1969,29 @@
           "name": {
             "type": "string"
           },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "modifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
           "version": {
             "type": "integer",
             "format": "int32"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "DIRECTORY",
+              "IMAGE",
+              "VIDEO",
+              "TEXT_FILE",
+              "MUSIC",
+              "COMPRESSED",
+              "UNDEFINED"
+            ]
           },
           "children": {
             "type": "array",

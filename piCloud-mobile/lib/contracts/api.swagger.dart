@@ -72,14 +72,19 @@ abstract class Api extends ChopperService {
       {@Path('username') required String? username,
       @Query('newAssignedSpace') required int? newAssignedSpace});
 
-  ///STABILITY: In early development
+  ///
+  @Post(path: '/filesystem/search')
+  Future<chopper.Response<List<FileInfoDTO>>> filesystemSearchPost(
+      {@Body() required FileQueryDTO? body});
+
+  ///uploads new image
   ///@param imageName
   @Post(path: '/files/image/{imageName}')
   Future<chopper.Response<FileInfoDTO>> filesImageImageNamePost(
       {@Path('imageName') required String? imageName,
       @Body() required FilesImageImageNamePost$RequestBody? body});
 
-  ///STABILITY: Usually very basic hand testing
+  ///uploads new file
   ///@param fileType
   ///@param filepath
   Future<chopper.Response<FileInfoDTO>> filesFilePost(
@@ -92,7 +97,7 @@ abstract class Api extends ChopperService {
         body: body);
   }
 
-  ///STABILITY: Usually very basic hand testing
+  ///uploads new file
   ///@param fileType
   ///@param filepath
   @Post(path: '/files/file')
@@ -101,7 +106,7 @@ abstract class Api extends ChopperService {
       @Query('filepath') required String? filepath,
       @Body() required FilesFilePost$RequestBody? body});
 
-  ///STABILITY: In early development
+  ///deletes files with provided UUIDs in the body
   @Delete(path: '/files/file')
   Future<chopper.Response> filesFileDelete();
 
@@ -154,7 +159,7 @@ abstract class Api extends ChopperService {
       {@Query('structureLevels') int? structureLevels,
       @Query('fileStructureRoot') String? fileStructureRoot});
 
-  ///STABILITY: In early development
+  ///creates image preview with provided resolution
   ///@param previewResolution
   ///@param imageIds
   @Get(path: '/files/image-preview')
@@ -162,19 +167,19 @@ abstract class Api extends ChopperService {
       {@Query('previewResolution') int? previewResolution,
       @Query('imageIds') required List<String>? imageIds});
 
-  ///STABILITY: In early development
+  ///downloads a file
   ///@param fileId
   @Get(path: '/files/file/{fileId}')
   Future<chopper.Response<String>> filesFileFileIdGet(
       {@Path('fileId') required String? fileId});
 
-  ///STABILITY: In early development
+  ///deletes a file with provided UUID
   ///@param fileId
   @Delete(path: '/files/file/{fileId}')
   Future<chopper.Response> filesFileFileIdDelete(
       {@Path('fileId') required String? fileId});
 
-  ///Not implemented
+  ///
   ///@param directoryId
   @Get(path: '/files/directory/{directoryId}')
   Future<chopper.Response<String>> filesDirectoryDirectoryIdGet(
@@ -201,6 +206,8 @@ final Map<Type, Object Function(Map<String, dynamic>)> ApiJsonDecoderMappings =
   FileInfoDTO: FileInfoDTO.fromJsonFactory,
   PostUserRequest: PostUserRequest.fromJsonFactory,
   LoginRequest: LoginRequest.fromJsonFactory,
+  FileQueryDTO: FileQueryDTO.fromJsonFactory,
+  TimePeriod: TimePeriod.fromJsonFactory,
   PostDriveRequest: PostDriveRequest.fromJsonFactory,
   DriveDTO: DriveDTO.fromJsonFactory,
   PatchUserRequest: PatchUserRequest.fromJsonFactory,
@@ -459,6 +466,113 @@ extension $LoginRequestExtension on LoginRequest {
     return LoginRequest(
         username: username ?? this.username,
         password: password ?? this.password);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class FileQueryDTO {
+  FileQueryDTO({
+    this.name,
+    this.type,
+    this.created,
+    this.lastModified,
+  });
+
+  factory FileQueryDTO.fromJson(Map<String, dynamic> json) =>
+      _$FileQueryDTOFromJson(json);
+
+  @JsonKey(name: 'name')
+  final String? name;
+  @JsonKey(
+      name: 'type',
+      toJson: fileQueryDTOTypeToJson,
+      fromJson: fileQueryDTOTypeFromJson)
+  final enums.FileQueryDTOType? type;
+  @JsonKey(name: 'created')
+  final TimePeriod? created;
+  @JsonKey(name: 'lastModified')
+  final TimePeriod? lastModified;
+  static const fromJsonFactory = _$FileQueryDTOFromJson;
+  static const toJsonFactory = _$FileQueryDTOToJson;
+  Map<String, dynamic> toJson() => _$FileQueryDTOToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is FileQueryDTO &&
+            (identical(other.name, name) ||
+                const DeepCollectionEquality().equals(other.name, name)) &&
+            (identical(other.type, type) ||
+                const DeepCollectionEquality().equals(other.type, type)) &&
+            (identical(other.created, created) ||
+                const DeepCollectionEquality()
+                    .equals(other.created, created)) &&
+            (identical(other.lastModified, lastModified) ||
+                const DeepCollectionEquality()
+                    .equals(other.lastModified, lastModified)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(name) ^
+      const DeepCollectionEquality().hash(type) ^
+      const DeepCollectionEquality().hash(created) ^
+      const DeepCollectionEquality().hash(lastModified) ^
+      runtimeType.hashCode;
+}
+
+extension $FileQueryDTOExtension on FileQueryDTO {
+  FileQueryDTO copyWith(
+      {String? name,
+      enums.FileQueryDTOType? type,
+      TimePeriod? created,
+      TimePeriod? lastModified}) {
+    return FileQueryDTO(
+        name: name ?? this.name,
+        type: type ?? this.type,
+        created: created ?? this.created,
+        lastModified: lastModified ?? this.lastModified);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class TimePeriod {
+  TimePeriod({
+    this.from,
+    this.to,
+  });
+
+  factory TimePeriod.fromJson(Map<String, dynamic> json) =>
+      _$TimePeriodFromJson(json);
+
+  @JsonKey(name: 'from')
+  final DateTime? from;
+  @JsonKey(name: 'to')
+  final DateTime? to;
+  static const fromJsonFactory = _$TimePeriodFromJson;
+  static const toJsonFactory = _$TimePeriodToJson;
+  Map<String, dynamic> toJson() => _$TimePeriodToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is TimePeriod &&
+            (identical(other.from, from) ||
+                const DeepCollectionEquality().equals(other.from, from)) &&
+            (identical(other.to, to) ||
+                const DeepCollectionEquality().equals(other.to, to)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(from) ^
+      const DeepCollectionEquality().hash(to) ^
+      runtimeType.hashCode;
+}
+
+extension $TimePeriodExtension on TimePeriod {
+  TimePeriod copyWith({DateTime? from, DateTime? to}) {
+    return TimePeriod(from: from ?? this.from, to: to ?? this.to);
   }
 }
 
@@ -909,7 +1023,10 @@ class FilesystemObjectDTO {
   FilesystemObjectDTO({
     this.pubId,
     this.name,
+    this.size,
+    this.modifiedAt,
     this.version,
+    this.type,
     this.children,
   });
 
@@ -920,8 +1037,17 @@ class FilesystemObjectDTO {
   final String? pubId;
   @JsonKey(name: 'name')
   final String? name;
+  @JsonKey(name: 'size')
+  final int? size;
+  @JsonKey(name: 'modifiedAt')
+  final DateTime? modifiedAt;
   @JsonKey(name: 'version')
   final int? version;
+  @JsonKey(
+      name: 'type',
+      toJson: filesystemObjectDTOTypeToJson,
+      fromJson: filesystemObjectDTOTypeFromJson)
+  final enums.FilesystemObjectDTOType? type;
   @JsonKey(name: 'children', defaultValue: <FilesystemObjectDTO>[])
   final List<FilesystemObjectDTO>? children;
   static const fromJsonFactory = _$FilesystemObjectDTOFromJson;
@@ -936,9 +1062,16 @@ class FilesystemObjectDTO {
                 const DeepCollectionEquality().equals(other.pubId, pubId)) &&
             (identical(other.name, name) ||
                 const DeepCollectionEquality().equals(other.name, name)) &&
+            (identical(other.size, size) ||
+                const DeepCollectionEquality().equals(other.size, size)) &&
+            (identical(other.modifiedAt, modifiedAt) ||
+                const DeepCollectionEquality()
+                    .equals(other.modifiedAt, modifiedAt)) &&
             (identical(other.version, version) ||
                 const DeepCollectionEquality()
                     .equals(other.version, version)) &&
+            (identical(other.type, type) ||
+                const DeepCollectionEquality().equals(other.type, type)) &&
             (identical(other.children, children) ||
                 const DeepCollectionEquality()
                     .equals(other.children, children)));
@@ -948,7 +1081,10 @@ class FilesystemObjectDTO {
   int get hashCode =>
       const DeepCollectionEquality().hash(pubId) ^
       const DeepCollectionEquality().hash(name) ^
+      const DeepCollectionEquality().hash(size) ^
+      const DeepCollectionEquality().hash(modifiedAt) ^
       const DeepCollectionEquality().hash(version) ^
+      const DeepCollectionEquality().hash(type) ^
       const DeepCollectionEquality().hash(children) ^
       runtimeType.hashCode;
 }
@@ -957,12 +1093,18 @@ extension $FilesystemObjectDTOExtension on FilesystemObjectDTO {
   FilesystemObjectDTO copyWith(
       {String? pubId,
       String? name,
+      int? size,
+      DateTime? modifiedAt,
       int? version,
+      enums.FilesystemObjectDTOType? type,
       List<FilesystemObjectDTO>? children}) {
     return FilesystemObjectDTO(
         pubId: pubId ?? this.pubId,
         name: name ?? this.name,
+        size: size ?? this.size,
+        modifiedAt: modifiedAt ?? this.modifiedAt,
         version: version ?? this.version,
+        type: type ?? this.type,
         children: children ?? this.children);
   }
 }
@@ -1100,6 +1242,44 @@ List<enums.FileInfoDTOType> fileInfoDTOTypeListFromJson(List? fileInfoDTOType) {
       .toList();
 }
 
+String? fileQueryDTOTypeToJson(enums.FileQueryDTOType? fileQueryDTOType) {
+  return enums.$FileQueryDTOTypeMap[fileQueryDTOType];
+}
+
+enums.FileQueryDTOType fileQueryDTOTypeFromJson(String? fileQueryDTOType) {
+  if (fileQueryDTOType == null) {
+    return enums.FileQueryDTOType.swaggerGeneratedUnknown;
+  }
+
+  return enums.$FileQueryDTOTypeMap.entries
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() == fileQueryDTOType.toLowerCase(),
+          orElse: () => const MapEntry(
+              enums.FileQueryDTOType.swaggerGeneratedUnknown, ''))
+      .key;
+}
+
+List<String> fileQueryDTOTypeListToJson(
+    List<enums.FileQueryDTOType>? fileQueryDTOType) {
+  if (fileQueryDTOType == null) {
+    return [];
+  }
+
+  return fileQueryDTOType.map((e) => enums.$FileQueryDTOTypeMap[e]!).toList();
+}
+
+List<enums.FileQueryDTOType> fileQueryDTOTypeListFromJson(
+    List? fileQueryDTOType) {
+  if (fileQueryDTOType == null) {
+    return [];
+  }
+
+  return fileQueryDTOType
+      .map((e) => fileQueryDTOTypeFromJson(e.toString()))
+      .toList();
+}
+
 String? userDetailsDTORolesToJson(
     enums.UserDetailsDTORoles? userDetailsDTORoles) {
   return enums.$UserDetailsDTORolesMap[userDetailsDTORoles];
@@ -1139,6 +1319,49 @@ List<enums.UserDetailsDTORoles> userDetailsDTORolesListFromJson(
 
   return userDetailsDTORoles
       .map((e) => userDetailsDTORolesFromJson(e.toString()))
+      .toList();
+}
+
+String? filesystemObjectDTOTypeToJson(
+    enums.FilesystemObjectDTOType? filesystemObjectDTOType) {
+  return enums.$FilesystemObjectDTOTypeMap[filesystemObjectDTOType];
+}
+
+enums.FilesystemObjectDTOType filesystemObjectDTOTypeFromJson(
+    String? filesystemObjectDTOType) {
+  if (filesystemObjectDTOType == null) {
+    return enums.FilesystemObjectDTOType.swaggerGeneratedUnknown;
+  }
+
+  return enums.$FilesystemObjectDTOTypeMap.entries
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() ==
+              filesystemObjectDTOType.toLowerCase(),
+          orElse: () => const MapEntry(
+              enums.FilesystemObjectDTOType.swaggerGeneratedUnknown, ''))
+      .key;
+}
+
+List<String> filesystemObjectDTOTypeListToJson(
+    List<enums.FilesystemObjectDTOType>? filesystemObjectDTOType) {
+  if (filesystemObjectDTOType == null) {
+    return [];
+  }
+
+  return filesystemObjectDTOType
+      .map((e) => enums.$FilesystemObjectDTOTypeMap[e]!)
+      .toList();
+}
+
+List<enums.FilesystemObjectDTOType> filesystemObjectDTOTypeListFromJson(
+    List? filesystemObjectDTOType) {
+  if (filesystemObjectDTOType == null) {
+    return [];
+  }
+
+  return filesystemObjectDTOType
+      .map((e) => filesystemObjectDTOTypeFromJson(e.toString()))
       .toList();
 }
 

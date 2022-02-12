@@ -26,6 +26,7 @@ class _LoginPanelState extends State<LoginPanel> {
   @override
   void initState() {
     loginIndicator = LoginProgressIndicator();
+
     super.initState();
   }
 
@@ -43,49 +44,53 @@ class _LoginPanelState extends State<LoginPanel> {
         listener: _blocListener,
         child: BlocBuilder<LoginBloc, LoginState>(
           builder: (context, state) {
-            return AlertDialog(
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-              ),
-              insetPadding: const EdgeInsets.symmetric(vertical: 20),
-              contentPadding: const EdgeInsets.only(
-                left: 10,
-                right: 10,
-                top: 30,
-              ),
-              actionsPadding: const EdgeInsets.only(bottom: 10),
-              content: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 450),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.85,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        UsernameInputField(
-                          defaultValue: _username,
-                          onChanged: (value) => _username = value,
-                          onSubmitted: _onLoginPressed,
-                        ),
-                        const SizedBox(height: 10),
-                        PasswordInputField(
-                          onPasswordChanged: (value) => _password = value,
-                          onSubmitted: _onLoginPressed,
-                        ),
-                        const SizedBox(height: 10),
-                        _getLoginMessageIfAny(state),
-                        const SizedBox(height: 10),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              actions: [LoginButton(onPressed: _onLoginPressed)],
-            );
+            return _buildLoginPanel(state);
           },
         ),
       ),
+    );
+  }
+
+  Widget _buildLoginPanel(LoginState state) {
+    return AlertDialog(
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(20),
+        ),
+      ),
+      insetPadding: const EdgeInsets.symmetric(vertical: 20),
+      contentPadding: const EdgeInsets.only(
+        left: 10,
+        right: 10,
+        top: 30,
+      ),
+      actionsPadding: const EdgeInsets.only(bottom: 10),
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 450),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.85,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                UsernameInputField(
+                  defaultValue: _username,
+                  onChanged: (value) => _username = value,
+                  onSubmitted: _onLoginPressed,
+                ),
+                const SizedBox(height: 10),
+                PasswordInputField(
+                  onPasswordChanged: (value) => _password = value,
+                  onSubmitted: _onLoginPressed,
+                ),
+                const SizedBox(height: 10),
+                _getLoginMessageIfAny(state),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        ),
+      ),
+      actions: [LoginButton(onPressed: _onLoginPressed)],
     );
   }
 

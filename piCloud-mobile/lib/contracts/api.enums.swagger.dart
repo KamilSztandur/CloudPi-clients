@@ -30,6 +30,36 @@ const $FileInfoDTOTypeMap = {
   FileInfoDTOType.swaggerGeneratedUnknown: ''
 };
 
+enum FileQueryDTOType {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('DIRECTORY')
+  directory,
+  @JsonValue('IMAGE')
+  image,
+  @JsonValue('VIDEO')
+  video,
+  @JsonValue('TEXT_FILE')
+  textFile,
+  @JsonValue('MUSIC')
+  music,
+  @JsonValue('COMPRESSED')
+  compressed,
+  @JsonValue('UNDEFINED')
+  undefined
+}
+
+const $FileQueryDTOTypeMap = {
+  FileQueryDTOType.directory: 'DIRECTORY',
+  FileQueryDTOType.image: 'IMAGE',
+  FileQueryDTOType.video: 'VIDEO',
+  FileQueryDTOType.textFile: 'TEXT_FILE',
+  FileQueryDTOType.music: 'MUSIC',
+  FileQueryDTOType.compressed: 'COMPRESSED',
+  FileQueryDTOType.undefined: 'UNDEFINED',
+  FileQueryDTOType.swaggerGeneratedUnknown: ''
+};
+
 enum UserDetailsDTORoles {
   @JsonValue('swaggerGeneratedUnknown')
   swaggerGeneratedUnknown,
@@ -49,6 +79,36 @@ const $UserDetailsDTORolesMap = {
   UserDetailsDTORoles.user: 'USER',
   UserDetailsDTORoles.bot: 'BOT',
   UserDetailsDTORoles.swaggerGeneratedUnknown: ''
+};
+
+enum FilesystemObjectDTOType {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('DIRECTORY')
+  directory,
+  @JsonValue('IMAGE')
+  image,
+  @JsonValue('VIDEO')
+  video,
+  @JsonValue('TEXT_FILE')
+  textFile,
+  @JsonValue('MUSIC')
+  music,
+  @JsonValue('COMPRESSED')
+  compressed,
+  @JsonValue('UNDEFINED')
+  undefined
+}
+
+const $FilesystemObjectDTOTypeMap = {
+  FilesystemObjectDTOType.directory: 'DIRECTORY',
+  FilesystemObjectDTOType.image: 'IMAGE',
+  FilesystemObjectDTOType.video: 'VIDEO',
+  FilesystemObjectDTOType.textFile: 'TEXT_FILE',
+  FilesystemObjectDTOType.music: 'MUSIC',
+  FilesystemObjectDTOType.compressed: 'COMPRESSED',
+  FilesystemObjectDTOType.undefined: 'UNDEFINED',
+  FilesystemObjectDTOType.swaggerGeneratedUnknown: ''
 };
 
 enum FilesFilePostFileType {

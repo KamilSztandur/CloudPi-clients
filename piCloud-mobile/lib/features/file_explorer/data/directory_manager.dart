@@ -1,4 +1,7 @@
+import 'dart:convert';
+import 'package:app/contracts/api.enums.swagger.dart';
 import 'package:app/contracts/client_index.dart';
+import 'package:app/features/file_explorer/data/items_display.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/models/file_item.dart';
 
@@ -18,23 +21,21 @@ class DirectoryManager {
   }
 
   Future<List<FileItem>?> _getRawList(String path) async {
-    final result = await _api.filesystemFileStructureGet();
+    final result = await _api.filesystemFileStructureGet(
+      structureLevels: 1,
+    );
 
-    if (result.isSuccessful) {
-      return [
-        ...(result.body?.root?.children ?? []).map(
-          (dto) => FileItem(
-            title: dto.name!,
-            lastModifiedOn: DateTime.now(), // TODO
-            type: FileExplorerItemType.file, // TODO
-            size: 0, // TODO
-            thumbnailURL: null, // TODO: Handle thumbnails
-          ),
+    return [
+      ...(result.body?.root?.children ?? []).map(
+        (dto) => FileItem(
+          title: dto.name!,
+          lastModifiedOn: DateTime.parse(dto.modifiedAt!.toString()), // TODO
+          type: _mapBodyTextToType(dto.type), // TODO
+          size: dto.size!.toDouble(), // TODO
+          thumbnailURL: null,
         ),
-      ];
-    } else {
-      return null;
-    }
+      ),
+    ]; // TODO: Handle thumbnails
   }
 
   List<FileItem> _sortDirectoryItemsByTypeAndName(List<FileItem> items) {
@@ -49,5 +50,24 @@ class DirectoryManager {
           }
         },
       );
+  }
+
+  FileExplorerItemType _mapBodyTextToType(FilesystemObjectDTOType? type) {
+    switch (type) {
+      case FilesystemObjectDTOType.directory:
+        return FileExplorerItemType.directory;
+      case FilesystemObjectDTOType.image:
+        return FileExplorerItemType.image;
+      case FilesystemObjectDTOType.video:
+        return FileExplorerItemType.directory;
+      case FilesystemObjectDTOType.textFile:
+        return FileExplorerItemType.text;
+      case FilesystemObjectDTOType.music:
+        return FileExplorerItemType.music;
+      case FilesystemObjectDTOType.compressed:
+        return FileExplorerItemType.file;
+      default:
+        return FileExplorerItemType.file;
+    }
   }
 }

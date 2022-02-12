@@ -70,6 +70,37 @@ Map<String, dynamic> _$LoginRequestToJson(LoginRequest instance) =>
       'password': instance.password,
     };
 
+FileQueryDTO _$FileQueryDTOFromJson(Map<String, dynamic> json) => FileQueryDTO(
+      name: json['name'] as String?,
+      type: fileQueryDTOTypeFromJson(json['type'] as String?),
+      created: json['created'] == null
+          ? null
+          : TimePeriod.fromJson(json['created'] as Map<String, dynamic>),
+      lastModified: json['lastModified'] == null
+          ? null
+          : TimePeriod.fromJson(json['lastModified'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$FileQueryDTOToJson(FileQueryDTO instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'type': fileQueryDTOTypeToJson(instance.type),
+      'created': instance.created?.toJson(),
+      'lastModified': instance.lastModified?.toJson(),
+    };
+
+TimePeriod _$TimePeriodFromJson(Map<String, dynamic> json) => TimePeriod(
+      from:
+          json['from'] == null ? null : DateTime.parse(json['from'] as String),
+      to: json['to'] == null ? null : DateTime.parse(json['to'] as String),
+    );
+
+Map<String, dynamic> _$TimePeriodToJson(TimePeriod instance) =>
+    <String, dynamic>{
+      'from': instance.from?.toIso8601String(),
+      'to': instance.to?.toIso8601String(),
+    };
+
 PostDriveRequest _$PostDriveRequestFromJson(Map<String, dynamic> json) =>
     PostDriveRequest(
       path: json['path'] as String?,
@@ -188,7 +219,12 @@ FilesystemObjectDTO _$FilesystemObjectDTOFromJson(Map<String, dynamic> json) =>
     FilesystemObjectDTO(
       pubId: json['pubId'] as String?,
       name: json['name'] as String?,
+      size: json['size'] as int?,
+      modifiedAt: json['modifiedAt'] == null
+          ? null
+          : DateTime.parse(json['modifiedAt'] as String),
       version: json['version'] as int?,
+      type: filesystemObjectDTOTypeFromJson(json['type'] as String?),
       children: (json['children'] as List<dynamic>?)
               ?.map((e) =>
                   FilesystemObjectDTO.fromJson(e as Map<String, dynamic>))
@@ -201,7 +237,10 @@ Map<String, dynamic> _$FilesystemObjectDTOToJson(
     <String, dynamic>{
       'pubId': instance.pubId,
       'name': instance.name,
+      'size': instance.size,
+      'modifiedAt': instance.modifiedAt?.toIso8601String(),
       'version': instance.version,
+      'type': filesystemObjectDTOTypeToJson(instance.type),
       'children': instance.children?.map((e) => e.toJson()).toList(),
     };
 
