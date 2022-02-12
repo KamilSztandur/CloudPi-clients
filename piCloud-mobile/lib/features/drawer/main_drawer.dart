@@ -1,3 +1,4 @@
+import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:app/features/app/widgets/app_bar/user_profile_image.dart';
@@ -5,6 +6,7 @@ import 'package:app/features/drawer/main_drawer_item.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/src/provider.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({
@@ -126,6 +128,7 @@ class MainDrawer extends StatelessWidget {
       );
 
   void _onLogoutTapped(BuildContext context) {
-    //TODO
+    context.read<AuthManager>().logout();
+    AutoRouter.of(context).replaceAll([const LoginRoute()]);
   }
 }
