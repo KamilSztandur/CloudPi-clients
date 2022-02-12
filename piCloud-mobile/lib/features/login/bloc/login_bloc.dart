@@ -6,9 +6,9 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(const InitialLoginState());
+  LoginBloc(this._service) : super(const InitialLoginState());
 
-  final LoginService service = LoginService();
+  final LoginService _service;
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
@@ -23,7 +23,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final password = event.password;
 
     try {
-      final isAuthorized = await service.logIn(username, password);
+      final isAuthorized = await _service.logIn(username, password);
 
       if (isAuthorized) {
         yield const LoginSuccessLoginState();
