@@ -73,22 +73,10 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
       case MediaReaderSupportedTypes.image:
         return ImagePreview(resourceBytes: resourceBytes);
 
-      case MediaReaderSupportedTypes.audio:
-        return ErrorWidget('Not supported yet');
-
-      case MediaReaderSupportedTypes.video:
-        return ErrorWidget('Not supported yet');
-
       case MediaReaderSupportedTypes.txt:
         return TextPreview(resourceBytes: resourceBytes);
 
-      case MediaReaderSupportedTypes.pdf:
-        return NoPreviewAvailable(
-          path: widget.path,
-          resourceName: widget.resourceName,
-        );
-
-      case MediaReaderSupportedTypes.file:
+      default:
         return NoPreviewAvailable(
           path: widget.path,
           resourceName: widget.resourceName,
