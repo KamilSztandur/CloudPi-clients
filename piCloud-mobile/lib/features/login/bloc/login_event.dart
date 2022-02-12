@@ -19,3 +19,10 @@ class LoginRequestedEvent extends LoginEvent {
   @override
   List<Object> get props => [username, password];
 }
+
+class CheckIfAlreadyLoggedEvent extends LoginEvent {
+  const CheckIfAlreadyLoggedEvent();
+
+  @override
+  List<Object> get props => [];
+}

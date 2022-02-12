@@ -26,6 +26,9 @@ class _LoginPanelState extends State<LoginPanel> {
   @override
   void initState() {
     loginIndicator = LoginProgressIndicator();
+    _bloc.add(
+      const CheckIfAlreadyLoggedEvent(),
+    );
 
     super.initState();
   }
@@ -44,7 +47,16 @@ class _LoginPanelState extends State<LoginPanel> {
         listener: _blocListener,
         child: BlocBuilder<LoginBloc, LoginState>(
           builder: (context, state) {
-            return _buildLoginPanel(state);
+            if (state is LoginRequiredState) {
+              return _buildLoginPanel(state);
+            } else if (state is UserIsAlreadyLoggedState) {
+              return Text(
+                'Welcome!',
+                style: Theme.of(context).textTheme.headline4,
+              );
+            } else {
+              return const CircularProgressIndicator(color: Colors.white);
+            }
           },
         ),
       ),
@@ -122,6 +134,10 @@ class _LoginPanelState extends State<LoginPanel> {
       });
 
   void _blocListener(BuildContext context, LoginState state) => setState(() {
+        if (state is UserIsAlreadyLoggedState) {
+          AutoRouter.of(context).replaceAll(const [HomeRoute()]);
+        }
+
         if (state is LoginInProgressLoginState) {
           loginIndicator.show(context);
         } else if (state is LoginSuccessLoginState) {

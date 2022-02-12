@@ -12,8 +12,28 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   @override
   Stream<LoginState> mapEventToState(LoginEvent event) async* {
-    if (event is LoginRequestedEvent) {
+    if (event is CheckIfAlreadyLoggedEvent) {
+      yield* _verifyIfUserIsLoggedIn(event);
+    } else if (event is LoginRequestedEvent) {
       yield* _logUserIn(event);
+    }
+  }
+
+  Stream<LoginState> _verifyIfUserIsLoggedIn(
+    CheckIfAlreadyLoggedEvent event,
+  ) async* {
+    yield const CheckingIfUserIsAlreadyLoggedInState();
+
+    try {
+      final isLoggedIn = await _service.isLoggedIn();
+
+      if (isLoggedIn) {
+        yield const UserIsAlreadyLoggedState();
+      } else {
+        yield const LoginRequiredState();
+      }
+    } catch (exception) {
+      yield const LoginRequiredState();
     }
   }
 
