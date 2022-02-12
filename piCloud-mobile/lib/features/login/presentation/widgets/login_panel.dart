@@ -1,5 +1,6 @@
 import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:app/features/login/bloc/login_bloc.dart';
+import 'package:app/features/login/data/login_service.dart';
 import 'package:app/features/login/presentation/widgets/login_button.dart';
 import 'package:app/features/login/presentation/widgets/password_input_field.dart';
 import 'package:app/features/login/presentation/widgets/username_input_field.dart';
@@ -19,12 +20,11 @@ class LoginPanel extends StatefulWidget {
 
 class _LoginPanelState extends State<LoginPanel> {
   late LoginProgressIndicator loginIndicator;
-  late LoginBloc _bloc;
+  late final _bloc = LoginBloc(LoginService(context.read()));
   String? _username, _password;
 
   @override
   void initState() {
-    _bloc = LoginBloc();
     loginIndicator = LoginProgressIndicator();
     super.initState();
   }
