@@ -1,3 +1,4 @@
+import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/user_profile/data/models/user_profile_data.dart';
 import 'package:bloc/bloc.dart';
@@ -8,9 +9,11 @@ part 'user_profile_page_state.dart';
 
 class UserProfilePageBloc
     extends Bloc<UserProfilePageEvent, UserProfilePageState> {
-  UserProfilePageBloc(this._api) : super(UserProfilePageInitialState());
+  UserProfilePageBloc(this._api, this._authManager)
+      : super(UserProfilePageInitialState());
 
   final Api _api;
+  final AuthManager _authManager;
   late UserProfileData _userData;
 
   @override
@@ -34,8 +37,10 @@ class UserProfilePageBloc
     yield UserProfilePageFetchingDataState();
 
     try {
+      final username = await _authManager.getUsernameOfLoggedUser();
+
       final response =
-          await _api.userUsernamesDetailsGet(usernames: ['mighty root']);
+          await _api.userUsernamesDetailsGet(usernames: [username!]);
 
       final responseData = response.body![0];
 

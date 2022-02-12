@@ -1,3 +1,4 @@
+import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/widgets/app_bar/user_profile_image.dart';
 import 'package:app/features/loading_baner/presentation/loading_panel.dart';
@@ -20,7 +21,7 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
 
   @override
   void initState() {
-    _bloc = UserProfilePageBloc(context.read());
+    _bloc = UserProfilePageBloc(context.read(), context.read<AuthManager>());
     _bloc.add(FetchDataUserProfilePageEvent());
     super.initState();
   }

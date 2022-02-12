@@ -32,9 +32,9 @@ class DirectoryManager {
           ),
         ),
       ];
-    } else {*/
-    return null;
-    //}
+    } else {
+      return null;
+    }
   }
 
   List<FileItem> _sortDirectoryItemsByTypeAndName(List<FileItem> items) {

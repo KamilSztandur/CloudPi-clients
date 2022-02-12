@@ -117,4 +117,15 @@ class AuthManager {
     await _storage.delete(key: accessTokenKey);
     await _storage.delete(key: refreshTokenKey);
   }
+
+  Future<String?> getUsernameOfLoggedUser() async {
+    final encodedToken = await _storage.read(key: accessTokenKey);
+
+    if (encodedToken == null) {
+      return null;
+    }
+
+    final token = JwtDecoder.decode(encodedToken);
+    return token['sub'] as String;
+  }
 }
