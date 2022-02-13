@@ -1,7 +1,5 @@
-import 'dart:convert';
 import 'package:app/contracts/api.enums.swagger.dart';
 import 'package:app/contracts/client_index.dart';
-import 'package:app/features/file_explorer/data/items_display.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/models/file_item.dart';
 
@@ -23,19 +21,25 @@ class DirectoryManager {
   Future<List<FileItem>?> _getRawList(String path) async {
     final result = await _api.filesystemFileStructureGet(
       structureLevels: 1,
+      fileStructureRoot: path,
     );
 
     return [
-      ...(result.body?.root?.children ?? []).map(
-        (dto) => FileItem(
-          title: dto.name!,
-          lastModifiedOn: DateTime.parse(dto.modifiedAt!.toString()), // TODO
-          type: _mapBodyTextToType(dto.type), // TODO
-          size: dto.size!.toDouble(), // TODO
-          thumbnailURL: null,
-        ),
-      ),
-    ]; // TODO: Handle thumbnails
+      ...(result.body?.root?.children ?? []).map((dto) {
+        final title = dto.name!;
+        final lastModifiedOn = DateTime.parse(dto.modifiedAt!.toString());
+        final type = _mapBodyTextToType(dto.type);
+        final size = dto.size!.toDouble();
+
+        return FileItem(
+          title: title,
+          lastModifiedOn: lastModifiedOn,
+          type: type,
+          size: size,
+          thumbnailURL: null, //TODO: Handle thumbnails
+        );
+      }),
+    ];
   }
 
   List<FileItem> _sortDirectoryItemsByTypeAndName(List<FileItem> items) {
