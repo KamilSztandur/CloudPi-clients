@@ -40,12 +40,14 @@ class DirectoryManager {
 
     return [
       ...(result.body?.root?.children ?? []).map((dto) {
+        final id = dto.pubId;
         final title = dto.name!;
         final lastModifiedOn = DateTime.parse(dto.modifiedAt!.toString());
         final type = _mapBodyTextToType(dto.type);
         final size = dto.size!.toDouble();
 
         return FileItem(
+          id: id,
           title: title,
           lastModifiedOn: lastModifiedOn,
           type: type,

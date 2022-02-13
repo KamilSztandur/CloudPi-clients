@@ -7,8 +7,10 @@ class FileItem {
     required this.type,
     required this.size,
     required this.thumbnailURL,
+    required this.id,
   });
 
+  final String? id;
   final String title;
   final double size;
   final FileExplorerItemType type;
