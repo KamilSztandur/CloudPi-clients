@@ -1,12 +1,17 @@
+import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/contracts/api.enums.swagger.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/models/file_item.dart';
 
 class DirectoryManager {
-  const DirectoryManager(this._api);
+  const DirectoryManager(
+    this._api,
+    this._authManager,
+  );
 
   final Api _api;
+  final AuthManager _authManager;
 
   Future<List<FileItem>?> getCurrentDirectoryItems(String path) async {
     final items = await _getRawList(path);
@@ -16,6 +21,15 @@ class DirectoryManager {
     } else {
       return null;
     }
+  }
+
+  Future<bool> createNewDirectory(String path, String name) async {
+    final username = await _authManager.getUsernameOfLoggedUser();
+    final result = await _api.filesystemDirectoryPut(
+      directoryPath: '$username$path$name',
+    );
+
+    return result.isSuccessful;
   }
 
   Future<List<FileItem>?> _getRawList(String path) async {

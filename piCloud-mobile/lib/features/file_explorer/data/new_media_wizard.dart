@@ -32,7 +32,8 @@ class NewMediaWizard {
   //WARNING: MOCK -> TODO
   bool isDirectoryNameTaken(String name) => false;
 
-  bool isNameLegal(String name) => RegExp(r'^[a-zA-Z0-9\(\)]+$').hasMatch(name);
+  bool isNameLegal(String name) =>
+      RegExp(r'^[a-zA-Z0-9\(\) ]+$').hasMatch(name);
 
   Future<File?> takePhoto() async {
     final _picker = ImagePicker();

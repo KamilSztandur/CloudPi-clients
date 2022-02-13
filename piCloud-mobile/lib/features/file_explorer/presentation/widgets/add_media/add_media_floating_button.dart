@@ -1,20 +1,36 @@
 import 'dart:io';
 
+import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/create_directory_button.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/pick_file_button.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/photo_taken_status.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/take_photo_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:provider/src/provider.dart';
 
 class AddMediaButton extends StatefulWidget {
-  const AddMediaButton({Key? key}) : super(key: key);
+  const AddMediaButton({
+    Key? key,
+    required this.currentPath,
+  }) : super(key: key);
+
+  final String currentPath;
 
   @override
   _AddMediaButtonState createState() => _AddMediaButtonState();
 }
 
 class _AddMediaButtonState extends State<AddMediaButton> {
+  late DirectoryManager directoryManager;
+
+  @override
+  void initState() {
+    directoryManager = context.read<DirectoryManager>();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SpeedDial(
@@ -38,13 +54,18 @@ class _AddMediaButtonState extends State<AddMediaButton> {
     );
   }
 
-  void _createDirectory(String directoryName) {
-    //TODO
+  Future<void> _createDirectory(String directoryName) async {
+    final result = await directoryManager.createNewDirectory(
+      widget.currentPath,
+      directoryName,
+    );
 
     ScaffoldMessenger.of(context).showSnackBar(
       _NotificationSnackbar(
         context: context,
-        message: 'Directory $directoryName created.',
+        message: result == true
+            ? 'Directory $directoryName created.'
+            : 'Failed to create new directory $directoryName.',
       ),
     );
   }

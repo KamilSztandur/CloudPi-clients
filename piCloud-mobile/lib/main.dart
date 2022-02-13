@@ -27,7 +27,12 @@ Future<void> main() async {
           ),
         ),
         Provider(create: (context) => Api.create(context.read())),
-        Provider(create: (context) => DirectoryManager(context.read())),
+        Provider(
+          create: (context) => DirectoryManager(
+            context.read<Api>(),
+            context.read<AuthManager>(),
+          ),
+        ),
       ],
       child: const PICloudApp(),
     ),
