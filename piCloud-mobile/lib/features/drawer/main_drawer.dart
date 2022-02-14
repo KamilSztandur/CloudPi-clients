@@ -136,6 +136,7 @@ class MainDrawer extends StatelessWidget {
       );
 
   void _onLogoutTapped(BuildContext context) {
-    //TODO
+    context.read<AuthManager>().logout();
+    AutoRouter.of(context).replaceAll([const LoginRoute()]);
   }
 }
