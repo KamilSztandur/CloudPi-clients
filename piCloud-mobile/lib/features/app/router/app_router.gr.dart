@@ -1,14 +1,8 @@
-// **************************************************************************
-// AutoRouteGenerator
-// **************************************************************************
-
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
 // AutoRouteGenerator
 // **************************************************************************
-//
-// ignore_for_file: type=lint
 
 import 'package:auto_route/auto_route.dart' as _i11;
 import 'package:flutter/material.dart' as _i12;
@@ -105,44 +99,38 @@ class AppRouter extends _i11.RootStackRouter {
       ];
 }
 
-/// generated route for
-/// [_i1.LoginPage]
+/// generated route for [_i1.LoginPage]
 class LoginRoute extends _i11.PageRouteInfo<void> {
-  const LoginRoute() : super(LoginRoute.name, path: '/');
+  const LoginRoute() : super(name, path: '/');
 
   static const String name = 'LoginRoute';
 }
 
-/// generated route for
-/// [_i2.HomePage]
+/// generated route for [_i2.HomePage]
 class HomeRoute extends _i11.PageRouteInfo<void> {
-  const HomeRoute() : super(HomeRoute.name, path: '/home-page');
+  const HomeRoute() : super(name, path: '/home-page');
 
   static const String name = 'HomeRoute';
 }
 
-/// generated route for
-/// [_i3.SharedPage]
+/// generated route for [_i3.SharedPage]
 class SharedRoute extends _i11.PageRouteInfo<void> {
-  const SharedRoute() : super(SharedRoute.name, path: '/shared-page');
+  const SharedRoute() : super(name, path: '/shared-page');
 
   static const String name = 'SharedRoute';
 }
 
-/// generated route for
-/// [_i4.FavouritesPage]
+/// generated route for [_i4.FavouritesPage]
 class FavouritesRoute extends _i11.PageRouteInfo<void> {
-  const FavouritesRoute()
-      : super(FavouritesRoute.name, path: '/favourites-page');
+  const FavouritesRoute() : super(name, path: '/favourites-page');
 
   static const String name = 'FavouritesRoute';
 }
 
-/// generated route for
-/// [_i5.FileExplorerPage]
+/// generated route for [_i5.FileExplorerPage]
 class FileExplorerRoute extends _i11.PageRouteInfo<FileExplorerRouteArgs> {
   FileExplorerRoute({_i12.Key? key, required String path})
-      : super(FileExplorerRoute.name,
+      : super(name,
             path: '/file-explorer-page',
             args: FileExplorerRouteArgs(key: key, path: path));
 
@@ -155,52 +143,40 @@ class FileExplorerRouteArgs {
   final _i12.Key? key;
 
   final String path;
-
-  @override
-  String toString() {
-    return 'FileExplorerRouteArgs{key: $key, path: $path}';
-  }
 }
 
-/// generated route for
-/// [_i6.LibrariesPage]
+/// generated route for [_i6.LibrariesPage]
 class LibrariesRoute extends _i11.PageRouteInfo<void> {
-  const LibrariesRoute() : super(LibrariesRoute.name, path: '/libraries-page');
+  const LibrariesRoute() : super(name, path: '/libraries-page');
 
   static const String name = 'LibrariesRoute';
 }
 
-/// generated route for
-/// [_i7.UserProfilePage]
+/// generated route for [_i7.UserProfilePage]
 class UserProfileRoute extends _i11.PageRouteInfo<void> {
-  const UserProfileRoute()
-      : super(UserProfileRoute.name, path: '/user-profile-page');
+  const UserProfileRoute() : super(name, path: '/user-profile-page');
 
   static const String name = 'UserProfileRoute';
 }
 
-/// generated route for
-/// [_i8.SettingsPage]
+/// generated route for [_i8.SettingsPage]
 class SettingsRoute extends _i11.PageRouteInfo<void> {
-  const SettingsRoute() : super(SettingsRoute.name, path: '/settings-page');
+  const SettingsRoute() : super(name, path: '/settings-page');
 
   static const String name = 'SettingsRoute';
 }
 
-/// generated route for
-/// [_i9.CloudSettingsPage]
+/// generated route for [_i9.CloudSettingsPage]
 class CloudSettingsRoute extends _i11.PageRouteInfo<void> {
-  const CloudSettingsRoute()
-      : super(CloudSettingsRoute.name, path: '/cloud-settings-page');
+  const CloudSettingsRoute() : super(name, path: '/cloud-settings-page');
 
   static const String name = 'CloudSettingsRoute';
 }
 
-/// generated route for
-/// [_i10.UserWizardPage]
+/// generated route for [_i10.UserWizardPage]
 class UserWizardRoute extends _i11.PageRouteInfo<UserWizardRouteArgs> {
   UserWizardRoute({_i12.Key? key, _i14.User? user})
-      : super(UserWizardRoute.name,
+      : super(name,
             path: '/user-wizard-page',
             args: UserWizardRouteArgs(key: key, user: user));
 
@@ -213,9 +189,4 @@ class UserWizardRouteArgs {
   final _i12.Key? key;
 
   final _i14.User? user;
-
-  @override
-  String toString() {
-    return 'UserWizardRouteArgs{key: $key, user: $user}';
-  }
 }

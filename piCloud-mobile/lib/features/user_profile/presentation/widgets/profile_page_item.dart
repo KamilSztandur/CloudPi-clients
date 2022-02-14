@@ -14,7 +14,7 @@ class ProfilePageItem extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const Spacer(flex: 3),
+          const Spacer(flex: 4),
           _getFlexibleText(label, 22, 14),
           _getFlexibleText(value, 20, 16),
         ],

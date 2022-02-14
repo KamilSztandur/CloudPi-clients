@@ -76,7 +76,7 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
         ProfilePageItem(label: 'Username', value: data.username),
         ProfilePageItem(label: 'Nickname', value: data.nickname),
         ProfilePageItem(label: 'E-mail', value: data.email),
-        ProfilePageItem(label: 'Account Type', value: data.typeOfAccount),
+        ProfilePageItem(label: 'Roles', value: data.rolesString),
       ],
     );
   }
@@ -100,7 +100,9 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
             .read<UserProfilePageBloc>()
             .add(InitializeUserProfilePageEvent());
       } else if (state is UserProfilePageFetchingDataErrorState) {
-        //TODO
+        context
+            .read<UserProfilePageBloc>()
+            .add(FetchDataErrorOccurredUserProfilePageEvent());
       } else if (state is FetchingDataFinishedUserProfilePageEvent) {
         context
             .read<UserProfilePageBloc>()

@@ -83,6 +83,15 @@ class _$Api extends Api {
   }
 
   @override
+  Future<Response<List<FileInfoDTO>>> filesystemSearchPost(
+      {required FileQueryDTO? body}) {
+    final $url = '/filesystem/search';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<List<FileInfoDTO>, FileInfoDTO>($request);
+  }
+
+  @override
   Future<Response<FileInfoDTO>> filesImageImageNamePost(
       {required String? imageName,
       required FilesImageImageNamePost$RequestBody? body}) {
@@ -149,11 +158,11 @@ class _$Api extends Api {
   }
 
   @override
-  Future<Response<List<UserDetailsDTO>>> userUsernamesDetailsGet(
-      {required List<String>? usernames}) {
-    final $url = '/user/${usernames}/details';
+  Future<Response<UserDetailsDTO>> userUsernameDetailsGet(
+      {required String? username}) {
+    final $url = '/user/${username}/details';
     final $request = Request('GET', $url, client.baseUrl);
-    return client.send<List<UserDetailsDTO>, UserDetailsDTO>($request);
+    return client.send<UserDetailsDTO, UserDetailsDTO>($request);
   }
 
   @override

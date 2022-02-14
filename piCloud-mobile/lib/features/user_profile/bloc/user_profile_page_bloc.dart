@@ -38,16 +38,20 @@ class UserProfilePageBloc
 
     try {
       final username = await _authManager.getUsernameOfLoggedUser();
-      final response =
-          await _api.userUsernamesDetailsGet(usernames: [username!]);
+      final response = await _api.userUsernameDetailsGet(username: username);
+      final responseData = response.body!;
+      var rolesString = '';
 
-      final responseData = response.body![0];
+      for (final role in responseData.roles!) {
+        final str = role.toString();
+        rolesString += '${str.substring(str.indexOf('.') + 1)}, ';
+      }
 
       _userData = UserProfileData(
-        username: responseData.username!,
-        nickname: responseData.nickname!,
-        email: responseData.email!,
-        typeOfAccount: responseData.roles![0].toString(),
+        username: responseData.username ?? 'Unknown',
+        nickname: responseData.nickname ?? 'Unknown',
+        email: responseData.email ?? 'Unknown',
+        rolesString: rolesString.substring(0, rolesString.length - 2),
       );
 
       yield UserProfilePageFetchingDataFinishedState(

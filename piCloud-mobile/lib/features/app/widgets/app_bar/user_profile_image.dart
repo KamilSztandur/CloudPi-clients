@@ -35,12 +35,14 @@ class UserProfileImage extends StatelessWidget {
 
     try {
       final api = context.read<Api>();
-      final userData =
-          await api.userUsernamesDetailsGet(usernames: [username!]);
+      final userData = await api.userUsernameDetailsGet(username: username);
+      final imageId = userData.body!.profilePicturePubId;
 
-      final path = userData.body!.first.pathToProfilePicture;
-      final image = await api.filesFileFileIdGet(fileId: '44'); //TODO: update
+      if (imageId == null) {
+        return const AssetImage('assets/profilepic.jpg');
+      }
 
+      final image = await api.filesFileFileIdGet(fileId: imageId);
       return MemoryImage(image.bodyBytes);
     } catch (exception) {
       return const AssetImage('assets/profilepic.jpg');
