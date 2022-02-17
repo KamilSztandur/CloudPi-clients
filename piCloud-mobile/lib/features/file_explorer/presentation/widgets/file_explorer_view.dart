@@ -18,10 +18,12 @@ class FileExplorerView extends StatefulWidget {
     Key? key,
     required this.path,
     required this.selectionChanged,
+    required this.setItems,
   }) : super(key: key);
 
   final void Function(Selection) selectionChanged;
   final String path;
+  final void Function(List<FileExplorerItem>) setItems;
 
   @override
   _FileExplorerViewState createState() => _FileExplorerViewState();
@@ -151,6 +153,7 @@ class _FileExplorerViewState extends State<FileExplorerView> {
         items.add(FileExplorerItem(file: item));
       }
 
+      widget.setItems(items);
       return items;
     }
   }
@@ -175,6 +178,7 @@ class _FileExplorerViewState extends State<FileExplorerView> {
         (a, b) => a.file.type.index - b.file.type.index,
       );
 
+      widget.setItems(items);
       return items;
     }
   }

@@ -1,22 +1,35 @@
 import 'dart:io';
 
+import 'package:app/contracts/client_index.dart';
+import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/selection_icon_button_choice.dart';
+import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
-class SelectionAppBar extends StatelessWidget implements PreferredSizeWidget {
+class SelectionAppBar extends StatefulWidget implements PreferredSizeWidget {
   const SelectionAppBar({
     Key? key,
     this.title,
     this.selection = const Selection.empty(),
+    required this.allItems,
+    required this.api,
   }) : super(key: key);
 
   final Widget? title;
   final Selection selection;
+  final List<FileExplorerItem> allItems;
+  final Api api;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
+  @override
+  _SelectionAppBarState createState() => _SelectionAppBarState();
+}
+
+class _SelectionAppBarState extends State<SelectionAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -50,7 +63,7 @@ class SelectionAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   String _getTitle() =>
-      'Selected ${selection.amount} item${selection.amount > 1 ? 's.' : '.'}';
+      'Selected ${widget.selection.amount} item${widget.selection.amount > 1 ? 's.' : '.'}';
 
   List<SelectionIconButtonChoice> _getHamburgerMenuBody() =>
       <SelectionIconButtonChoice>[
@@ -95,7 +108,7 @@ class SelectionAppBar extends StatelessWidget implements PreferredSizeWidget {
         return;
 
       case 'Delete':
-        _onDeletePressed();
+        _onDeletePressed().whenComplete(() => null); //TODO: refresh items
         return;
 
       case 'Details':
@@ -119,12 +132,25 @@ class SelectionAppBar extends StatelessWidget implements PreferredSizeWidget {
     //TODO
   }
 
-  void _onDownloadPressed() {
+  Future<void> _onDownloadPressed() async {
     //TODO
+    for (final item in _getSelectedItems()) {
+      final file = await widget.api.filesFileFileIdGet(fileId: item.file.id);
+    }
   }
 
-  void _onDeletePressed() {
-    //TODO
+  Future<void> _onDeletePressed() async {
+    //TODO: popup asking for confirmation
+    final api = widget.api;
+
+    for (final item in _getSelectedItems()) {
+      if (item.file.type == FileExplorerItemType.directory) {
+        await api.filesystemDirectoryDirectoryIdDelete(
+            directoryId: item.file.id);
+      } else {
+        await api.filesFileFileIdDelete(fileId: item.file.id);
+      }
+    }
   }
 
   void _onDetailsPressed() {
@@ -133,5 +159,15 @@ class SelectionAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   void _onAddToFavouritesPressed() {
     //TODO
+  }
+
+  List<FileExplorerItem> _getSelectedItems() {
+    final list = <FileExplorerItem>[];
+
+    for (final index in widget.selection.selectedIndexes) {
+      list.add(widget.allItems[index]);
+    }
+
+    return list;
   }
 }

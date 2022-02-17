@@ -629,6 +629,7 @@
                 "IMAGE",
                 "VIDEO",
                 "TEXT_FILE",
+                "PDF",
                 "MUSIC",
                 "COMPRESSED",
                 "UNDEFINED"
@@ -995,7 +996,7 @@
         }
       }
     },
-    "/user/{usernames}/details": {
+    "/user/{username}/details": {
       "get": {
         "tags": [
           "User Management API"
@@ -1006,14 +1007,14 @@
         "parameters": [
           {
             "name": "usernames",
+            "description": "One or more usernames whose details you want to acquire"
+          },
+          {
+            "name": "username",
             "in": "path",
-            "description": "One or more usernames whose details you want to acquire",
             "required": true,
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
+              "type": "string"
             }
           }
         ],
@@ -1053,10 +1054,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserDetailsDTO"
-                  }
+                  "$ref": "#/components/schemas/UserDetailsDTO"
                 }
               }
             }
@@ -1721,6 +1719,7 @@
               "IMAGE",
               "VIDEO",
               "TEXT_FILE",
+              "PDF",
               "MUSIC",
               "COMPRESSED",
               "UNDEFINED"
@@ -1789,6 +1788,7 @@
               "IMAGE",
               "VIDEO",
               "TEXT_FILE",
+              "PDF",
               "MUSIC",
               "COMPRESSED",
               "UNDEFINED"
@@ -1865,8 +1865,9 @@
           "email": {
             "type": "string"
           },
-          "pathToProfilePicture": {
-            "type": "string"
+          "profilePicturePubId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
@@ -1891,8 +1892,9 @@
           "email": {
             "type": "string"
           },
-          "pathToProfilePicture": {
-            "type": "string"
+          "profilePicturePubId": {
+            "type": "string",
+            "format": "uuid"
           },
           "nickname": {
             "type": "string"
@@ -1927,8 +1929,9 @@
           "nickname": {
             "type": "string"
           },
-          "pathToProfilePicture": {
-            "type": "string"
+          "profilePicturePubId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       },
@@ -1988,6 +1991,7 @@
               "IMAGE",
               "VIDEO",
               "TEXT_FILE",
+              "PDF",
               "MUSIC",
               "COMPRESSED",
               "UNDEFINED"

@@ -1,12 +1,15 @@
+import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
 import 'package:app/features/app/widgets/app_bar/selection_app_bar.dart';
 import 'package:app/features/app/widgets/navigation_bar/bottom_navigation_bar.dart';
 import 'package:app/features/drawer/main_drawer.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/add_media_floating_button.dart';
+import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_view.dart';
 import 'package:app/features/file_explorer/presentation/widgets/switch_view_button.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 class FileExplorerPage extends StatefulWidget {
   const FileExplorerPage({
@@ -22,14 +25,16 @@ class FileExplorerPage extends StatefulWidget {
 
 class _FileExplorerPageState extends State<FileExplorerPage> {
   Selection? selection;
+  late List<FileExplorerItem> items;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _getBar(),
+      appBar: _getBar(context.read<Api>()),
       drawer: const MainDrawer(),
       body: FileExplorerView(
         path: widget.path,
+        setItems: (items) => this.items = items,
         selectionChanged: (selection) => setState(() {
           this.selection = selection;
         }),
@@ -58,10 +63,12 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
     }
   }
 
-  PreferredSizeWidget _getBar() {
+  PreferredSizeWidget _getBar(Api api) {
     if (_isSelecting()) {
       return SelectionAppBar(
         selection: selection ?? DragSelectGridViewController().value,
+        allItems: items,
+        api: api,
       );
     } else {
       return PICloudAppBar(
