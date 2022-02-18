@@ -185,8 +185,100 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
     );
   }
 
-  void _onDetailsPressed() {
-    //TODO
+  Future<void> _onDetailsPressed() async {
+    final selectedItems = _getSelectedItems();
+    var i = 0;
+
+    for (final item in selectedItems) {
+      i++;
+
+      await showDialog<void>(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('File $i/${selectedItems.length}'),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _getDetailWidget(
+                    'Title',
+                    item.file.title,
+                  ),
+                  _getDetailWidget(
+                    'Type',
+                    _formatType(item.file.type),
+                  ),
+                  _getDetailWidget(
+                    'Last modified',
+                    _formatDate(item.file.lastModifiedOn),
+                  ),
+                  _getDetailWidget(
+                    'Size',
+                    item.file.size.toString(),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text(
+                  'Ok',
+                  style: TextStyle(fontSize: 20),
+                ),
+              )
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  Widget _getDetailWidget(String label, String value) {
+    return Container(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            value,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatType(FileExplorerItemType type) {
+    switch (type) {
+      case FileExplorerItemType.directory:
+        return 'Directory';
+      case FileExplorerItemType.file:
+        return 'File';
+      case FileExplorerItemType.image:
+        return 'Image';
+      case FileExplorerItemType.music:
+        return 'Music file';
+      case FileExplorerItemType.pdf:
+        return 'PDF file';
+      case FileExplorerItemType.text:
+        return 'Text file';
+      case FileExplorerItemType.video:
+        return 'Video';
+    }
+  }
+
+  String _formatDate(DateTime dateTime) {
+    var result = dateTime.toString();
+    var indexOfDot = result.indexOf('.');
+    return result.substring(0, indexOfDot);
   }
 
   void _onAddToFavouritesPressed() {
