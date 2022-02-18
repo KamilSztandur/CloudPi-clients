@@ -140,17 +140,49 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
   }
 
   Future<void> _onDeletePressed() async {
-    //TODO: popup asking for confirmation
     final api = widget.api;
 
-    for (final item in _getSelectedItems()) {
-      if (item.file.type == FileExplorerItemType.directory) {
-        await api.filesystemDirectoryDirectoryIdDelete(
-            directoryId: item.file.id);
-      } else {
-        await api.filesFileFileIdDelete(fileId: item.file.id);
-      }
-    }
+    await showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Deleting...'),
+          content: const SingleChildScrollView(
+            child: Text(
+              'Are you sure you want to delete selected files?',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () async {
+                for (final item in _getSelectedItems()) {
+                  if (item.file.type == FileExplorerItemType.directory) {
+                    await api.filesystemDirectoryDirectoryIdDelete(
+                      directoryId: item.file.id,
+                    );
+                  } else {
+                    await api.filesFileFileIdDelete(fileId: item.file.id);
+                  }
+                }
+
+                Navigator.pop(context);
+              },
+              child: const Text(
+                'Yes',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('No'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   void _onDetailsPressed() {
