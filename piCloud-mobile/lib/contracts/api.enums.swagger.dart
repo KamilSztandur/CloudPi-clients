@@ -11,6 +11,8 @@ enum FileInfoDTOType {
   video,
   @JsonValue('TEXT_FILE')
   textFile,
+  @JsonValue('PDF')
+  pdf,
   @JsonValue('MUSIC')
   music,
   @JsonValue('COMPRESSED')
@@ -24,10 +26,44 @@ const $FileInfoDTOTypeMap = {
   FileInfoDTOType.image: 'IMAGE',
   FileInfoDTOType.video: 'VIDEO',
   FileInfoDTOType.textFile: 'TEXT_FILE',
+  FileInfoDTOType.pdf: 'PDF',
   FileInfoDTOType.music: 'MUSIC',
   FileInfoDTOType.compressed: 'COMPRESSED',
   FileInfoDTOType.undefined: 'UNDEFINED',
   FileInfoDTOType.swaggerGeneratedUnknown: ''
+};
+
+enum FileQueryDTOType {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('DIRECTORY')
+  directory,
+  @JsonValue('IMAGE')
+  image,
+  @JsonValue('VIDEO')
+  video,
+  @JsonValue('TEXT_FILE')
+  textFile,
+  @JsonValue('PDF')
+  pdf,
+  @JsonValue('MUSIC')
+  music,
+  @JsonValue('COMPRESSED')
+  compressed,
+  @JsonValue('UNDEFINED')
+  undefined
+}
+
+const $FileQueryDTOTypeMap = {
+  FileQueryDTOType.directory: 'DIRECTORY',
+  FileQueryDTOType.image: 'IMAGE',
+  FileQueryDTOType.video: 'VIDEO',
+  FileQueryDTOType.textFile: 'TEXT_FILE',
+  FileQueryDTOType.pdf: 'PDF',
+  FileQueryDTOType.music: 'MUSIC',
+  FileQueryDTOType.compressed: 'COMPRESSED',
+  FileQueryDTOType.undefined: 'UNDEFINED',
+  FileQueryDTOType.swaggerGeneratedUnknown: ''
 };
 
 enum UserDetailsDTORoles {
@@ -51,6 +87,39 @@ const $UserDetailsDTORolesMap = {
   UserDetailsDTORoles.swaggerGeneratedUnknown: ''
 };
 
+enum FilesystemObjectDTOType {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('DIRECTORY')
+  directory,
+  @JsonValue('IMAGE')
+  image,
+  @JsonValue('VIDEO')
+  video,
+  @JsonValue('TEXT_FILE')
+  textFile,
+  @JsonValue('PDF')
+  pdf,
+  @JsonValue('MUSIC')
+  music,
+  @JsonValue('COMPRESSED')
+  compressed,
+  @JsonValue('UNDEFINED')
+  undefined
+}
+
+const $FilesystemObjectDTOTypeMap = {
+  FilesystemObjectDTOType.directory: 'DIRECTORY',
+  FilesystemObjectDTOType.image: 'IMAGE',
+  FilesystemObjectDTOType.video: 'VIDEO',
+  FilesystemObjectDTOType.textFile: 'TEXT_FILE',
+  FilesystemObjectDTOType.pdf: 'PDF',
+  FilesystemObjectDTOType.music: 'MUSIC',
+  FilesystemObjectDTOType.compressed: 'COMPRESSED',
+  FilesystemObjectDTOType.undefined: 'UNDEFINED',
+  FilesystemObjectDTOType.swaggerGeneratedUnknown: ''
+};
+
 enum FilesFilePostFileType {
   @JsonValue('swaggerGeneratedUnknown')
   swaggerGeneratedUnknown,
@@ -62,6 +131,8 @@ enum FilesFilePostFileType {
   video,
   @JsonValue('TEXT_FILE')
   textFile,
+  @JsonValue('PDF')
+  pdf,
   @JsonValue('MUSIC')
   music,
   @JsonValue('COMPRESSED')
@@ -75,6 +146,7 @@ const $FilesFilePostFileTypeMap = {
   FilesFilePostFileType.image: 'IMAGE',
   FilesFilePostFileType.video: 'VIDEO',
   FilesFilePostFileType.textFile: 'TEXT_FILE',
+  FilesFilePostFileType.pdf: 'PDF',
   FilesFilePostFileType.music: 'MUSIC',
   FilesFilePostFileType.compressed: 'COMPRESSED',
   FilesFilePostFileType.undefined: 'UNDEFINED',

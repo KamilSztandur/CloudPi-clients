@@ -1,4 +1,6 @@
 import 'package:app/common/core/config.dart';
+import 'package:app/contracts/api.enums.swagger.dart';
+import 'package:app/contracts/api.swagger.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
 
@@ -13,28 +15,83 @@ class UsersService {
   }
 
   Future<List<User>> getAllRegisteredUsers() async {
-    //TODO
-    //final response = await _api.userGet();
+    final response = await _api.userGet();
+    final allUsers = response.body!;
+    final result = <User>[];
 
-    await Future<void>.delayed(const Duration(seconds: 1));
-    return _getMockedUsers();
+    for (final user in allUsers) {
+      final username = user.username;
+      final nickname = user.nickname;
+
+      final userDetailsResponse =
+          await _api.userUsernameDetailsGet(username: username);
+      final userDetails = userDetailsResponse.body!;
+      final email = userDetails.email;
+      AccountType accountType;
+
+      if (userDetails.roles!.contains(UserDetailsDTORoles.admin)) {
+        accountType = AccountType.admin;
+      } else if (userDetails.roles!.contains(UserDetailsDTORoles.moderator)) {
+        accountType = AccountType.moderator;
+      } else if (userDetails.roles!.contains(UserDetailsDTORoles.bot)) {
+        accountType = AccountType.bot;
+      } else {
+        accountType = AccountType.user;
+      }
+
+      final allocatedMemoryResponse =
+          await _api.filesystemUsernameGet(username: username);
+      int? allocatedMemory;
+
+      try {
+        allocatedMemory = allocatedMemoryResponse.body!.totalSpace;
+      } catch (exception) {
+        allocatedMemory = 0;
+      }
+
+      result.add(
+        User(
+          accountType: accountType,
+          allocatedMemoryInMb: allocatedMemory!.toDouble(),
+          email: email,
+          nickname: nickname!,
+          password: 'password :D', //TODO
+          username: username!,
+        ),
+      );
+    }
+
+    return result;
   }
 
   Future<bool> deleteUser(String username) async {
-    //TODO
-
-    return true;
+    final response = await _api.userUsernameDelete(username: username);
+    return response.isSuccessful;
   }
 
   Future<bool> addUser(User user) async {
-    //TODO
+    final response = await _api.userNewPost(
+      body: PostUserRequest(
+        username: user.username,
+        nickname: user.nickname,
+        email: user.email,
+        password: user.password,
+      ),
+    );
 
-    return true;
+    return response.isSuccessful;
   }
 
   Future<bool> editUser(User user) async {
-    //TODO
-    return true;
+    final response = await _api.userUsernamePatch(
+      username: user.username,
+      body: PatchUserRequest(
+        email: user.email,
+        nickname: user.nickname, //TODO: profilePicturePubId
+      ),
+    );
+
+    return response.isSuccessful;
   }
 
   String? getWarningMessageForUserData(User user) {
@@ -76,45 +133,5 @@ class UsersService {
     } else {
       return 'Fill all required fields.';
     }
-  }
-
-  // To be removed
-  List<User> _getMockedUsers() {
-    final mockedUsers = <User>[
-      User(
-        nickname: 'jankowalski',
-        username: 'Jan Kowalski',
-        password: '123456',
-        accountType: AccountType.user,
-        email: null,
-        allocatedMemoryInMb: 1000,
-      ),
-      User(
-        nickname: 'kubakowalski',
-        username: 'Kuba Kowalski',
-        password: '111111',
-        accountType: AccountType.user,
-        email: null,
-        allocatedMemoryInMb: 2048,
-      ),
-      User(
-        nickname: 'harry29',
-        username: 'Harry Potter',
-        password: '222222',
-        accountType: AccountType.admin,
-        email: null,
-        allocatedMemoryInMb: 1024,
-      ),
-      User(
-        nickname: 'mojlaptoppc',
-        username: 'Kamil laptop',
-        password: '111',
-        accountType: AccountType.user,
-        email: null,
-        allocatedMemoryInMb: 1024,
-      ),
-    ];
-
-    return mockedUsers;
   }
 }

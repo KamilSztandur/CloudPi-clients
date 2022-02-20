@@ -19,4 +19,4 @@ class User {
   double allocatedMemoryInMb;
 }
 
-enum AccountType { user, admin, service }
+enum AccountType { user, admin, moderator, bot }
