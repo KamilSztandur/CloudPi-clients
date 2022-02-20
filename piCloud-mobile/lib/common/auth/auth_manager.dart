@@ -47,12 +47,8 @@ class AuthManager {
       return;
     }
 
-    final accessToken = result.headers['authorization']!;
-    final refreshTokenSetCookie = result.headers['set-cookie']!;
-    final refreshToken = refreshTokenSetCookie.substring(
-      'Refresh-Token='.length,
-      refreshTokenSetCookie.indexOf(';'),
-    );
+    final accessToken = _extractAccessToken(result.headers);
+    final refreshToken = _extractRefreshToken(result.headers);
 
     await _storage.write(key: accessTokenKey, value: accessToken);
     await _storage.write(key: refreshTokenKey, value: refreshToken);
@@ -73,42 +69,106 @@ class AuthManager {
         DateTime.fromMillisecondsSinceEpoch((token['exp'] as int) * 1000);
 
     if (DateTime.now().isAfter(expiration)) {
-      final refreshedToken = await _refreshToken();
+      final accessTokenRefreshed = await _refreshAccessToken();
+      final refreshTokenRefreshed = await _refreshRefreshToken();
 
-      if (refreshedToken == null) {
+      if (!accessTokenRefreshed || !refreshTokenRefreshed) {
         await logout();
 
         return null;
       }
 
-      await _storage.write(key: accessTokenKey, value: refreshedToken);
-
-      return refreshedToken;
+      return getAccessToken();
     }
 
     return encodedToken;
   }
 
-  Future<String?> _refreshToken() async {
-    final encodedToken = await _storage.read(key: refreshTokenKey);
+  Future<bool> _refreshAccessToken() async {
+    final encodedAccessToken = await _storage.read(key: accessTokenKey);
+    final encodedRefreshToken = await _storage.read(key: refreshTokenKey);
 
-    if (encodedToken == null) {
-      return null;
+    if (encodedRefreshToken == null) {
+      return false;
     }
 
-    final token = JwtDecoder.decode(encodedToken);
+    final refreshToken = JwtDecoder.decode(encodedRefreshToken);
 
-    final expiration = DateTime.parse(token['exp'] as String);
+    final expiration = DateTime.fromMillisecondsSinceEpoch(
+      (refreshToken['exp'] as int) * 1000,
+    );
 
     if (DateTime.now().isAfter(expiration)) {
-      await logout();
-
-      return null;
+      return false;
     }
 
-    // TODO: Refresh token
+    final result = await http.post(
+      Uri.parse('${Config.apiBaseUrl}/refresh/auth-token'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $encodedAccessToken',
+        'Cookie': 'Refresh-Token=$encodedRefreshToken'
+      },
+    );
 
-    return '';
+    if (result.statusCode != 200) {
+      return false;
+    }
+
+    final newAccessToken = _extractAccessToken(result.headers);
+
+    await _storage.write(key: accessTokenKey, value: newAccessToken);
+
+    return true;
+  }
+
+  Future<bool> _refreshRefreshToken() async {
+    final encodedAccessToken = await _storage.read(key: accessTokenKey);
+    final encodedRefreshToken = await _storage.read(key: refreshTokenKey);
+
+    if (encodedRefreshToken == null) {
+      return false;
+    }
+
+    final refreshToken = JwtDecoder.decode(encodedRefreshToken);
+
+    final expiration = DateTime.fromMillisecondsSinceEpoch(
+      (refreshToken['exp'] as int) * 1000,
+    );
+
+    if (DateTime.now().isAfter(expiration)) {
+      return false;
+    }
+
+    final result = await http.post(
+      Uri.parse('${Config.apiBaseUrl}/refresh/refresh-token'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $encodedAccessToken',
+        'Cookie': 'Refresh-Token=$encodedRefreshToken'
+      },
+    );
+
+    if (result.statusCode != 200) {
+      return false;
+    }
+
+    final newRefreshToken = _extractRefreshToken(result.headers);
+
+    await _storage.write(key: refreshTokenKey, value: newRefreshToken);
+
+    return true;
+  }
+
+  String _extractAccessToken(Map<String, String> headers) =>
+      headers['authorization']!;
+
+  String _extractRefreshToken(Map<String, String> headers) {
+    final refreshTokenSetCookie = headers['set-cookie']!;
+    return refreshTokenSetCookie.substring(
+      'Refresh-Token='.length,
+      refreshTokenSetCookie.indexOf(';'),
+    );
   }
 
   Future<void> logout() async {
