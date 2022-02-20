@@ -147,6 +147,7 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Deleting...'),
+          contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 4),
           content: const SingleChildScrollView(
             child: Text(
               'Are you sure you want to delete selected files?',
@@ -170,14 +171,22 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
               },
               child: const Text(
                 'Yes',
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 20,
+                ),
               ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('No'),
+              child: const Text(
+                'No',
+                style: TextStyle(
+                  fontSize: 20,
+                ),
+              ),
             ),
           ],
         );
@@ -196,11 +205,12 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
         context: context,
         builder: (context) {
           return AlertDialog(
+            contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
             title: Text('File $i/${selectedItems.length}'),
             content: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                children: <Widget>[
                   _getDetailWidget(
                     'Title',
                     item.file.title,
@@ -213,10 +223,13 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
                     'Last modified',
                     _formatDate(item.file.lastModifiedOn),
                   ),
-                  _getDetailWidget(
-                    'Size',
-                    item.file.size.toString(),
-                  ),
+                  if (item.file.type != FileExplorerItemType.directory)
+                    _getDetailWidget(
+                      'Size',
+                      item.file.size.toString(),
+                    )
+                  else
+                    Container(height: 0),
                 ],
               ),
             ),
@@ -276,8 +289,8 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
   }
 
   String _formatDate(DateTime dateTime) {
-    var result = dateTime.toString();
-    var indexOfDot = result.indexOf('.');
+    final result = dateTime.toString();
+    final indexOfDot = result.indexOf('.');
     return result.substring(0, indexOfDot);
   }
 
