@@ -1,8 +1,15 @@
+import 'dart:io';
+
 import 'package:app/common/auth/auth_manager.dart';
+import 'package:app/common/core/config.dart';
 import 'package:app/contracts/api.enums.swagger.dart';
+import 'package:app/contracts/api.swagger.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/models/file_item.dart';
+import 'package:http/http.dart';
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 
 class DirectoryManager {
   const DirectoryManager(
@@ -32,9 +39,35 @@ class DirectoryManager {
     return result.isSuccessful;
   }
 
+  Future<bool> uploadFile(String path, File file) async {
+    final headers = await _getHeaders();
+    final cloudPath = await _getCloudFilePath(path, file);
+    final multipartFile = await MultipartFile.fromPath('file', file.path);
+
+    final request = MultipartRequest(
+      'POST',
+      Uri.parse('${Config.apiBaseUrl}/files/file/'),
+    );
+    request.fields.addAll({
+      'filepath': cloudPath,
+      'fileType': _getFileTypeBasedOnFile(file),
+    });
+    request.files.add(multipartFile);
+    request.headers.addAll(headers);
+
+    final response = await request.send();
+    return response.statusCode == 201;
+  }
+
+  Future<bool> uploadPhoto(String path, File file) async {
+    final result = await uploadFile(path, file);
+
+    return result;
+  }
+
   Future<List<FileItem>?> _getRawList(String path) async {
     final result = await _api.filesystemFileStructureGet(
-      structureLevels: 1,
+      structureLevels: 999,
       fileStructureRoot: path,
     );
 
@@ -70,6 +103,47 @@ class DirectoryManager {
           }
         },
       );
+  }
+
+  String _getFileTypeBasedOnFile(File file) {
+    final result = lookupMimeType(_getFilenameFromPath(file.path));
+
+    if (result != null) {
+      if (result.contains('image')) {
+        return 'IMAGE';
+      } else if (result.contains('video')) {
+        return 'VIDEO';
+      } else if (result.contains('text')) {
+        return 'TEXT_FILE';
+      } else if (result.contains('pdf')) {
+        return 'PDF';
+      } else if (result.contains('audio')) {
+        return 'MUSIC';
+      } else if (result.contains('compressed') || result.contains('archive')) {
+        return 'COMPRESSED';
+      }
+    }
+
+    return 'UNDEFINED';
+  }
+
+  Future<Map<String, String>> _getHeaders() async {
+    return {'Authorization': 'Bearer ${await _authManager.getAccessToken()}'};
+  }
+
+  Future<String> _getCloudFilePath(String path, File file) async {
+    final username = await _authManager.getUsernameOfLoggedUser();
+    final filename = _getFilenameFromPath(file.path);
+    final filepath = '$username$path$filename';
+
+    return filepath;
+  }
+
+  String _getFilenameFromPath(String path) {
+    var filename = path.split('/').last;
+    filename = filename.substring(1, filename.length);
+
+    return filename;
   }
 
   FileExplorerItemType _mapBodyTextToType(FilesystemObjectDTOType? type) {

@@ -29,6 +29,7 @@ dependencies:
   jwt_decoder: ^2.0.1
   leancode_lint: ^1.0.0
   material_design_icons_flutter: ^5.0.5955
+  mime: ^1.0.1
   password_strength: ^0.2.0
   provider: ^6.0.1
   rxdart: ^0.27.3

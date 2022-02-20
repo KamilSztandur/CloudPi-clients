@@ -70,24 +70,83 @@ class _AddMediaButtonState extends State<AddMediaButton> {
     );
   }
 
-  void _uploadFile(List<File> files) {
+  Future<void> _uploadFile(List<File> files) async {
     if (files.isNotEmpty) {
-      //TODO
-
-      final n = files.length;
-      ScaffoldMessenger.of(context).showSnackBar(
-        _NotificationSnackbar(
-          context: context,
-          message: "$n file${n > 1 ? 's' : ''} uploaded.",
+      // ignore: unawaited_futures
+      showDialog<void>(
+        context: context,
+        builder: (context) => const Center(
+          child: SizedBox(
+            height: 100,
+            width: 100,
+            child: CircularProgressIndicator(),
+          ),
         ),
       );
+
+      try {
+        var counter = 0;
+
+        for (final file in files) {
+          final result = await directoryManager.uploadFile(
+            widget.currentPath,
+            file,
+          );
+
+          if (result) {
+            counter++;
+          }
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          _NotificationSnackbar(
+            context: context,
+            message: "$counter file${counter > 1 ? 's' : ''} uploaded.",
+          ),
+        );
+      } catch (exception) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          _NotificationSnackbar(
+            context: context,
+            message: 'Upload failed.',
+          ),
+        );
+      } finally {
+        Navigator.of(context).pop();
+      }
     }
   }
 
-  void _uploadPhoto(File file) {
-    //TODO
+  Future<void> _uploadPhoto(File file) async {
+    // ignore: unawaited_futures
+    showDialog<void>(
+      context: context,
+      builder: (context) => const Center(
+        child: SizedBox(
+          height: 100,
+          width: 100,
+          child: CircularProgressIndicator(),
+        ),
+      ),
+    );
 
-    PhotoTakenPopup(context: context, imageFile: file).show();
+    var isSuccess = false;
+    try {
+      isSuccess = await directoryManager.uploadPhoto(widget.currentPath, file);
+    } catch (exception) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        _NotificationSnackbar(
+          context: context,
+          message: 'Upload failed.',
+        ),
+      );
+    } finally {
+      Navigator.of(context).pop();
+    }
+
+    if (isSuccess) {
+      PhotoTakenPopup(context: context, imageFile: file).show();
+    }
   }
 }
 

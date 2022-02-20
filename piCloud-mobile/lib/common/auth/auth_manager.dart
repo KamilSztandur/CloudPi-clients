@@ -98,7 +98,7 @@ class AuthManager {
 
     final token = JwtDecoder.decode(encodedToken);
 
-    final expiration = DateTime.parse(token['exp'] as String);
+    final expiration = DateTime.parse(token['exp'].toString());
 
     if (DateTime.now().isAfter(expiration)) {
       await logout();
