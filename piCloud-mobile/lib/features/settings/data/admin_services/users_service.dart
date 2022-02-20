@@ -1,18 +1,22 @@
 import 'package:app/common/core/config.dart';
+import 'package:app/contracts/client_index.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
 
 class UsersService {
-  Future<int> getRegisteredUsersAmount() async {
-    await Future<void>.delayed(const Duration(seconds: 1));
-    //TODO
+  const UsersService(this._api);
 
-    return _getMockedUsers().length;
+  final Api _api;
+
+  Future<int> getRegisteredUsersAmount() async {
+    final response = await _api.userGet();
+    return response.body!.length;
   }
 
   Future<List<User>> getAllRegisteredUsers() async {
-    await Future<void>.delayed(const Duration(seconds: 1));
     //TODO
+    //final response = await _api.userGet();
 
+    await Future<void>.delayed(const Duration(seconds: 1));
     return _getMockedUsers();
   }
 

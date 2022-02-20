@@ -1,7 +1,9 @@
+import 'package:app/contracts/client_index.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 class ManageAdministratorsView extends StatefulWidget {
   const ManageAdministratorsView({
@@ -14,8 +16,14 @@ class ManageAdministratorsView extends StatefulWidget {
 }
 
 class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
-  final UsersService _service = UsersService();
+  late UsersService service;
   Map<String, bool>? _permissionsDictionary;
+
+  @override
+  void initState() {
+    service = UsersService(context.read<Api>());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,7 +163,7 @@ class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
     if (_permissionsDictionary == null) {
       _permissionsDictionary = <String, bool>{};
 
-      final users = await _service.getAllRegisteredUsers();
+      final users = await service.getAllRegisteredUsers();
 
       for (final user in users) {
         final username = user.nickname;

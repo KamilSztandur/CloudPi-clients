@@ -1,3 +1,4 @@
+import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
@@ -7,6 +8,7 @@ import 'package:app/features/user_wizard/presentation/widgets/password_input_fie
 import 'package:app/features/user_wizard/presentation/widgets/user_avatar_input.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 class UserWizardPage extends StatefulWidget {
   const UserWizardPage({
@@ -22,13 +24,13 @@ class UserWizardPage extends StatefulWidget {
 
 class _UserWizardPageState extends State<UserWizardPage> {
   final ScrollController _scrollController = ScrollController();
-  final UsersService service = UsersService();
+  late UsersService service;
   late User user;
 
   @override
   void initState() {
     _initializeDefaultUserData();
-
+    service = UsersService(context.read<Api>());
     super.initState();
   }
 

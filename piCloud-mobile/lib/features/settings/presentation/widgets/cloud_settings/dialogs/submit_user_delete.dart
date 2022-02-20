@@ -1,15 +1,16 @@
+import 'package:app/contracts/client_index.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 class DeleteUserView extends StatefulWidget {
-  DeleteUserView({
+  const DeleteUserView({
     Key? key,
     required this.user,
   }) : super(key: key);
 
-  final UsersService service = UsersService();
   final User user;
 
   @override
@@ -17,7 +18,13 @@ class DeleteUserView extends StatefulWidget {
 }
 
 class _DeleteUserViewState extends State<DeleteUserView> {
-  final UsersService service = UsersService();
+  late UsersService service;
+
+  @override
+  void initState() {
+    service = UsersService(context.read<Api>());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
