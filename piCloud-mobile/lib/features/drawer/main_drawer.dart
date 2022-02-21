@@ -58,7 +58,7 @@ class MainDrawer extends StatelessWidget {
                 child: UserProfileImage(size: 60),
               ),
               Text(
-                await authManager.getUsernameOfLoggedUser() ?? ':D', //xD
+                await authManager.getUsernameOfLoggedUser() ?? '',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,
