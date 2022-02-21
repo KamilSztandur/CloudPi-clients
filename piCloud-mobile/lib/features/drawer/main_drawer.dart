@@ -21,7 +21,16 @@ class MainDrawer extends StatelessWidget {
         color: Theme.of(context).primaryColor,
         child: Column(
           children: [
-            _getDrawerHeader(),
+            FutureBuilder(
+              future: _getDrawerHeader(context.read<AuthManager>()),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data! as Widget;
+                } else {
+                  return const Text('Loading...');
+                }
+              },
+            ),
             _getDrawerOptions(context),
             const Spacer(flex: 3),
             _getVersionInfoLabel(),
@@ -31,7 +40,7 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
-  Widget _getDrawerHeader() {
+  Future<Widget> _getDrawerHeader(AuthManager authManager) async {
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -42,19 +51,19 @@ class MainDrawer extends StatelessWidget {
         child: DrawerHeader(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              SizedBox(
+            children: [
+              const SizedBox(
                 height: 70,
                 width: 74,
                 child: UserProfileImage(size: 60),
               ),
               Text(
-                'Adam44', //Mock or sth, should get username from user's data
-                style: TextStyle(
+                await authManager.getUsernameOfLoggedUser() ?? '',
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -110,9 +119,8 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
-  void _onUserProfileTapped(BuildContext context) {
-    //TODO
-  }
+  void _onUserProfileTapped(BuildContext context) =>
+      AutoRouter.of(context).navigate(const UserProfileRoute());
 
   void _onSettingsTapped(BuildContext context) =>
       AutoRouter.of(context).navigate(const SettingsRoute());
