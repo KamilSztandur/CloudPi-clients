@@ -170,6 +170,8 @@ class _UserWizardPageState extends State<UserWizardPage> {
       } else {
         service.editUser(user);
       }
+
+      AutoRouter.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(errorMessage)),

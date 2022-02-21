@@ -79,7 +79,15 @@ class UsersService {
       ),
     );
 
-    return response.isSuccessful;
+    if (response.isSuccessful) {
+      final allocationResponse = await _api.filesystemUsernamePost(
+        username: user.username,
+        newAssignedSpace: user.allocatedMemoryInMb.toInt(),
+      );
+      return allocationResponse.isSuccessful;
+    } else {
+      return false;
+    }
   }
 
   Future<bool> editUser(User user) async {
