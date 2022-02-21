@@ -95,7 +95,6 @@ class DirectoryManager {
         ),
       );
     }
-
     return fileExplorerItems;
   }
 

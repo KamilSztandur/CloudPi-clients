@@ -127,6 +127,8 @@ class _FileExplorerViewState extends State<FileExplorerView> {
               onTap: () {
                 if (currentItem.file.type == FileExplorerItemType.directory) {
                   _moveToNextDirectory(currentItem.file.title);
+                } else {
+                  _previewMedia(currentItem.file.title);
                 }
               },
               child: currentItem,
@@ -186,6 +188,13 @@ class _FileExplorerViewState extends State<FileExplorerView> {
   void _moveToNextDirectory(String directoryName) =>
       AutoRouter.of(context).push(
         FileExplorerRoute(path: '${widget.path}$directoryName/'),
+      );
+
+  void _previewMedia(String resourceName) => AutoRouter.of(context).push(
+        MediaReaderRoute(
+          path: widget.path,
+          resourceName: resourceName,
+        ),
       );
 
   Future<void> _refreshData() async {
