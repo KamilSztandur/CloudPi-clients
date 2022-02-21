@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
@@ -8,7 +10,6 @@ import 'package:app/contracts/client_index.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/models/file_item.dart';
 import 'package:http/http.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
 
 class DirectoryManager {
@@ -66,29 +67,53 @@ class DirectoryManager {
   }
 
   Future<List<FileItem>?> _getRawList(String path) async {
+    final fileExplorerItems = <FileItem>[];
+
     final result = await _api.filesystemFileStructureGet(
       structureLevels: 999,
       fileStructureRoot: path,
     );
 
-    return [
-      ...(result.body?.root?.children ?? []).map((dto) {
-        final id = dto.pubId;
-        final title = dto.name!;
-        final lastModifiedOn = DateTime.parse(dto.modifiedAt!.toString());
-        final type = _mapBodyTextToType(dto.type);
-        final size = dto.size!.toDouble();
+    for (final dto in result.body?.root?.children ?? <FilesystemObjectDTO>[]) {
+      final id = dto.pubId;
+      final title = dto.name!;
+      final lastModifiedOn = DateTime.parse(dto.modifiedAt!.toString());
+      final type = _mapBodyTextToType(dto.type);
+      final size = dto.size!.toDouble();
+      final thumbnail = type == FileExplorerItemType.image
+          ? await _getImagePreview(dto)
+          : null;
 
-        return FileItem(
+      fileExplorerItems.add(
+        FileItem(
           id: id,
           title: title,
           lastModifiedOn: lastModifiedOn,
           type: type,
           size: size,
-          thumbnailURL: null, //TODO: Handle thumbnails
-        );
-      }),
-    ];
+          thumbnail: thumbnail,
+        ),
+      );
+    }
+
+    return fileExplorerItems;
+  }
+
+  Future<Uint8List?> _getImagePreview(FilesystemObjectDTO dto) async {
+    final result = await _api.filesImagePreviewGet(
+      previewResolution: 64,
+      imageIds: [dto.pubId!],
+    );
+
+    print(dto.pubId);
+
+    if (result.isSuccessful) {
+      final decodedResult = base64Decode(result.bodyString);
+
+      return decodedResult;
+    } else {
+      return null;
+    }
   }
 
   List<FileItem> _sortDirectoryItemsByTypeAndName(List<FileItem> items) {
