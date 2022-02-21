@@ -98,9 +98,7 @@ class _InputFieldPasswordState extends State<InputFieldPassword> {
   }
 
   void _onChanged(String value) {
-    setState(() {
-      widget.onPasswordChanged(value);
-    });
+    widget.onPasswordChanged(value);
   }
 
   String _getPasswordInfo() {
