@@ -91,7 +91,12 @@ class UsersService {
       ),
     );
 
-    return response.isSuccessful;
+    final memoryAllocationResponse = await _api.filesystemUsernamePost(
+      username: user.username,
+      newAssignedSpace: user.allocatedMemoryInMb.toInt(),
+    );
+
+    return response.isSuccessful && memoryAllocationResponse.isSuccessful;
   }
 
   String? getWarningMessageForUserData(User user) {
