@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
-import 'package:app/contracts/api.enums.swagger.dart';
 import 'package:app/contracts/api.swagger.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
@@ -68,10 +67,11 @@ class DirectoryManager {
 
   Future<List<FileItem>?> _getRawList(String path) async {
     final fileExplorerItems = <FileItem>[];
+    final username = await _authManager.getUsernameOfLoggedUser();
 
     final result = await _api.filesystemFileStructureGet(
-      structureLevels: 999,
-      fileStructureRoot: path,
+      structureLevels: 1,
+      fileStructureRoot: '$username$path',
     );
 
     for (final dto in result.body?.root?.children ?? <FilesystemObjectDTO>[]) {
@@ -99,17 +99,27 @@ class DirectoryManager {
   }
 
   Future<Uint8List?> _getImagePreview(FilesystemObjectDTO dto) async {
-    final result = await _api.filesImagePreviewGet(
-      previewResolution: 64,
-      imageIds: [dto.pubId!],
-    );
+    final headers = await _getHeaders()
+      ..addAll({'Content-Type': 'application/json'});
 
-    print(dto.pubId);
+    final request = Request(
+      'GET',
+      Uri.parse('${Config.apiBaseUrl}/files/image-preview'),
+    )..body = json.encode([dto.pubId]);
 
-    if (result.isSuccessful) {
-      final decodedResult = base64Decode(result.bodyString);
+    request.headers.addAll(headers);
 
-      return decodedResult;
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      var encodedThumbnail = await response.stream.bytesToString();
+      encodedThumbnail = encodedThumbnail.substring(
+        2,
+        encodedThumbnail.length - 2,
+      );
+
+      final decodedThumbnail = base64Decode(encodedThumbnail);
+      return decodedThumbnail;
     } else {
       return null;
     }
@@ -133,17 +143,18 @@ class DirectoryManager {
     final result = lookupMimeType(_getFilenameFromPath(file.path));
 
     if (result != null) {
-      if (result.contains('image')) {
+      if (result.toLowerCase().contains('image')) {
         return 'IMAGE';
-      } else if (result.contains('video')) {
+      } else if (result.toLowerCase().contains('video')) {
         return 'VIDEO';
-      } else if (result.contains('text')) {
+      } else if (result.toLowerCase().contains('text')) {
         return 'TEXT_FILE';
-      } else if (result.contains('pdf')) {
+      } else if (result.toLowerCase().contains('pdf')) {
         return 'PDF';
-      } else if (result.contains('audio')) {
+      } else if (result.toLowerCase().contains('audio')) {
         return 'MUSIC';
-      } else if (result.contains('compressed') || result.contains('archive')) {
+      } else if (result.toLowerCase().contains('compressed') ||
+          result.toLowerCase().contains('archive')) {
         return 'COMPRESSED';
       }
     }
@@ -164,8 +175,7 @@ class DirectoryManager {
   }
 
   String _getFilenameFromPath(String path) {
-    var filename = path.split('/').last;
-    filename = filename.substring(1, filename.length);
+    final filename = path.split('/').last;
 
     return filename;
   }
@@ -184,6 +194,8 @@ class DirectoryManager {
         return FileExplorerItemType.music;
       case FilesystemObjectDTOType.compressed:
         return FileExplorerItemType.file;
+      case FilesystemObjectDTOType.pdf:
+        return FileExplorerItemType.pdf;
       default:
         return FileExplorerItemType.file;
     }

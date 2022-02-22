@@ -135,9 +135,10 @@ abstract class Api extends ChopperService {
 
   ///returns all details of user with provided username
   ///@param usernames One or more usernames whose details you want to acquire
-  @Get(path: '/user/{usernames}/details')
-  Future<chopper.Response<List<UserDetailsDTO>>> userUsernamesDetailsGet(
-      {@Path('usernames') required List<String>? usernames});
+  ///@param username
+  @Get(path: '/user/{username}/details')
+  Future<chopper.Response<UserDetailsDTO>> userUsernameDetailsGet(
+      {@Path('username') required String? username});
 
   ///Returns all users
   @Get(path: '/user/')
@@ -682,7 +683,7 @@ class PatchUserRequest {
   PatchUserRequest({
     this.nickname,
     this.email,
-    this.pathToProfilePicture,
+    this.profilePicturePubId,
   });
 
   factory PatchUserRequest.fromJson(Map<String, dynamic> json) =>
@@ -692,8 +693,8 @@ class PatchUserRequest {
   final String? nickname;
   @JsonKey(name: 'email')
   final String? email;
-  @JsonKey(name: 'pathToProfilePicture')
-  final String? pathToProfilePicture;
+  @JsonKey(name: 'profilePicturePubId')
+  final String? profilePicturePubId;
   static const fromJsonFactory = _$PatchUserRequestFromJson;
   static const toJsonFactory = _$PatchUserRequestToJson;
   Map<String, dynamic> toJson() => _$PatchUserRequestToJson(this);
@@ -707,27 +708,26 @@ class PatchUserRequest {
                     .equals(other.nickname, nickname)) &&
             (identical(other.email, email) ||
                 const DeepCollectionEquality().equals(other.email, email)) &&
-            (identical(other.pathToProfilePicture, pathToProfilePicture) ||
+            (identical(other.profilePicturePubId, profilePicturePubId) ||
                 const DeepCollectionEquality()
-                    .equals(other.pathToProfilePicture, pathToProfilePicture)));
+                    .equals(other.profilePicturePubId, profilePicturePubId)));
   }
 
   @override
   int get hashCode =>
       const DeepCollectionEquality().hash(nickname) ^
       const DeepCollectionEquality().hash(email) ^
-      const DeepCollectionEquality().hash(pathToProfilePicture) ^
+      const DeepCollectionEquality().hash(profilePicturePubId) ^
       runtimeType.hashCode;
 }
 
 extension $PatchUserRequestExtension on PatchUserRequest {
   PatchUserRequest copyWith(
-      {String? nickname, String? email, String? pathToProfilePicture}) {
+      {String? nickname, String? email, String? profilePicturePubId}) {
     return PatchUserRequest(
         nickname: nickname ?? this.nickname,
         email: email ?? this.email,
-        pathToProfilePicture:
-            pathToProfilePicture ?? this.pathToProfilePicture);
+        profilePicturePubId: profilePicturePubId ?? this.profilePicturePubId);
   }
 }
 
@@ -780,7 +780,7 @@ class UserDetailsDTO {
   UserDetailsDTO({
     this.username,
     this.email,
-    this.pathToProfilePicture,
+    this.profilePicturePubId,
     this.nickname,
     this.pubId,
     this.roles,
@@ -793,8 +793,8 @@ class UserDetailsDTO {
   final String? username;
   @JsonKey(name: 'email')
   final String? email;
-  @JsonKey(name: 'pathToProfilePicture')
-  final String? pathToProfilePicture;
+  @JsonKey(name: 'profilePicturePubId')
+  final String? profilePicturePubId;
   @JsonKey(name: 'nickname')
   final String? nickname;
   @JsonKey(name: 'pubId')
@@ -817,9 +817,9 @@ class UserDetailsDTO {
                     .equals(other.username, username)) &&
             (identical(other.email, email) ||
                 const DeepCollectionEquality().equals(other.email, email)) &&
-            (identical(other.pathToProfilePicture, pathToProfilePicture) ||
-                const DeepCollectionEquality().equals(
-                    other.pathToProfilePicture, pathToProfilePicture)) &&
+            (identical(other.profilePicturePubId, profilePicturePubId) ||
+                const DeepCollectionEquality()
+                    .equals(other.profilePicturePubId, profilePicturePubId)) &&
             (identical(other.nickname, nickname) ||
                 const DeepCollectionEquality()
                     .equals(other.nickname, nickname)) &&
@@ -833,7 +833,7 @@ class UserDetailsDTO {
   int get hashCode =>
       const DeepCollectionEquality().hash(username) ^
       const DeepCollectionEquality().hash(email) ^
-      const DeepCollectionEquality().hash(pathToProfilePicture) ^
+      const DeepCollectionEquality().hash(profilePicturePubId) ^
       const DeepCollectionEquality().hash(nickname) ^
       const DeepCollectionEquality().hash(pubId) ^
       const DeepCollectionEquality().hash(roles) ^
@@ -844,14 +844,14 @@ extension $UserDetailsDTOExtension on UserDetailsDTO {
   UserDetailsDTO copyWith(
       {String? username,
       String? email,
-      String? pathToProfilePicture,
+      String? profilePicturePubId,
       String? nickname,
       String? pubId,
       List<enums.UserDetailsDTORoles>? roles}) {
     return UserDetailsDTO(
         username: username ?? this.username,
         email: email ?? this.email,
-        pathToProfilePicture: pathToProfilePicture ?? this.pathToProfilePicture,
+        profilePicturePubId: profilePicturePubId ?? this.profilePicturePubId,
         nickname: nickname ?? this.nickname,
         pubId: pubId ?? this.pubId,
         roles: roles ?? this.roles);
@@ -864,7 +864,7 @@ class UserIdDTO {
     this.username,
     this.pubId,
     this.nickname,
-    this.pathToProfilePicture,
+    this.profilePicturePubId,
   });
 
   factory UserIdDTO.fromJson(Map<String, dynamic> json) =>
@@ -876,8 +876,8 @@ class UserIdDTO {
   final String? pubId;
   @JsonKey(name: 'nickname')
   final String? nickname;
-  @JsonKey(name: 'pathToProfilePicture')
-  final String? pathToProfilePicture;
+  @JsonKey(name: 'profilePicturePubId')
+  final String? profilePicturePubId;
   static const fromJsonFactory = _$UserIdDTOFromJson;
   static const toJsonFactory = _$UserIdDTOToJson;
   Map<String, dynamic> toJson() => _$UserIdDTOToJson(this);
@@ -894,9 +894,9 @@ class UserIdDTO {
             (identical(other.nickname, nickname) ||
                 const DeepCollectionEquality()
                     .equals(other.nickname, nickname)) &&
-            (identical(other.pathToProfilePicture, pathToProfilePicture) ||
+            (identical(other.profilePicturePubId, profilePicturePubId) ||
                 const DeepCollectionEquality()
-                    .equals(other.pathToProfilePicture, pathToProfilePicture)));
+                    .equals(other.profilePicturePubId, profilePicturePubId)));
   }
 
   @override
@@ -904,7 +904,7 @@ class UserIdDTO {
       const DeepCollectionEquality().hash(username) ^
       const DeepCollectionEquality().hash(pubId) ^
       const DeepCollectionEquality().hash(nickname) ^
-      const DeepCollectionEquality().hash(pathToProfilePicture) ^
+      const DeepCollectionEquality().hash(profilePicturePubId) ^
       runtimeType.hashCode;
 }
 
@@ -913,13 +913,12 @@ extension $UserIdDTOExtension on UserIdDTO {
       {String? username,
       String? pubId,
       String? nickname,
-      String? pathToProfilePicture}) {
+      String? profilePicturePubId}) {
     return UserIdDTO(
         username: username ?? this.username,
         pubId: pubId ?? this.pubId,
         nickname: nickname ?? this.nickname,
-        pathToProfilePicture:
-            pathToProfilePicture ?? this.pathToProfilePicture);
+        profilePicturePubId: profilePicturePubId ?? this.profilePicturePubId);
   }
 }
 

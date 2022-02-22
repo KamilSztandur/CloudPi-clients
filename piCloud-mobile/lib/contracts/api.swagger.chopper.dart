@@ -158,11 +158,11 @@ class _$Api extends Api {
   }
 
   @override
-  Future<Response<List<UserDetailsDTO>>> userUsernamesDetailsGet(
-      {required List<String>? usernames}) {
-    final $url = '/user/${usernames}/details';
+  Future<Response<UserDetailsDTO>> userUsernameDetailsGet(
+      {required String? username}) {
+    final $url = '/user/${username}/details';
     final $request = Request('GET', $url, client.baseUrl);
-    return client.send<List<UserDetailsDTO>, UserDetailsDTO>($request);
+    return client.send<UserDetailsDTO, UserDetailsDTO>($request);
   }
 
   @override

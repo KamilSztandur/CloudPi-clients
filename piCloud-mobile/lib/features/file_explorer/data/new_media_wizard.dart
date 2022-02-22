@@ -29,7 +29,7 @@ class NewMediaWizard {
     return parsedFiles;
   }
 
-  //WARNING: MOCK -> TODO
+  //TODO
   bool isDirectoryNameTaken(String name) => false;
 
   bool isNameLegal(String name) =>

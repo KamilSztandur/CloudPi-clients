@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 
+import 'package:app/common/auth/auth_manager.dart';
+import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/widgets/app_bar/preview_app_bar.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_error.dart';
 import 'package:app/features/loading_baner/presentation/loading_panel.dart';
@@ -17,10 +19,12 @@ class MediaReaderPage extends StatefulWidget {
     Key? key,
     required this.path,
     required this.resourceName,
+    required this.resourcePubId,
   }) : super(key: key);
 
   final String path;
   final String resourceName;
+  final String? resourcePubId;
 
   @override
   _MediaReaderPageState createState() => _MediaReaderPageState();
@@ -28,10 +32,14 @@ class MediaReaderPage extends StatefulWidget {
 
 class _MediaReaderPageState extends State<MediaReaderPage> {
   late MediaReaderBloc _bloc;
-  final service = MediaReaderService();
+  late MediaReaderService service;
 
   @override
   void initState() {
+    service = MediaReaderService(
+      context.read<AuthManager>(),
+    );
+
     _initializeBloc();
 
     super.initState();
@@ -54,6 +62,10 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
                 } else if (state is MediaDownloadFailureState) {
                   return const FileExplorerErrorWidget(
                     errorMessage: 'Check your internet connection.',
+                  );
+                } else if (state is MediaFileDamagedState) {
+                  return const FileExplorerErrorWidget(
+                    errorMessage: 'File is damaged. Contact administrator.',
                   );
                 } else {
                   return const LoadingPanel();
@@ -87,12 +99,17 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
   void _mediaReaderBlocListener(BuildContext ctx, MediaReaderState state) =>
       setState(() {});
 
-  Uri _generateUriForResource() => Uri(path: widget.path + widget.resourceName);
-
   void _initializeBloc() {
-    _bloc = MediaReaderBloc();
+    _bloc = MediaReaderBloc(service);
 
-    final resourceURI = _generateUriForResource();
-    _bloc.add(RequestMediaDownloadEvent(resource: resourceURI));
+    if (widget.resourcePubId != null) {
+      _bloc.add(
+        RequestMediaDownloadEvent(resourcePubId: widget.resourcePubId!),
+      );
+    } else {
+      _bloc.add(
+        const DetectedDamagedFileEvent(),
+      );
+    }
   }
 }

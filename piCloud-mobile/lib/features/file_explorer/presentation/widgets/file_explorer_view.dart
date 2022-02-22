@@ -128,7 +128,10 @@ class _FileExplorerViewState extends State<FileExplorerView> {
                 if (currentItem.file.type == FileExplorerItemType.directory) {
                   _moveToNextDirectory(currentItem.file.title);
                 } else {
-                  _previewMedia(currentItem.file.title);
+                  _previewMedia(
+                    currentItem.file.title,
+                    currentItem.file.id,
+                  );
                 }
               },
               child: currentItem,
@@ -190,10 +193,12 @@ class _FileExplorerViewState extends State<FileExplorerView> {
         FileExplorerRoute(path: '${widget.path}$directoryName/'),
       );
 
-  void _previewMedia(String resourceName) => AutoRouter.of(context).push(
+  void _previewMedia(String resourceName, String? pubId) =>
+      AutoRouter.of(context).push(
         MediaReaderRoute(
           path: widget.path,
           resourceName: resourceName,
+          resourcePubId: pubId,
         ),
       );
 

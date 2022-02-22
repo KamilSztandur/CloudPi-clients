@@ -11,6 +11,8 @@ enum FileInfoDTOType {
   video,
   @JsonValue('TEXT_FILE')
   textFile,
+  @JsonValue('PDF')
+  pdf,
   @JsonValue('MUSIC')
   music,
   @JsonValue('COMPRESSED')
@@ -24,6 +26,7 @@ const $FileInfoDTOTypeMap = {
   FileInfoDTOType.image: 'IMAGE',
   FileInfoDTOType.video: 'VIDEO',
   FileInfoDTOType.textFile: 'TEXT_FILE',
+  FileInfoDTOType.pdf: 'PDF',
   FileInfoDTOType.music: 'MUSIC',
   FileInfoDTOType.compressed: 'COMPRESSED',
   FileInfoDTOType.undefined: 'UNDEFINED',
@@ -41,6 +44,8 @@ enum FileQueryDTOType {
   video,
   @JsonValue('TEXT_FILE')
   textFile,
+  @JsonValue('PDF')
+  pdf,
   @JsonValue('MUSIC')
   music,
   @JsonValue('COMPRESSED')
@@ -54,6 +59,7 @@ const $FileQueryDTOTypeMap = {
   FileQueryDTOType.image: 'IMAGE',
   FileQueryDTOType.video: 'VIDEO',
   FileQueryDTOType.textFile: 'TEXT_FILE',
+  FileQueryDTOType.pdf: 'PDF',
   FileQueryDTOType.music: 'MUSIC',
   FileQueryDTOType.compressed: 'COMPRESSED',
   FileQueryDTOType.undefined: 'UNDEFINED',
@@ -92,6 +98,8 @@ enum FilesystemObjectDTOType {
   video,
   @JsonValue('TEXT_FILE')
   textFile,
+  @JsonValue('PDF')
+  pdf,
   @JsonValue('MUSIC')
   music,
   @JsonValue('COMPRESSED')
@@ -105,6 +113,7 @@ const $FilesystemObjectDTOTypeMap = {
   FilesystemObjectDTOType.image: 'IMAGE',
   FilesystemObjectDTOType.video: 'VIDEO',
   FilesystemObjectDTOType.textFile: 'TEXT_FILE',
+  FilesystemObjectDTOType.pdf: 'PDF',
   FilesystemObjectDTOType.music: 'MUSIC',
   FilesystemObjectDTOType.compressed: 'COMPRESSED',
   FilesystemObjectDTOType.undefined: 'UNDEFINED',
@@ -122,6 +131,8 @@ enum FilesFilePostFileType {
   video,
   @JsonValue('TEXT_FILE')
   textFile,
+  @JsonValue('PDF')
+  pdf,
   @JsonValue('MUSIC')
   music,
   @JsonValue('COMPRESSED')
@@ -135,6 +146,7 @@ const $FilesFilePostFileTypeMap = {
   FilesFilePostFileType.image: 'IMAGE',
   FilesFilePostFileType.video: 'VIDEO',
   FilesFilePostFileType.textFile: 'TEXT_FILE',
+  FilesFilePostFileType.pdf: 'PDF',
   FilesFilePostFileType.music: 'MUSIC',
   FilesFilePostFileType.compressed: 'COMPRESSED',
   FilesFilePostFileType.undefined: 'UNDEFINED',

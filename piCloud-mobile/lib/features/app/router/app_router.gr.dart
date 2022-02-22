@@ -58,7 +58,10 @@ class AppRouter extends _i12.RootStackRouter {
       return _i12.MaterialPageX<void>(
           routeData: routeData,
           child: _i6.MediaReaderPage(
-              key: args.key, path: args.path, resourceName: args.resourceName),
+              key: args.key,
+              path: args.path,
+              resourceName: args.resourceName,
+              resourcePubId: args.resourcePubId),
           fullscreenDialog: true);
     },
     LibrariesRoute.name: (routeData) {
@@ -158,24 +161,35 @@ class FileExplorerRouteArgs {
 /// generated route for [_i6.MediaReaderPage]
 class MediaReaderRoute extends _i12.PageRouteInfo<MediaReaderRouteArgs> {
   MediaReaderRoute(
-      {_i13.Key? key, required String path, required String resourceName})
+      {_i13.Key? key,
+      required String path,
+      required String resourceName,
+      required String? resourcePubId})
       : super(name,
             path: '/media-reader-page',
             args: MediaReaderRouteArgs(
-                key: key, path: path, resourceName: resourceName));
+                key: key,
+                path: path,
+                resourceName: resourceName,
+                resourcePubId: resourcePubId));
 
   static const String name = 'MediaReaderRoute';
 }
 
 class MediaReaderRouteArgs {
   const MediaReaderRouteArgs(
-      {this.key, required this.path, required this.resourceName});
+      {this.key,
+      required this.path,
+      required this.resourceName,
+      required this.resourcePubId});
 
   final _i13.Key? key;
 
   final String path;
 
   final String resourceName;
+
+  final String? resourcePubId;
 }
 
 /// generated route for [_i7.LibrariesPage]

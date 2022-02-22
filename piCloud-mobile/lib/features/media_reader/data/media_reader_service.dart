@@ -1,27 +1,40 @@
+import 'dart:io';
 import 'dart:typed_data';
+
+import 'package:app/common/auth/auth_manager.dart';
+import 'package:app/common/core/config.dart';
+import 'package:app/contracts/client_index.dart';
 import 'package:app/features/media_reader/data/media_reader_supported_types.dart';
-import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 
 class MediaReaderService {
+  MediaReaderService(
+    this._authManager,
+  );
+
+  final AuthManager _authManager;
   final _typeResolver = MimeTypeResolver();
 
-  final testImageURL =
-      'https://img.redro.pl/obrazy/clouded-leopard-in-tree-700-113986304.jpg';
+  Future<Uint8List> downloadBytes(String resourcePubId) async {
+    final headers = await _getHeaders();
 
-  final testTextURL = 'https://wolnelektury.pl/media/book/txt/pan-tadeusz.txt';
+    final request = http.Request(
+      'GET',
+      Uri.parse('${Config.apiBaseUrl}/files/file/$resourcePubId'),
+    );
 
-  //TODO
-  Future<Uint8List> downloadBytes(Uri resoruce) async {
-    await Future<void>.delayed(const Duration(seconds: 2));
+    request.headers.addAll(headers);
 
-    final resourceData = await NetworkAssetBundle(
-      Uri.parse(testTextURL),
-    ).load('');
+    final response = await request.send();
 
-    final bytes = resourceData.buffer.asUint8List();
-
-    return bytes;
+    if (response.statusCode == 200) {
+      return response.stream.toBytes();
+    } else {
+      throw HttpException(
+        'Response different than 200: ${response.statusCode}',
+      );
+    }
   }
 
   MediaReaderSupportedTypes defineMediaType(String name) {
@@ -50,5 +63,13 @@ class MediaReaderService {
     }
 
     return MediaReaderSupportedTypes.file;
+  }
+
+  Future<Map<String, String>> _getHeaders() async {
+    var headers = {
+      'Authorization': 'Bearer ${await _authManager.getAccessToken()}'
+    };
+
+    return headers;
   }
 }

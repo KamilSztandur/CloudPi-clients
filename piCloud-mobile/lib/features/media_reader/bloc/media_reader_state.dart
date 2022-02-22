@@ -16,13 +16,13 @@ class InitialState extends MediaReaderState {
 
 class DownloadingMediaState extends MediaReaderState {
   const DownloadingMediaState({
-    required this.resource,
+    required this.resourcePubId,
   });
 
-  final Uri resource;
+  final String resourcePubId;
 
   @override
-  List<Object> get props => [resource];
+  List<Object> get props => [resourcePubId];
 }
 
 class MediaDownloadSuccessState extends MediaReaderState {
@@ -45,4 +45,11 @@ class MediaDownloadFailureState extends MediaReaderState {
 
   @override
   List<Object> get props => [errorMessage];
+}
+
+class MediaFileDamagedState extends MediaReaderState {
+  const MediaFileDamagedState();
+
+  @override
+  List<Object> get props => [];
 }

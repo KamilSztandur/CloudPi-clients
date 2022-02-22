@@ -9,11 +9,18 @@ abstract class MediaReaderEvent extends Equatable {
 
 class RequestMediaDownloadEvent extends MediaReaderEvent {
   const RequestMediaDownloadEvent({
-    required this.resource,
+    required this.resourcePubId,
   });
 
-  final Uri resource;
+  final String resourcePubId;
 
   @override
-  List<Object> get props => [resource];
+  List<Object> get props => [resourcePubId];
+}
+
+class DetectedDamagedFileEvent extends MediaReaderEvent {
+  const DetectedDamagedFileEvent();
+
+  @override
+  List<Object> get props => [];
 }

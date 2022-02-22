@@ -131,14 +131,14 @@ PatchUserRequest _$PatchUserRequestFromJson(Map<String, dynamic> json) =>
     PatchUserRequest(
       nickname: json['nickname'] as String?,
       email: json['email'] as String?,
-      pathToProfilePicture: json['pathToProfilePicture'] as String?,
+      profilePicturePubId: json['profilePicturePubId'] as String?,
     );
 
 Map<String, dynamic> _$PatchUserRequestToJson(PatchUserRequest instance) =>
     <String, dynamic>{
       'nickname': instance.nickname,
       'email': instance.email,
-      'pathToProfilePicture': instance.pathToProfilePicture,
+      'profilePicturePubId': instance.profilePicturePubId,
     };
 
 MoveFileRequest _$MoveFileRequestFromJson(Map<String, dynamic> json) =>
@@ -157,7 +157,7 @@ UserDetailsDTO _$UserDetailsDTOFromJson(Map<String, dynamic> json) =>
     UserDetailsDTO(
       username: json['username'] as String?,
       email: json['email'] as String?,
-      pathToProfilePicture: json['pathToProfilePicture'] as String?,
+      profilePicturePubId: json['profilePicturePubId'] as String?,
       nickname: json['nickname'] as String?,
       pubId: json['pubId'] as String?,
       roles: userDetailsDTORolesListFromJson(json['roles'] as List?),
@@ -167,7 +167,7 @@ Map<String, dynamic> _$UserDetailsDTOToJson(UserDetailsDTO instance) =>
     <String, dynamic>{
       'username': instance.username,
       'email': instance.email,
-      'pathToProfilePicture': instance.pathToProfilePicture,
+      'profilePicturePubId': instance.profilePicturePubId,
       'nickname': instance.nickname,
       'pubId': instance.pubId,
       'roles': userDetailsDTORolesListToJson(instance.roles),
@@ -177,14 +177,14 @@ UserIdDTO _$UserIdDTOFromJson(Map<String, dynamic> json) => UserIdDTO(
       username: json['username'] as String?,
       pubId: json['pubId'] as String?,
       nickname: json['nickname'] as String?,
-      pathToProfilePicture: json['pathToProfilePicture'] as String?,
+      profilePicturePubId: json['profilePicturePubId'] as String?,
     );
 
 Map<String, dynamic> _$UserIdDTOToJson(UserIdDTO instance) => <String, dynamic>{
       'username': instance.username,
       'pubId': instance.pubId,
       'nickname': instance.nickname,
-      'pathToProfilePicture': instance.pathToProfilePicture,
+      'profilePicturePubId': instance.profilePicturePubId,
     };
 
 FilesystemInfoDTO _$FilesystemInfoDTOFromJson(Map<String, dynamic> json) =>

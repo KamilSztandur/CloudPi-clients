@@ -18,16 +18,19 @@ class _TextPreviewState extends State<TextPreview> {
   final ScrollController _controller = ScrollController();
 
   @override
-  Widget build(BuildContext context) => InteractiveViewer(
-        minScale: 0.5,
-        maxScale: 2,
-        child: SingleChildScrollView(
-          controller: _controller,
-          child: Scrollbar(
+  Widget build(BuildContext context) => Align(
+        alignment: Alignment.topLeft,
+        child: InteractiveViewer(
+          minScale: 0.5,
+          maxScale: 2,
+          child: SingleChildScrollView(
             controller: _controller,
-            isAlwaysShown: true,
-            child: SelectableText(
-              _getText(),
+            child: Scrollbar(
+              controller: _controller,
+              isAlwaysShown: true,
+              child: SelectableText(
+                _getText(),
+              ),
             ),
           ),
         ),
