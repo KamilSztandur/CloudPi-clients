@@ -8,11 +8,11 @@ part 'media_reader_event.dart';
 part 'media_reader_state.dart';
 
 class MediaReaderBloc extends Bloc<MediaReaderEvent, MediaReaderState> {
-  MediaReaderBloc(MediaReaderService mediaReaderService)
-      : service = mediaReaderService,
-        super(const InitialState());
+  MediaReaderBloc(
+    this.mediaReaderService,
+  ) : super(const InitialState());
 
-  final MediaReaderService service;
+  final MediaReaderService mediaReaderService;
 
   @override
   Stream<MediaReaderState> mapEventToState(MediaReaderEvent event) async* {
@@ -27,7 +27,8 @@ class MediaReaderBloc extends Bloc<MediaReaderEvent, MediaReaderState> {
     yield DownloadingMediaState(resourcePubId: event.resourcePubId);
 
     try {
-      final mediaBytes = await service.downloadBytes(event.resourcePubId);
+      final mediaBytes =
+          await mediaReaderService.downloadBytes(event.resourcePubId);
 
       yield MediaDownloadSuccessState(resourceBytes: mediaBytes);
     } catch (exception) {

@@ -30,9 +30,12 @@ class NewMediaWizard {
   }
 
   //TODO
-  bool isDirectoryNameTaken(String name) => false;
+  bool isNameTaken(String name) => false;
 
-  bool isNameLegal(String name) =>
+  bool isFilenameLegal(String name) =>
+      RegExp(r'^[a-zA-Z0-9\(\). ]+$').hasMatch(name);
+
+  bool isDirectoryNameLegal(String name) =>
       RegExp(r'^[a-zA-Z0-9\(\) ]+$').hasMatch(name);
 
   Future<File?> takePhoto() async {

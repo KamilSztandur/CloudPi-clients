@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 
 class NoPreviewAvailable extends StatefulWidget {
@@ -7,10 +5,12 @@ class NoPreviewAvailable extends StatefulWidget {
     Key? key,
     required this.path,
     required this.resourceName,
+    required this.onDownloadRequested,
   }) : super(key: key);
 
   final String path;
   final String resourceName;
+  final VoidCallback onDownloadRequested;
 
   @override
   _NoPreviewAvailableState createState() => _NoPreviewAvailableState();
@@ -46,14 +46,10 @@ class _NoPreviewAvailableState extends State<NoPreviewAvailable> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _downloadMediaToDevice,
+              onPressed: widget.onDownloadRequested,
               child: const Text('Download'),
             ),
           ],
         ),
       );
-
-  void _downloadMediaToDevice() {
-    //TODO
-  }
 }

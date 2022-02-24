@@ -1,23 +1,30 @@
+import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/file_explorer/data/new_media_wizard.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
-class CreateDirectoryPopup {
-  CreateDirectoryPopup({
-    required this.namePicked,
+class RenameFilePopup {
+  RenameFilePopup({
     required this.context,
+    required this.currentName,
+    required this.currentPath,
+    required this.resourceId,
   });
 
-  final Function(String) namePicked;
   final BuildContext context;
+  final String currentName, currentPath, resourceId;
+
   final TextEditingController _controller = TextEditingController();
+  late DirectoryManager _directoryManager;
   String? _warningMessage;
 
   void show() {
+    _directoryManager = context.read<DirectoryManager>();
+
     showDialog<void>(
       context: context,
       builder: (context) {
-        // return alert dialog object
         return StatefulBuilder(
           builder: (context, setState) => AlertDialog(
             contentPadding: const EdgeInsets.only(
@@ -50,7 +57,7 @@ class CreateDirectoryPopup {
   }
 
   Widget _getTitle() => Text(
-        'Create new directory',
+        'Rename $currentName',
         textAlign: TextAlign.center,
         style: TextStyle(
           color: Theme.of(context).primaryColorDark,
@@ -108,8 +115,8 @@ class CreateDirectoryPopup {
   Widget _getCreateButton(void Function(void Function()) setState) => SizedBox(
         width: double.infinity,
         child: ElevatedButton(
-          onPressed: () => _onCreatePressed(setState),
-          child: const Text('Create'),
+          onPressed: () => _onRenamePressed(setState),
+          child: const Text('Rename'),
         ),
       );
 
@@ -123,19 +130,18 @@ class CreateDirectoryPopup {
         ),
       );
 
-  void _onCreatePressed(void Function(void Function()) setState) {
+  Future<void> _onRenamePressed(void Function(void Function()) setState) async {
     final wizard = NewMediaWizard();
-    final name = _controller.text;
+    final newName = _controller.text;
 
-    if (wizard.isDirectoryNameLegal(name)) {
-      if (wizard.isNameTaken(name)) {
+    if (wizard.isFilenameLegal(newName)) {
+      if (wizard.isNameTaken(newName)) {
         setState(
           () {
             _warningMessage = 'Directory with this name already exists.';
           },
         );
       } else {
-        namePicked(name);
         _close();
       }
     } else {
@@ -145,6 +151,28 @@ class CreateDirectoryPopup {
         },
       );
     }
+
+    final isSuccessful = await _directoryManager.rename(
+      currentPath,
+      newName,
+      resourceId,
+    );
+
+    var message = '';
+    if (isSuccessful) {
+      message = '$currentName renamed to $newName.';
+
+      await AutoRouter.of(context).pop();
+    } else {
+      message = 'Failed to rename $currentName.';
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Text(message),
+      ),
+    );
   }
 
   void _close() => AutoRouter.of(context).pop();

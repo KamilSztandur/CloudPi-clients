@@ -8,6 +8,7 @@ import 'package:app/contracts/api.swagger.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/models/file_item.dart';
+import 'package:dio/dio.dart' as dio;
 import 'package:http/http.dart';
 import 'package:mime/mime.dart';
 
@@ -63,6 +64,55 @@ class DirectoryManager {
     final result = await uploadFile(path, file);
 
     return result;
+  }
+
+  Future<bool> deleteFile(String pubId) async {
+    final result = await _api.filesFileFileIdDelete(fileId: pubId);
+
+    return result.isSuccessful;
+  }
+
+  Future<bool> deleteDirectory(String pubId) async {
+    final result = await _api.filesystemDirectoryDirectoryIdDelete(
+      directoryId: pubId,
+    );
+
+    return result.isSuccessful;
+  }
+
+  Future<void> downloadMediaToDevice(String name, String pubId) async {
+    final dioClient = dio.Dio();
+
+    final headers = await _getHeaders();
+    final requestUrl = '${Config.apiBaseUrl}/files/file/$pubId';
+
+    await dioClient.download(
+      requestUrl,
+      '/storage/emulated/0/Download/$name',
+      onReceiveProgress: (received, total) {
+        //TODO
+      },
+      options: dio.Options(headers: headers),
+    );
+  }
+
+  Future<bool> rename(
+    String containingDirectoryPath,
+    String newName,
+    String pubId,
+  ) async {
+    final path =
+        '${await _authManager.getUsernameOfLoggedUser()}$containingDirectoryPath$newName';
+
+    final result = await _api.filesystemMovePatch(
+      body: MoveFileRequest(filePubId: pubId, newPath: path),
+    );
+
+    print(path);
+    print(result.statusCode);
+    print(pubId);
+
+    return result.isSuccessful;
   }
 
   Future<List<FileItem>?> _getRawList(String path) async {

@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:app/contracts/client_index.dart';
+import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/selection_icon_button_choice.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
+import 'package:pedantic/pedantic.dart';
 import 'package:provider/src/provider.dart';
 
 class SelectionAppBar extends StatefulWidget implements PreferredSizeWidget {
@@ -14,13 +16,11 @@ class SelectionAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.title,
     this.selection = const Selection.empty(),
     required this.allItems,
-    required this.api,
   }) : super(key: key);
 
   final Widget? title;
   final Selection selection;
   final List<FileExplorerItem> allItems;
-  final Api api;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -30,6 +30,14 @@ class SelectionAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _SelectionAppBarState extends State<SelectionAppBar> {
+  late DirectoryManager _directoryManager;
+
+  @override
+  void initState() {
+    _directoryManager = context.read<DirectoryManager>();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -68,16 +76,12 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
   List<SelectionIconButtonChoice> _getHamburgerMenuBody() =>
       <SelectionIconButtonChoice>[
         const SelectionIconButtonChoice(
-          title: 'Move',
-          icon: Icons.subdirectory_arrow_left_outlined,
+          title: 'Download',
+          icon: Icons.download_outlined,
         ),
         const SelectionIconButtonChoice(
           title: 'Rename',
           icon: Icons.edit_outlined,
-        ),
-        const SelectionIconButtonChoice(
-          title: 'Download',
-          icon: Icons.download_outlined,
         ),
         const SelectionIconButtonChoice(
           title: 'Delete',
@@ -95,10 +99,6 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
 
   void _onHamburgerItemPressed(SelectionIconButtonChoice value) {
     switch (value.title) {
-      case 'Move':
-        _onMovePressed();
-        return;
-
       case 'Rename':
         _onRenamePressed();
         return;
@@ -108,7 +108,7 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
         return;
 
       case 'Delete':
-        _onDeletePressed().whenComplete(() => null); //TODO: refresh items
+        _onDeletePressed();
         return;
 
       case 'Details':
@@ -124,73 +124,29 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
     }
   }
 
-  void _onMovePressed() {
-    //TODO
-  }
-
   void _onRenamePressed() {
     //TODO
   }
 
-  Future<void> _onDownloadPressed() async {
+  void _onAddToFavouritesPressed() {
     //TODO
+  }
+
+  Future<void> _onDownloadPressed() async {
     for (final item in _getSelectedItems()) {
-      final file = await widget.api.filesFileFileIdGet(fileId: item.file.id);
+      unawaited(
+        _directoryManager.downloadMediaToDevice(
+          item.file.title,
+          item.file.id!,
+        ),
+      );
     }
   }
 
   Future<void> _onDeletePressed() async {
-    final api = widget.api;
-
     await showDialog<void>(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Deleting...'),
-          contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 4),
-          content: const SingleChildScrollView(
-            child: Text(
-              'Are you sure you want to delete selected files?',
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () async {
-                for (final item in _getSelectedItems()) {
-                  if (item.file.type == FileExplorerItemType.directory) {
-                    await api.filesystemDirectoryDirectoryIdDelete(
-                      directoryId: item.file.id,
-                    );
-                  } else {
-                    await api.filesFileFileIdDelete(fileId: item.file.id);
-                  }
-                }
-
-                Navigator.pop(context);
-              },
-              child: const Text(
-                'Yes',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontSize: 20,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text(
-                'No',
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+      builder: (context) => _getConfirmDeletePopop(),
     );
   }
 
@@ -203,51 +159,103 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
 
       await showDialog<void>(
         context: context,
-        builder: (context) {
-          return AlertDialog(
-            contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-            title: Text('File $i/${selectedItems.length}'),
-            content: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _getDetailWidget(
-                    'Title',
-                    item.file.title,
-                  ),
-                  _getDetailWidget(
-                    'Type',
-                    _formatType(item.file.type),
-                  ),
-                  _getDetailWidget(
-                    'Last modified',
-                    _formatDate(item.file.lastModifiedOn),
-                  ),
-                  if (item.file.type != FileExplorerItemType.directory)
-                    _getDetailWidget(
-                      'Size',
-                      item.file.size.toString(),
-                    )
-                  else
-                    Container(height: 0),
-                ],
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  'Ok',
-                  style: TextStyle(fontSize: 20),
-                ),
-              )
-            ],
-          );
-        },
+        builder: (context) => _getDetailsPopup(selectedItems.length, item, i),
       );
     }
+  }
+
+  Widget _getConfirmDeletePopop() {
+    return AlertDialog(
+      title: const Text('Deleting...'),
+      contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 4),
+      content: const SingleChildScrollView(
+        child: Text(
+          'Are you sure you want to delete selected files?',
+          style: TextStyle(fontSize: 18),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () async {
+            for (final item in _getSelectedItems()) {
+              if (item.file.type == FileExplorerItemType.directory) {
+                unawaited(_directoryManager.deleteDirectory(item.file.id!));
+              } else {
+                unawaited(_directoryManager.deleteFile(item.file.id!));
+              }
+            }
+
+            Navigator.pop(context);
+          },
+          child: const Text(
+            'Yes',
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 20,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text(
+            'No',
+            style: TextStyle(
+              fontSize: 20,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _getDetailsPopup(
+    int length,
+    FileExplorerItem currentItem,
+    int currentIndex,
+  ) {
+    return AlertDialog(
+      contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+      title: Text('File $currentIndex/$length'),
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _getDetailWidget(
+              'Title',
+              currentItem.file.title,
+            ),
+            _getDetailWidget(
+              'Type',
+              _formatType(currentItem.file.type),
+            ),
+            _getDetailWidget(
+              'Last modified',
+              _formatDate(currentItem.file.lastModifiedOn),
+            ),
+            if (currentItem.file.type != FileExplorerItemType.directory)
+              _getDetailWidget(
+                'Size',
+                currentItem.file.size.toString(),
+              )
+            else
+              Container(height: 0),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: const Text(
+            'Ok',
+            style: TextStyle(fontSize: 20),
+          ),
+        )
+      ],
+    );
   }
 
   Widget _getDetailWidget(String label, String value) {
@@ -292,10 +300,6 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
     final result = dateTime.toString();
     final indexOfDot = result.indexOf('.');
     return result.substring(0, indexOfDot);
-  }
-
-  void _onAddToFavouritesPressed() {
-    //TODO
   }
 
   List<FileExplorerItem> _getSelectedItems() {

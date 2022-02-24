@@ -8,9 +8,17 @@ class PreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
   const PreviewAppBar({
     Key? key,
     required this.resourceName,
+    required this.onDownloadRequested,
+    required this.onDeleteRequested,
+    required this.onRenameRequested,
+    required this.onShareRequested,
   }) : super(key: key);
 
   final String resourceName;
+  final VoidCallback onDownloadRequested;
+  final VoidCallback onDeleteRequested;
+  final VoidCallback onRenameRequested;
+  final VoidCallback onShareRequested;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -110,19 +118,11 @@ class PreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
   }
 
-  void _onSharePressed() {
-    //TODO
-  }
+  void _onSharePressed() => onShareRequested();
 
-  void _onRenamePressed() {
-    //TODO
-  }
+  void _onRenamePressed() => onRenameRequested();
 
-  void _onDeletePressed() {
-    //TODO
-  }
+  void _onDeletePressed() => onDeleteRequested();
 
-  void _onDownloadPressed() {
-    //TODO
-  }
+  void _onDownloadPressed() => onDownloadRequested();
 }

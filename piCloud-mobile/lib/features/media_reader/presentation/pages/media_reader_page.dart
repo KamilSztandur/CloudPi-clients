@@ -1,8 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:app/common/auth/auth_manager.dart';
-import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/widgets/app_bar/preview_app_bar.dart';
+import 'package:app/features/file_explorer/data/directory_manager.dart';
+import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/rename_file.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_error.dart';
 import 'package:app/features/loading_baner/presentation/loading_panel.dart';
 import 'package:app/features/media_reader/bloc/media_reader_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:app/features/media_reader/data/media_reader_supported_types.dart
 import 'package:app/features/media_reader/presentation/widgets/image_preview.dart';
 import 'package:app/features/media_reader/presentation/widgets/no_preview_available.dart';
 import 'package:app/features/media_reader/presentation/widgets/txt_preview.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,14 +34,13 @@ class MediaReaderPage extends StatefulWidget {
 
 class _MediaReaderPageState extends State<MediaReaderPage> {
   late MediaReaderBloc _bloc;
-  late MediaReaderService service;
+  late MediaReaderService _service;
+  late DirectoryManager _directoryManager;
 
   @override
   void initState() {
-    service = MediaReaderService(
-      context.read<AuthManager>(),
-    );
-
+    _service = MediaReaderService(context.read<AuthManager>());
+    _directoryManager = context.read<DirectoryManager>();
     _initializeBloc();
 
     super.initState();
@@ -48,7 +49,13 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreviewAppBar(resourceName: widget.resourceName),
+      appBar: PreviewAppBar(
+        resourceName: widget.resourceName,
+        onShareRequested: _onShareRequested,
+        onDeleteRequested: _onDeleteRequested,
+        onDownloadRequested: _onDownloadRequested,
+        onRenameRequested: _onRenameRequested,
+      ),
       body: Center(
         child: BlocProvider.value(
           value: _bloc,
@@ -79,7 +86,7 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
   }
 
   Widget _buildPreviewForResourceOfType(Uint8List resourceBytes) {
-    final type = service.defineMediaType(widget.resourceName);
+    final type = _service.defineMediaType(widget.resourceName);
 
     switch (type) {
       case MediaReaderSupportedTypes.image:
@@ -92,15 +99,56 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
         return NoPreviewAvailable(
           path: widget.path,
           resourceName: widget.resourceName,
+          onDownloadRequested: _onDownloadRequested,
         );
     }
+  }
+
+  void _onDownloadRequested() => _service.downloadMediaToDevice(
+        widget.resourceName,
+        widget.resourcePubId ?? '',
+      );
+
+  void _onRenameRequested() => RenameFilePopup(
+        context: context,
+        currentName: widget.resourceName,
+        currentPath: widget.path,
+        resourceId: widget.resourcePubId!,
+      ).show();
+
+  Future<void> _onDeleteRequested() async {
+    final isSuccessful = await _directoryManager.deleteFile(
+      widget.resourcePubId!,
+    );
+
+    var message = '';
+    if (isSuccessful) {
+      message = '${widget.resourceName} deleted.';
+
+      await AutoRouter.of(context).pop();
+    } else {
+      message = 'Failed to delete ${widget.resourceName}';
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        content: Text(message),
+      ),
+    );
+  }
+
+  void _onShareRequested() {
+    //TODO
   }
 
   void _mediaReaderBlocListener(BuildContext ctx, MediaReaderState state) =>
       setState(() {});
 
   void _initializeBloc() {
-    _bloc = MediaReaderBloc(service);
+    _bloc = MediaReaderBloc(
+      _service,
+    );
 
     if (widget.resourcePubId != null) {
       _bloc.add(
