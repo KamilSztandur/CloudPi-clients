@@ -55,7 +55,7 @@ class UsersService {
           allocatedMemoryInMb: allocatedMemory!.toDouble(),
           email: email,
           nickname: nickname!,
-          password: 'password :D', //TODO
+          password: '',
           username: username!,
         ),
       );
@@ -107,14 +107,17 @@ class UsersService {
     return response.isSuccessful && memoryAllocationResponse.isSuccessful;
   }
 
-  String? getWarningMessageForUserData(User user) {
-    final allValuesFilled = user.nickname.isNotEmpty &&
+  String? getWarningMessageForUserData(User user, bool creatingNewUser) {
+    final allValuesWithoutPasswordFilled = user.nickname.isNotEmpty &&
         user.username.isNotEmpty &&
-        user.password.isNotEmpty &&
         user.allocatedMemoryInMb > 0 &&
         user.email!.isNotEmpty;
 
-    if (allValuesFilled) {
+    final allValuesFilled =
+        allValuesWithoutPasswordFilled && user.password.isNotEmpty;
+
+    if (allValuesFilled ||
+        (!creatingNewUser && allValuesWithoutPasswordFilled)) {
       final alphanumericPattern = RegExp(r'^[a-zA-Z0-9]+$');
       final alphanumericAndSpacePattern = RegExp(r'^[a-zA-Z0-9 ]+$');
       final passwordPattern = RegExp(r'^[a-zA-Z0-9!@#\$%\^&_\-?]+$');
@@ -130,11 +133,11 @@ class UsersService {
         return 'Invalid nickname.';
       }
 
-      if (!passwordPattern.hasMatch(user.password)) {
+      if (!passwordPattern.hasMatch(user.password) && creatingNewUser) {
         return 'Invalid password.';
       }
 
-      if (user.password.length < Config.minPasswordLength) {
+      if (creatingNewUser && user.password.length < Config.minPasswordLength) {
         return "Pasword's too short (min. 6 characters).";
       }
 

@@ -38,7 +38,7 @@ class _UserWizardPageState extends State<UserWizardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PICloudAppBar(
-        title: widget.user == null ? 'Create new user' : 'Edit user',
+        title: _isThisNewUserCreation() ? 'Create new user' : 'Edit user',
       ),
       body: SingleChildScrollView(
         controller: _scrollController,
@@ -56,6 +56,7 @@ class _UserWizardPageState extends State<UserWizardPage> {
                     hintText: 'johnsmith',
                     onChanged: _onUsernameChanged,
                     initialValue: user.username,
+                    isEnabled: _isThisNewUserCreation(),
                   ),
                 ),
                 Container(
@@ -73,13 +74,15 @@ class _UserWizardPageState extends State<UserWizardPage> {
               hintText: 'John Smith',
               onChanged: _onNicknameChanged,
               initialValue: user.nickname,
+              isEnabled: true,
             ),
             const SizedBox(height: 10),
             InputFieldPassword(
-              headerText: 'Password',
-              hintTexti: 'At least 8 Charecter',
+              headerText: _isThisNewUserCreation()
+                  ? 'Password'
+                  : 'New Password (or empty)',
+              hintTexti: 'At least 8 characters',
               onPasswordChanged: _onPasswordChanged,
-              initialValue: user.password,
             ),
             const SizedBox(height: 10),
             InputField(
@@ -87,6 +90,7 @@ class _UserWizardPageState extends State<UserWizardPage> {
               hintText: 'john@smith.eu',
               onChanged: _onEmailChanged,
               initialValue: user.email,
+              isEnabled: true,
             ),
             const SizedBox(height: 10),
             MemoryAllocationInput(
@@ -113,9 +117,9 @@ class _UserWizardPageState extends State<UserWizardPage> {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: _onCreatePressed,
-          child: const Text(
-            'Create',
-            style: TextStyle(
+          child: Text(
+            widget.user == null ? 'Create' : 'Save changes',
+            style: const TextStyle(
               fontSize: 22.5,
               color: Colors.white,
             ),
@@ -162,7 +166,8 @@ class _UserWizardPageState extends State<UserWizardPage> {
   void _onCancelPressed() => AutoRouter.of(context).pop();
 
   void _onCreatePressed() {
-    final errorMessage = service.getWarningMessageForUserData(user);
+    final errorMessage =
+        service.getWarningMessageForUserData(user, _isThisNewUserCreation());
 
     if (errorMessage == null) {
       if (_isThisNewUserCreation()) {

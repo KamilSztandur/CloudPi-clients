@@ -7,6 +7,7 @@ class InputField extends StatelessWidget {
     required this.hintText,
     required this.onChanged,
     this.initialValue,
+    required this.isEnabled,
   }) : super(key: key);
 
   final Function(String) onChanged;
@@ -14,6 +15,7 @@ class InputField extends StatelessWidget {
   final String headerText;
   final String hintText;
   final String? initialValue;
+  final bool isEnabled;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class InputField extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             child: TextField(
+              enabled: isEnabled,
               controller: _controller,
               onChanged: onChanged,
               decoration: InputDecoration(

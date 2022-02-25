@@ -8,13 +8,11 @@ class InputFieldPassword extends StatefulWidget {
     required this.headerText,
     required this.hintTexti,
     required this.onPasswordChanged,
-    this.initialValue,
   }) : super(key: key);
 
   final String headerText;
   final String hintTexti;
   final Function(String) onPasswordChanged;
-  final String? initialValue;
 
   @override
   State<InputFieldPassword> createState() => _InputFieldPasswordState();
@@ -26,8 +24,6 @@ class _InputFieldPasswordState extends State<InputFieldPassword> {
 
   @override
   Widget build(BuildContext context) {
-    _controller.text = widget.initialValue ?? '';
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -69,8 +65,10 @@ class _InputFieldPasswordState extends State<InputFieldPassword> {
                     color: Theme.of(context).primaryColorDark,
                   ),
                   onPressed: () {
+                    final text = _controller.text;
                     setState(() {
                       _visible = !_visible;
+                      _controller.text = text;
                     });
                   },
                 ),
