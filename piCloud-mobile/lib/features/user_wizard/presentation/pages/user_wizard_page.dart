@@ -179,7 +179,10 @@ class _UserWizardPageState extends State<UserWizardPage> {
       AutoRouter.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
+        SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Theme.of(context).primaryColor,
+        ),
       );
     }
   }
