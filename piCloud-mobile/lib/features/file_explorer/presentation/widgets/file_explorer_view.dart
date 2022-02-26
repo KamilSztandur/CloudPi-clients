@@ -1,3 +1,5 @@
+import 'package:app/common/models/view_mode.dart';
+import 'package:app/common/preferences/view_mode_cubit.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:app/features/file_explorer/bloc/file_explorer_bloc.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
@@ -47,16 +49,9 @@ class _FileExplorerViewState extends State<FileExplorerView> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _checkIfPreferredViewIsList(),
-      builder: (context, snapshot) {
-        if (snapshot.data != null) {
-          return _buildFileExplorerView(snapshot.data! as bool);
-        } else {
-          return const LoadingPanel();
-        }
-      },
-    );
+    final viewMode = context.watch<ViewModeCubit>().state;
+
+    return _buildFileExplorerView(viewMode == ViewMode.list);
   }
 
   Widget _buildFileExplorerView(bool displayAsListView) {
@@ -134,12 +129,6 @@ class _FileExplorerViewState extends State<FileExplorerView> {
       widget.setItems(items);
       return items;
     }
-  }
-
-  Future<bool> _checkIfPreferredViewIsList() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    return prefs.getString('preferredView') == 'list';
   }
 
   List<FileExplorerListItem> _getItemWidgetsListForListView() {

@@ -1,4 +1,7 @@
+import 'package:app/common/models/view_mode.dart';
+import 'package:app/common/preferences/view_mode_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SwitchViewButton extends StatefulWidget {
@@ -16,12 +19,14 @@ class SwitchViewButton extends StatefulWidget {
 class _SwitchViewButtonState extends State<SwitchViewButton> {
   @override
   Widget build(BuildContext context) {
+    final viewMode = context.watch<ViewModeCubit>().state;
+
     return FutureBuilder(
-      future: _getIcon(),
+      future: _getIcon(viewMode),
       builder: (context, snapshot) {
         if (snapshot.data != null) {
           return IconButton(
-            onPressed: _onSwitchPressed,
+            onPressed: () => _onSwitchPressed(context),
             icon: Icon(
               snapshot.data! as IconData,
               color: Colors.white,
@@ -34,44 +39,16 @@ class _SwitchViewButtonState extends State<SwitchViewButton> {
     );
   }
 
-  Future<IconData> _getIcon() async {
-    final prefs = await SharedPreferences.getInstance();
-    final viewValue = prefs.getString('preferredView');
-
-    if (viewValue != null) {
-      switch (viewValue) {
-        case 'tiles':
-          return Icons.view_list_outlined;
-        case 'list':
-          return Icons.grid_view_outlined;
-        default:
-        //Ignore
-      }
+  Future<IconData> _getIcon(ViewMode viewMode) async {
+    switch (viewMode) {
+      case ViewMode.tile:
+        return Icons.view_list_outlined;
+      case ViewMode.list:
+        return Icons.grid_view_outlined;
     }
-
-    return Icons.visibility;
   }
 
-  Future<void> _onSwitchPressed() async {
-    final prefs = await SharedPreferences.getInstance();
-    const preferredViewSettingKey = 'preferredView';
-
-    final currentValue = prefs.getString(preferredViewSettingKey);
-    if (currentValue != null) {
-      switch (currentValue) {
-        case 'tiles':
-          await prefs.setString(preferredViewSettingKey, 'list');
-          widget.viewSwitched();
-          break;
-
-        case 'list':
-          await prefs.setString(preferredViewSettingKey, 'tiles');
-          widget.viewSwitched();
-          break;
-
-        default:
-        //Ignore
-      }
-    }
+  Future<void> _onSwitchPressed(BuildContext context) async {
+    context.read<ViewModeCubit>().toggleViewMode();
   }
 }
