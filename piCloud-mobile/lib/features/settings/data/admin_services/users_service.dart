@@ -131,7 +131,6 @@ class UsersService {
   String? getWarningMessageForUserData(User user, bool creatingNewUser) {
     final allValuesWithoutPasswordFilled = user.nickname.isNotEmpty &&
         user.username.isNotEmpty &&
-        user.allocatedMemoryInMb > 0 &&
         user.email!.isNotEmpty;
 
     final allValuesFilled =
