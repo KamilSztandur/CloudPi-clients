@@ -1,4 +1,3 @@
-import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/widgets/app_bar/user_profile_image.dart';
 import 'package:app/features/loading_baner/presentation/loading_panel.dart';
@@ -10,7 +9,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'profile_page_item.dart';
 
 class ProfilePageContent extends StatefulWidget {
-  const ProfilePageContent({Key? key}) : super(key: key);
+  const ProfilePageContent({Key? key, required this.username})
+      : super(key: key);
+
+  final String username;
 
   @override
   _ProfilePageContentState createState() => _ProfilePageContentState();
@@ -21,8 +23,7 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
 
   @override
   void initState() {
-    _bloc =
-        UserProfilePageBloc(context.read<Api>(), context.read<AuthManager>());
+    _bloc = UserProfilePageBloc(context.read<Api>(), widget.username);
     _bloc.add(FetchDataUserProfilePageEvent());
     super.initState();
   }

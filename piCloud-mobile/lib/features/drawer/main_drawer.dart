@@ -119,8 +119,13 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
-  void _onUserProfileTapped(BuildContext context) =>
-      AutoRouter.of(context).navigate(const UserProfileRoute());
+  void _onUserProfileTapped(BuildContext context) {
+    final authManager = context.read<AuthManager>();
+    authManager.getUsernameOfLoggedUser().then<void>(
+          (value) => AutoRouter.of(context)
+              .navigate(UserProfileRoute(username: value!)),
+        );
+  }
 
   void _onSettingsTapped(BuildContext context) =>
       AutoRouter.of(context).navigate(const SettingsRoute());

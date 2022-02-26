@@ -1,12 +1,8 @@
-import 'dart:ui';
-
 import 'package:app/common/core/config.dart';
 import 'package:app/contracts/api.enums.swagger.dart';
 import 'package:app/contracts/api.swagger.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 
 class UsersService {
   const UsersService(this._api);
@@ -120,7 +116,7 @@ class UsersService {
       username: user.username,
       body: PatchUserRequest(
         email: user.email,
-        nickname: user.nickname, //TODO: profilePicturePubId
+        nickname: user.nickname,
       ),
     );
 

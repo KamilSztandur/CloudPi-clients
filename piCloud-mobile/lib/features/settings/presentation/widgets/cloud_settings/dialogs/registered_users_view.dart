@@ -178,7 +178,7 @@ class _RegisteredUsersViewState extends State<RegisteredUsersView> {
       );
 
   void _onInfoPressed(User user) {
-    //TODO
+    AutoRouter.of(context).navigate(UserProfileRoute(username: user.username));
   }
 
   Widget _loadingIndicator() {
