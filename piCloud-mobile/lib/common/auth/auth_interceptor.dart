@@ -10,10 +10,12 @@ class AuthInterceptor extends RequestInterceptor {
 
   @override
   FutureOr<Request> onRequest(Request request) async {
+    final token = await _authManager.getAccessToken();
+
     return request.copyWith(
       headers: {
         ...request.headers,
-        'Authorization': 'Bearer ${await _authManager.getAccessToken()}'
+        'Authorization': 'Bearer $token',
       },
     );
   }
