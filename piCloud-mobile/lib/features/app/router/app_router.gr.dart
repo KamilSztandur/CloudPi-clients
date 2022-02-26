@@ -57,14 +57,10 @@ class AppRouter extends _i11.RootStackRouter {
           routeData: routeData, child: const _i6.LibrariesPage());
     },
     UserProfileRoute.name: (routeData) {
-      final args = routeData.argsAs<UserProfilePageRouteArgs>();
+      final args = routeData.argsAs<UserProfileRouteArgs>();
       return _i11.MaterialPageX<void>(
-        routeData: routeData,
-        child: _i7.UserProfilePage(
-          key: args.key,
-          username: args.username,
-        ),
-      );
+          routeData: routeData,
+          child: _i7.UserProfilePage(key: args.key, username: args.username));
     },
     SettingsRoute.name: (routeData) {
       return _i11.MaterialPageX<void>(
@@ -159,17 +155,17 @@ class LibrariesRoute extends _i11.PageRouteInfo<void> {
 }
 
 /// generated route for [_i7.UserProfilePage]
-class UserProfileRoute extends _i11.PageRouteInfo<UserProfilePageRouteArgs> {
+class UserProfileRoute extends _i11.PageRouteInfo<UserProfileRouteArgs> {
   UserProfileRoute({_i12.Key? key, required String username})
       : super(name,
             path: '/user-profile-page',
-            args: UserProfilePageRouteArgs(key: key, username: username));
+            args: UserProfileRouteArgs(key: key, username: username));
 
   static const String name = 'UserProfileRoute';
 }
 
-class UserProfilePageRouteArgs {
-  const UserProfilePageRouteArgs({this.key, required this.username});
+class UserProfileRouteArgs {
+  const UserProfileRouteArgs({this.key, required this.username});
 
   final _i12.Key? key;
 
