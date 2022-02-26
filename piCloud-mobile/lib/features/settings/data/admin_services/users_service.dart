@@ -1,8 +1,12 @@
+import 'dart:ui';
+
 import 'package:app/common/core/config.dart';
 import 'package:app/contracts/api.enums.swagger.dart';
 import 'package:app/contracts/api.swagger.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 
 class UsersService {
   const UsersService(this._api);
@@ -84,6 +88,27 @@ class UsersService {
         username: user.username,
         newAssignedSpace: user.allocatedMemoryInMb.toInt(),
       );
+
+      /*
+      if (user.profilePic != null) {
+        final postImageResponse = await _api.filesImagePost(
+          body: FilesImagePost$RequestBody(
+            file: String.fromCharCodes(user.profilePic!.bytes),
+          ),
+        );
+
+        final attachImageToUserResponse = await _api.userUsernamePatch(
+          username: user.username,
+          body: PatchUserRequest(
+            profilePicturePubId: postImageResponse.body!.pubId,
+          ),
+        );
+
+        return allocationResponse.isSuccessful &&
+            postImageResponse.isSuccessful &&
+            attachImageToUserResponse.isSuccessful;
+      }
+      */
       return allocationResponse.isSuccessful;
     } else {
       return false;

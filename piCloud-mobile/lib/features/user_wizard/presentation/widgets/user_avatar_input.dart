@@ -7,7 +7,7 @@ class UserAvatarInput extends StatefulWidget {
     required this.imagePicked,
   }) : super(key: key);
 
-  final Function(Image) imagePicked;
+  final Function(MemoryImage) imagePicked;
 
   @override
   _UserAvatarInputState createState() => _UserAvatarInputState();
@@ -15,7 +15,7 @@ class UserAvatarInput extends StatefulWidget {
 
 class _UserAvatarInputState extends State<UserAvatarInput> {
   final ImagePicker _picker = ImagePicker();
-  Image? image;
+  MemoryImage? image;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class _UserAvatarInputState extends State<UserAvatarInput> {
             shape: BoxShape.circle,
           ),
           child: CircleAvatar(
-            foregroundImage: image?.image,
+            foregroundImage: image,
             child: const Icon(Icons.add_photo_alternate_outlined),
           ),
         ),
@@ -42,7 +42,7 @@ class _UserAvatarInputState extends State<UserAvatarInput> {
     final image = await _picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
-      final parsedImage = Image.memory(await image.readAsBytes());
+      final parsedImage = MemoryImage(await image.readAsBytes());
 
       setState(() {
         this.image = parsedImage;

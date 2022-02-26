@@ -18,7 +18,8 @@ class DirectoryManager {
   }
 
   Future<List<FileItem>?> _getRawList(String path) async {
-    final result = await _api.filesystemFileStructureGet();
+    final result =
+        await _api.filesystemFileStructureGet(fileStructureRoot: path);
 
     if (result.isSuccessful) {
       return [

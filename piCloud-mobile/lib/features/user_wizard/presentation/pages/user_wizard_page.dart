@@ -158,7 +158,7 @@ class _UserWizardPageState extends State<UserWizardPage> {
 
   void _onEmailChanged(String value) => user.email = value;
 
-  void _onUserAvatarChanged(Image value) => user.profilePic = value;
+  void _onUserAvatarChanged(MemoryImage value) => user.profilePic = value;
 
   void _onMemoryAllocationChanged(double value) =>
       user.allocatedMemoryInMb = value;

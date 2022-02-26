@@ -8,6 +8,7 @@ class User {
     required this.accountType,
     required this.email,
     required this.allocatedMemoryInMb,
+    this.profilePic,
   });
 
   String nickname;
@@ -15,7 +16,7 @@ class User {
   String password;
   AccountType accountType;
   String? email;
-  Image? profilePic;
+  MemoryImage? profilePic;
   double allocatedMemoryInMb;
 }
 

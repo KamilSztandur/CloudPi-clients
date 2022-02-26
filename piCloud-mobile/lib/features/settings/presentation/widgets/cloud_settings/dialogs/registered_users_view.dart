@@ -94,7 +94,8 @@ class _RegisteredUsersViewState extends State<RegisteredUsersView> {
   Widget _buildTile(User user) {
     return ListTile(
       leading: CircleAvatar(
-        foregroundImage: Image.asset('assets/profilepic.jpg').image,
+        foregroundImage:
+            user.profilePic ?? Image.asset('assets/profilepic.jpg').image,
       ),
       title: Text(user.nickname),
       subtitle: Text(_getAccountTypeSubtlitle(user.accountType)),
