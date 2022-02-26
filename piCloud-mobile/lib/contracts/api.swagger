@@ -20,8 +20,16 @@
       "description": "API for uploading, downloading and deleting files"
     },
     {
+      "name": "FilePermissionAPI",
+      "description": "Api for managing permissions to files."
+    },
+    {
       "name": "User Management API",
       "description": "API for various operations with users"
+    },
+    {
+      "name": "Favourite API",
+      "description": "API for adding and retrieving files marked as favourite"
     }
   ],
   "paths": {
@@ -44,8 +52,8 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -54,8 +62,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -112,8 +120,8 @@
           "required": true
         },
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -122,8 +130,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -148,13 +156,35 @@
         }
       }
     },
-    "/refresh/refresh-token": {
+    "/roles/": {
       "post": {
         "tags": [
-          "authentication-api-controller"
+          "role-api-impl"
         ],
-        "operationId": "refreshRefreshToken",
+        "summary": "Gives user roles specified in request body",
+        "description": "Gives user roles specified in request body, admin role is needed to access",
+        "operationId": "addRole",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostRoleRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -165,8 +195,94 @@
               }
             }
           },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "role-api-impl"
+        ],
+        "summary": "Remove user's roles specified in request body",
+        "description": "Remove user's roles specified in request body, admin role is needed to access",
+        "operationId": "removeRole",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteRoleRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
           "400": {
             "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/refresh/refresh-token": {
+      "post": {
+        "tags": [
+          "authentication-api-controller"
+        ],
+        "operationId": "refreshRefreshToken",
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -198,8 +314,8 @@
         ],
         "operationId": "refreshAuthToken",
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -208,8 +324,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -241,8 +357,8 @@
         ],
         "operationId": "logout",
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -251,8 +367,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -305,8 +421,8 @@
           "required": true
         },
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -315,8 +431,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -348,7 +464,7 @@
         ],
         "summary": "retrieves info about virtual drive for specified user",
         "description": "Return information about filesystem for user with username provided in path",
-        "operationId": "getUsersVirtualDrivesInfo",
+        "operationId": "getUsersFilesystemInfo",
         "parameters": [
           {
             "name": "username",
@@ -360,8 +476,8 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -370,8 +486,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -408,7 +524,7 @@
         ],
         "summary": "changes max space for virtual drive",
         "description": "Changes max space for filesystem for user with provided username - new assigned space has to be greater or equal to the space filled by all files",
-        "operationId": "changeVirtualDriveMaxSize",
+        "operationId": "changeUserFilesystemMaxSize",
         "parameters": [
           {
             "name": "username",
@@ -429,8 +545,8 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -439,8 +555,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -470,6 +586,8 @@
         "tags": [
           "Filesystem API"
         ],
+        "summary": "Takes query in request body and search for files matching given criteria",
+        "description": "Takes query in request body and search for files matching given criteria",
         "operationId": "searchInUserFiles",
         "requestBody": {
           "content": {
@@ -482,8 +600,8 @@
           "required": true
         },
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -492,8 +610,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -528,7 +646,68 @@
         }
       }
     },
-    "/files/image/{imageName}": {
+    "/filesystem/get-by-path": {
+      "post": {
+        "tags": [
+          "Filesystem API"
+        ],
+        "summary": "Not implemented: Retrieves information about requested file",
+        "operationId": "getFileInfoByPath",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetFileByPathRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileInfoDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/files/image": {
       "post": {
         "tags": [
           "File API"
@@ -536,16 +715,6 @@
         "summary": "uploads new image",
         "description": "Uploads new image to ~/images/ directory",
         "operationId": "uploadNewImage",
-        "parameters": [
-          {
-            "name": "imageName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
         "requestBody": {
           "content": {
             "multipart/form-data": {
@@ -565,8 +734,8 @@
           }
         },
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -575,8 +744,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -613,8 +782,8 @@
         "tags": [
           "File API"
         ],
-        "summary": "uploads new file",
-        "description": "Uploads new file to the filesystem basing on provided path and filetype",
+        "summary": "uploads new file, or modify it if exist",
+        "description": "Uploads new file to the filesystem, if file exist it's modified",
         "operationId": "uploadNewFile",
         "parameters": [
           {
@@ -664,8 +833,8 @@
           }
         },
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -674,8 +843,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -727,6 +896,16 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -737,8 +916,104 @@
               }
             }
           },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/file-permission/permissions": {
+      "post": {
+        "tags": [
+          "FilePermissionAPI"
+        ],
+        "summary": "Add given permission to given file and user",
+        "operationId": "addPermissions",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostAddPermissionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
           "400": {
             "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "FilePermissionAPI"
+        ],
+        "summary": "<h2><font color=\"#911\">Method not implemented</font> [priority: medium]</h2>\nRemoves permission with parameters in request body",
+        "operationId": "revokePermissions",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeletePermissionsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -768,6 +1043,7 @@
         "tags": [
           "drive-api-impl"
         ],
+        "summary": "Creates new cloudpi drive in selected directory",
         "operationId": "createNewDrive",
         "requestBody": {
           "content": {
@@ -780,8 +1056,8 @@
           "required": true
         },
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -790,8 +1066,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -842,8 +1118,8 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -852,8 +1128,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -905,8 +1181,8 @@
           "required": true
         },
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -915,8 +1191,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -960,6 +1236,16 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -970,8 +1256,54 @@
               }
             }
           },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/favourite/{fileId}": {
+      "patch": {
+        "tags": [
+          "Favourite API"
+        ],
+        "summary": "changes file's favour state",
+        "description": "Changes file's favour state, which means that this method sets file as favourite if it wasn't, and if it was, it stops being favourite (changes state for the opposite one)",
+        "operationId": "changeFavour",
+        "parameters": [
+          {
+            "name": "fileId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
           "400": {
             "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -1019,8 +1351,8 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -1029,8 +1361,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -1071,8 +1403,8 @@
         "description": " Returns all basic user objects with their usernames, account types and paths to profile pictures.",
         "operationId": "getAllUsers",
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -1081,8 +1413,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -1117,12 +1449,193 @@
         }
       }
     },
+    "/roles/{username}": {
+      "get": {
+        "tags": [
+          "role-api-impl"
+        ],
+        "summary": "Get all user's roles",
+        "description": "Get all users roles, to access endpoint user need mode or admin role or user's username and username in request need to match",
+        "operationId": "getUserRoles",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "ADMIN",
+                      "MODERATOR",
+                      "USER",
+                      "BOT"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/filesystem/files-shared-to-user": {
+      "get": {
+        "tags": [
+          "Filesystem API"
+        ],
+        "summary": "Returns list of files that was shared to user",
+        "description": "Returns list of files that belong to other user butcan be accessed by currently logged user",
+        "operationId": "getFilesSharedToUser",
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FileInfoDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/filesystem/files-shared-by-user": {
+      "get": {
+        "tags": [
+          "Filesystem API"
+        ],
+        "summary": "<h2><font color=\"#911\">Method not implemented</font> [priority: medium]</h2>\nReturns list of files that user shared",
+        "description": "Returns list of files that belong to logged user andcan be accessed by someone else other that",
+        "operationId": "getFilesSharedByUser",
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FileInfoDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/filesystem/file/{fileId}": {
       "get": {
         "tags": [
           "Filesystem API"
         ],
-        "summary": "retrieves information about requested file",
+        "summary": "Retrieves information about requested file",
         "operationId": "getFileInfo",
         "parameters": [
           {
@@ -1130,7 +1643,8 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -1144,8 +1658,8 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -1154,8 +1668,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -1209,16 +1723,15 @@
           {
             "name": "fileStructureRoot",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
-              "type": "string",
-              "default": "/"
+              "type": "string"
             }
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -1227,8 +1740,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -1293,8 +1806,8 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -1303,8 +1816,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -1363,8 +1876,8 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -1373,8 +1886,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -1424,8 +1937,8 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -1434,8 +1947,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -1465,6 +1978,8 @@
         "tags": [
           "File API"
         ],
+        "summary": "compresses and returns a selected directory",
+        "description": "compresses a directory with provided public id and returns a byte stream of it",
         "operationId": "compressAndDownloadDirectory",
         "parameters": [
           {
@@ -1477,8 +1992,8 @@
           }
         ],
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -1487,8 +2002,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -1521,13 +2036,35 @@
         }
       }
     },
-    "/drive": {
+    "/file-permission/permissions/{filePubId}": {
       "get": {
         "tags": [
-          "drive-api-impl"
+          "FilePermissionAPI"
         ],
-        "operationId": "getAllDrives",
+        "summary": "<h2><font color=\"#911\">Method not implemented</font> [priority: low]</h2>\nReturns list of all permissions assigned to given file",
+        "description": "Returns list of all permissions that users have to given file",
+        "operationId": "getFilePermissions",
+        "parameters": [
+          {
+            "name": "filePubId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -1538,8 +2075,166 @@
               }
             }
           },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilePermissionsDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/file-permission/my-permission/{filePubId}": {
+      "get": {
+        "tags": [
+          "FilePermissionAPI"
+        ],
+        "summary": "<h2><font color=\"#911\">Method not implemented</font> [priority: low]</h2>\nReturns permissions that user have to given file.",
+        "description": "Based on logged user returns user's permissionsto file with given id",
+        "operationId": "getUsersPermissions",
+        "parameters": [
+          {
+            "name": "filePubId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
           "400": {
             "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserFilePermissionsDTO"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/favourite/all": {
+      "get": {
+        "tags": [
+          "Favourite API"
+        ],
+        "summary": "retrieves all files marked as favourite",
+        "operationId": "getFavouriteFiles",
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FileInfoDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/drive": {
+      "get": {
+        "tags": [
+          "drive-api-impl"
+        ],
+        "summary": "<h2><font color=\"#911\">Method not implemented</font> [priority: low]</h2>\nReturns all drives",
+        "operationId": "getAllDrives",
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -1579,10 +2274,11 @@
         "tags": [
           "drive-api-impl"
         ],
+        "summary": "<h2><font color=\"#911\">Method not implemented</font> [priority: low]</h2>\nReturns all detected discs",
         "operationId": "getAllDiscs",
         "responses": {
-          "401": {
-            "description": "Unauthorized",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "*/*": {
                 "schema": {
@@ -1591,8 +2287,8 @@
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -1645,6 +2341,16 @@
           }
         ],
         "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
           "401": {
             "description": "Unauthorized",
             "content": {
@@ -1655,8 +2361,52 @@
               }
             }
           },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/file-permission/permissions/all": {
+      "delete": {
+        "tags": [
+          "FilePermissionAPI"
+        ],
+        "summary": "Removes permission all parameters for specified user and file",
+        "operationId": "revokeAllPermissions",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteAllPermissionsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
           "400": {
             "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "*/*": {
                 "schema": {
@@ -1705,10 +2455,6 @@
           "path": {
             "type": "string"
           },
-          "parentUUID": {
-            "type": "string",
-            "format": "uuid"
-          },
           "hasThumbnail": {
             "type": "boolean"
           },
@@ -1736,6 +2482,9 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "isFavourite": {
+            "type": "boolean"
           }
         }
       },
@@ -1748,15 +2497,44 @@
         "type": "object",
         "properties": {
           "username": {
-            "type": "string"
+            "type": "string",
+            "description": "Can contain only ASCII digits and letter"
           },
           "nickname": {
             "type": "string"
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "description": "nullable"
           },
           "password": {
+            "type": "string",
+            "description": "Must be correct app password"
+          }
+        }
+      },
+      "PostRoleRequest": {
+        "required": [
+          "roles",
+          "username"
+        ],
+        "type": "object",
+        "properties": {
+          "roles": {
+            "type": "array",
+            "description": "must contain at least one role",
+            "items": {
+              "type": "string",
+              "description": "must contain at least one role",
+              "enum": [
+                "ADMIN",
+                "MODERATOR",
+                "USER",
+                "BOT"
+              ]
+            }
+          },
+          "username": {
             "type": "string"
           }
         }
@@ -1779,10 +2557,14 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string"
+            "type": "string",
+            "description": "nullable",
+            "nullable": true
           },
           "type": {
             "type": "string",
+            "description": "nullable",
+            "nullable": true,
             "enum": [
               "DIRECTORY",
               "IMAGE",
@@ -1818,7 +2600,54 @@
             "type": "string",
             "format": "date-time"
           }
+        },
+        "description": "nullable",
+        "nullable": true
+      },
+      "GetFileByPathRequest": {
+        "required": [
+          "filePaths"
+        ],
+        "type": "object",
+        "properties": {
+          "filePaths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
         }
+      },
+      "PostAddPermissionRequest": {
+        "required": [
+          "filePubId",
+          "ownerUsername",
+          "permissions"
+        ],
+        "type": "object",
+        "properties": {
+          "filePubId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerUsername": {
+            "type": "string",
+            "description": "Username of user that will receive permission"
+          },
+          "permissions": {
+            "type": "array",
+            "description": "List of permissions that will be given to user",
+            "items": {
+              "type": "string",
+              "description": "List of permissions that will be given to user",
+              "enum": [
+                "READ",
+                "MODIFY"
+              ]
+            }
+          }
+        },
+        "description": "All files are not null"
       },
       "PostDriveRequest": {
         "required": [
@@ -1860,18 +2689,25 @@
         "type": "object",
         "properties": {
           "nickname": {
-            "type": "string"
+            "type": "string",
+            "description": "nullable"
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "description": "nullable"
           },
           "profilePicturePubId": {
             "type": "string",
+            "description": "nullable",
             "format": "uuid"
           }
         }
       },
       "MoveFileRequest": {
+        "required": [
+          "filePubId",
+          "newPath"
+        ],
         "type": "object",
         "properties": {
           "filePubId": {
@@ -2005,6 +2841,63 @@
           }
         }
       },
+      "FilePermissionsDTO": {
+        "type": "object",
+        "properties": {
+          "filePubId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PermissionDTO"
+            }
+          }
+        },
+        "description": "DTO containing all existing permissions to given file.\n"
+      },
+      "PermissionDTO": {
+        "type": "object",
+        "properties": {
+          "ownerUsername": {
+            "type": "string"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "READ",
+                "MODIFY"
+              ]
+            }
+          }
+        }
+      },
+      "UserFilePermissionsDTO": {
+        "type": "object",
+        "properties": {
+          "types": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "READ",
+                "MODIFY"
+              ]
+            }
+          },
+          "username": {
+            "type": "string"
+          },
+          "filePubId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "description": "DTO containing permissions for particular file that have particular user.\n"
+      },
       "DiscDTO": {
         "type": "object",
         "properties": {
@@ -2018,6 +2911,71 @@
           "discSpaceAvailable": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "DeleteRoleRequest": {
+        "required": [
+          "roles"
+        ],
+        "type": "object",
+        "properties": {
+          "roles": {
+            "type": "array",
+            "description": "Must contain at least one role",
+            "items": {
+              "type": "string",
+              "description": "Must contain at least one role",
+              "enum": [
+                "ADMIN",
+                "MODERATOR",
+                "USER",
+                "BOT"
+              ]
+            }
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "DeletePermissionsRequest": {
+        "required": [
+          "filePubId",
+          "ownerUsername",
+          "permissions"
+        ],
+        "type": "object",
+        "properties": {
+          "filePubId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ownerUsername": {
+            "type": "string",
+            "description": "Username of user that will receive permission"
+          },
+          "permissions": {
+            "type": "array",
+            "description": "List of permissions that will be removed from user",
+            "items": {
+              "type": "string",
+              "description": "List of permissions that will be removed from user",
+              "enum": [
+                "READ",
+                "MODIFY"
+              ]
+            }
+          }
+        },
+        "description": "All files are not null"
+      },
+      "DeleteAllPermissionsRequest": {
+        "type": "object",
+        "properties": {
+          "filePubId": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       }

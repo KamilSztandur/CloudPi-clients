@@ -33,6 +33,27 @@ const $FileInfoDTOTypeMap = {
   FileInfoDTOType.swaggerGeneratedUnknown: ''
 };
 
+enum PostRoleRequestRoles {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('ADMIN')
+  admin,
+  @JsonValue('MODERATOR')
+  moderator,
+  @JsonValue('USER')
+  user,
+  @JsonValue('BOT')
+  bot
+}
+
+const $PostRoleRequestRolesMap = {
+  PostRoleRequestRoles.admin: 'ADMIN',
+  PostRoleRequestRoles.moderator: 'MODERATOR',
+  PostRoleRequestRoles.user: 'USER',
+  PostRoleRequestRoles.bot: 'BOT',
+  PostRoleRequestRoles.swaggerGeneratedUnknown: ''
+};
+
 enum FileQueryDTOType {
   @JsonValue('swaggerGeneratedUnknown')
   swaggerGeneratedUnknown,
@@ -64,6 +85,21 @@ const $FileQueryDTOTypeMap = {
   FileQueryDTOType.compressed: 'COMPRESSED',
   FileQueryDTOType.undefined: 'UNDEFINED',
   FileQueryDTOType.swaggerGeneratedUnknown: ''
+};
+
+enum PostAddPermissionRequestPermissions {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('READ')
+  read,
+  @JsonValue('MODIFY')
+  modify
+}
+
+const $PostAddPermissionRequestPermissionsMap = {
+  PostAddPermissionRequestPermissions.read: 'READ',
+  PostAddPermissionRequestPermissions.modify: 'MODIFY',
+  PostAddPermissionRequestPermissions.swaggerGeneratedUnknown: ''
 };
 
 enum UserDetailsDTORoles {
@@ -118,6 +154,72 @@ const $FilesystemObjectDTOTypeMap = {
   FilesystemObjectDTOType.compressed: 'COMPRESSED',
   FilesystemObjectDTOType.undefined: 'UNDEFINED',
   FilesystemObjectDTOType.swaggerGeneratedUnknown: ''
+};
+
+enum PermissionDTOPermissions {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('READ')
+  read,
+  @JsonValue('MODIFY')
+  modify
+}
+
+const $PermissionDTOPermissionsMap = {
+  PermissionDTOPermissions.read: 'READ',
+  PermissionDTOPermissions.modify: 'MODIFY',
+  PermissionDTOPermissions.swaggerGeneratedUnknown: ''
+};
+
+enum UserFilePermissionsDTOTypes {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('READ')
+  read,
+  @JsonValue('MODIFY')
+  modify
+}
+
+const $UserFilePermissionsDTOTypesMap = {
+  UserFilePermissionsDTOTypes.read: 'READ',
+  UserFilePermissionsDTOTypes.modify: 'MODIFY',
+  UserFilePermissionsDTOTypes.swaggerGeneratedUnknown: ''
+};
+
+enum DeleteRoleRequestRoles {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('ADMIN')
+  admin,
+  @JsonValue('MODERATOR')
+  moderator,
+  @JsonValue('USER')
+  user,
+  @JsonValue('BOT')
+  bot
+}
+
+const $DeleteRoleRequestRolesMap = {
+  DeleteRoleRequestRoles.admin: 'ADMIN',
+  DeleteRoleRequestRoles.moderator: 'MODERATOR',
+  DeleteRoleRequestRoles.user: 'USER',
+  DeleteRoleRequestRoles.bot: 'BOT',
+  DeleteRoleRequestRoles.swaggerGeneratedUnknown: ''
+};
+
+enum DeletePermissionsRequestPermissions {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('READ')
+  read,
+  @JsonValue('MODIFY')
+  modify
+}
+
+const $DeletePermissionsRequestPermissionsMap = {
+  DeletePermissionsRequestPermissions.read: 'READ',
+  DeletePermissionsRequestPermissions.modify: 'MODIFY',
+  DeletePermissionsRequestPermissions.swaggerGeneratedUnknown: ''
 };
 
 enum FilesFilePostFileType {

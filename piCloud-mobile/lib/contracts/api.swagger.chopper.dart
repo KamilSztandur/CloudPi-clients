@@ -34,6 +34,22 @@ class _$Api extends Api {
   }
 
   @override
+  Future<Response<dynamic>> rolesPost({required PostRoleRequest? body}) {
+    final $url = '/roles/';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> rolesDelete({required DeleteRoleRequest? body}) {
+    final $url = '/roles/';
+    final $body = body;
+    final $request = Request('DELETE', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
   Future<Response<dynamic>> refreshRefreshTokenPost() {
     final $url = '/refresh/refresh-token';
     final $request = Request('POST', $url, client.baseUrl);
@@ -92,10 +108,18 @@ class _$Api extends Api {
   }
 
   @override
-  Future<Response<FileInfoDTO>> filesImageImageNamePost(
-      {required String? imageName,
-      required FilesImageImageNamePost$RequestBody? body}) {
-    final $url = '/files/image/${imageName}';
+  Future<Response<FileInfoDTO>> filesystemGetByPathPost(
+      {required GetFileByPathRequest? body}) {
+    final $url = '/filesystem/get-by-path';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<FileInfoDTO, FileInfoDTO>($request);
+  }
+
+  @override
+  Future<Response<FileInfoDTO>> filesImagePost(
+      {required FilesImagePost$RequestBody? body}) {
+    final $url = '/files/image';
     final $body = body;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<FileInfoDTO, FileInfoDTO>($request);
@@ -121,6 +145,24 @@ class _$Api extends Api {
   Future<Response<dynamic>> filesFileDelete() {
     final $url = '/files/file';
     final $request = Request('DELETE', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> filePermissionPermissionsPost(
+      {required PostAddPermissionRequest? body}) {
+    final $url = '/file-permission/permissions';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> filePermissionPermissionsDelete(
+      {required DeletePermissionsRequest? body}) {
+    final $url = '/file-permission/permissions';
+    final $body = body;
+    final $request = Request('DELETE', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
   }
 
@@ -158,6 +200,13 @@ class _$Api extends Api {
   }
 
   @override
+  Future<Response<dynamic>> favouriteFileIdPatch({required String? fileId}) {
+    final $url = '/favourite/${fileId}';
+    final $request = Request('PATCH', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
   Future<Response<UserDetailsDTO>> userUsernameDetailsGet(
       {required String? username}) {
     final $url = '/user/${username}/details';
@@ -173,6 +222,27 @@ class _$Api extends Api {
   }
 
   @override
+  Future<Response<dynamic>> rolesUsernameGet({required String? username}) {
+    final $url = '/roles/${username}';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<List<FileInfoDTO>>> filesystemFilesSharedToUserGet() {
+    final $url = '/filesystem/files-shared-to-user';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<List<FileInfoDTO>, FileInfoDTO>($request);
+  }
+
+  @override
+  Future<Response<List<FileInfoDTO>>> filesystemFilesSharedByUserGet() {
+    final $url = '/filesystem/files-shared-by-user';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<List<FileInfoDTO>, FileInfoDTO>($request);
+  }
+
+  @override
   Future<Response<FileInfoDTO>> filesystemFileFileIdGet(
       {required String? fileId, bool? withPermissions}) {
     final $url = '/filesystem/file/${fileId}';
@@ -183,7 +253,7 @@ class _$Api extends Api {
 
   @override
   Future<Response<FileStructureDTO>> filesystemFileStructureGet(
-      {int? structureLevels, String? fileStructureRoot}) {
+      {int? structureLevels, required String? fileStructureRoot}) {
     final $url = '/filesystem/file-structure';
     final $params = <String, dynamic>{
       'structureLevels': structureLevels,
@@ -228,6 +298,30 @@ class _$Api extends Api {
   }
 
   @override
+  Future<Response<FilePermissionsDTO>> filePermissionPermissionsFilePubIdGet(
+      {required String? filePubId}) {
+    final $url = '/file-permission/permissions/${filePubId}';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<FilePermissionsDTO, FilePermissionsDTO>($request);
+  }
+
+  @override
+  Future<Response<UserFilePermissionsDTO>>
+      filePermissionMyPermissionFilePubIdGet({required String? filePubId}) {
+    final $url = '/file-permission/my-permission/${filePubId}';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client
+        .send<UserFilePermissionsDTO, UserFilePermissionsDTO>($request);
+  }
+
+  @override
+  Future<Response<List<FileInfoDTO>>> favouriteAllGet() {
+    final $url = '/favourite/all';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<List<FileInfoDTO>, FileInfoDTO>($request);
+  }
+
+  @override
   Future<Response<List<DriveDTO>>> driveGet() {
     final $url = '/drive';
     final $request = Request('GET', $url, client.baseUrl);
@@ -246,6 +340,15 @@ class _$Api extends Api {
       {required String? directoryId}) {
     final $url = '/filesystem/directory/${directoryId}';
     final $request = Request('DELETE', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> filePermissionPermissionsAllDelete(
+      {required DeleteAllPermissionsRequest? body}) {
+    final $url = '/file-permission/permissions/all';
+    final $body = body;
+    final $request = Request('DELETE', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
   }
 }
