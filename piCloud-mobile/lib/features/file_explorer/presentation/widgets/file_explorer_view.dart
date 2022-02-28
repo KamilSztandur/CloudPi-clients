@@ -1,5 +1,3 @@
-import 'package:app/common/models/view_mode.dart';
-import 'package:app/common/preferences/view_mode_cubit.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:app/features/file_explorer/bloc/file_explorer_bloc.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
@@ -53,26 +51,35 @@ class _FileExplorerViewState extends State<FileExplorerView> {
 
   @override
   Widget build(BuildContext context) {
-    final viewMode = context.watch<ViewModeCubit>().state;
-
     return BlocProvider.value(
       value: _bloc,
-      child: BlocConsumer<FileExplorerBloc, FileExplorerState>(
+      child: BlocListener<FileExplorerBloc, FileExplorerState>(
         listener: _fileExplorerBlocListener,
-        builder: (context, state) {
-          if (state is FetchedDataFileExplorerState) {
-            return RefreshIndicator(
-              onRefresh: _refreshData,
-              child: _buildFileExplorerView(viewMode == ViewMode.list),
-            );
-          } else if (state is FetchingDataErrorFileExplorerState) {
-            return const FileExplorerErrorWidget(
-              errorMessage: 'Check your internet connection.',
-            );
-          } else {
-            return const LoadingPanel();
-          }
-        },
+        child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
+          builder: (context, state) {
+            if (state is FetchedDataFileExplorerState) {
+              return FutureBuilder(
+                future: _checkIfPreferredViewIsList(),
+                builder: (context, snapshot) {
+                  if (snapshot.data != null) {
+                    return RefreshIndicator(
+                      onRefresh: _refreshData,
+                      child: _buildFileExplorerView(snapshot.data! as bool),
+                    );
+                  } else {
+                    return const LoadingPanel();
+                  }
+                },
+              );
+            } else if (state is FetchingDataErrorFileExplorerState) {
+              return const FileExplorerErrorWidget(
+                errorMessage: 'Check your internet connection.',
+              );
+            } else {
+              return const LoadingPanel();
+            }
+          },
+        ),
       ),
     );
   }
@@ -146,6 +153,12 @@ class _FileExplorerViewState extends State<FileExplorerView> {
 
       return items;
     }
+  }
+
+  Future<bool> _checkIfPreferredViewIsList() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    return prefs.getString('preferredView') == 'list';
   }
 
   List<FileExplorerListItem> _getItemWidgetsListForListView() {
