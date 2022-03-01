@@ -7,9 +7,11 @@ import 'package:app/features/file_explorer/presentation/widgets/add_media/status
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
-import 'package:pedantic/pedantic.dart';
-import 'package:provider/src/provider.dart';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
+import 'package:pedantic/pedantic.dart';
+// ignore: implementation_imports
+import 'package:provider/src/provider.dart';
 
 class SelectionAppBar extends StatefulWidget implements PreferredSizeWidget {
   const SelectionAppBar({
@@ -18,12 +20,14 @@ class SelectionAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.selection = const Selection.empty(),
     required this.allItems,
     required this.currentDirPath,
+    required this.onActionFinalized,
   }) : super(key: key);
 
   final Widget? title;
   final Selection selection;
   final List<FileExplorerItem> allItems;
   final String currentDirPath;
+  final VoidCallback onActionFinalized;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -100,30 +104,36 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
         ),
       ];
 
-  void _onHamburgerItemPressed(SelectionIconButtonChoice value) {
+  Future<void> _onHamburgerItemPressed(SelectionIconButtonChoice value) async {
     switch (value.title) {
       case 'Rename':
-        _onRenamePressed();
+        await _onRenamePressed();
+        widget.onActionFinalized();
         return;
 
       case 'Download':
-        _onDownloadPressed();
+        await _onDownloadPressed();
+        widget.onActionFinalized();
         return;
 
       case 'Delete':
-        _onDeletePressed();
+        await _onDeletePressed();
+        widget.onActionFinalized();
         return;
 
       case 'Details':
-        _onDetailsPressed();
+        await _onDetailsPressed();
+        widget.onActionFinalized();
         return;
 
       case 'Add to Favourites':
-        _onAddToFavouritesPressed();
+        await _onAddToFavouritesPressed();
+        widget.onActionFinalized();
         return;
 
       default:
         stderr.write('User selected unrecognizable choice from dropdown menu.');
+        widget.onActionFinalized();
     }
   }
 
@@ -140,7 +150,7 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
     ).showGroupRename();
   }
 
-  void _onAddToFavouritesPressed() {
+  Future<void> _onAddToFavouritesPressed() async {
     //TODO
   }
 
