@@ -4,11 +4,14 @@ import 'dart:typed_data';
 
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
+import 'package:app/common/widgets/download_indicator_popup.dart';
 import 'package:app/contracts/api.swagger.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/models/file_item.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mime/mime.dart';
 
@@ -98,20 +101,40 @@ class DirectoryManager {
     return result.isSuccessful;
   }
 
-  Future<void> downloadMediaToDevice(String name, String pubId) async {
+  Future<void> downloadMediaToDevice(
+    String name,
+    String pubId, {
+    BuildContext? context,
+    void Function(void Function())? setState,
+  }) async {
+    DownloadIndicatorPopup? progressIndicator;
+
     final dioClient = dio.Dio();
 
     final headers = await _getHeaders();
     final requestUrl = '${Config.apiBaseUrl}/files/file/$pubId';
 
+    if (context != null) {
+      progressIndicator = DownloadIndicatorPopup(
+        context: context,
+        progress: 0,
+      )..show();
+    }
+
     await dioClient.download(
       requestUrl,
       '/storage/emulated/0/Download/$name',
       onReceiveProgress: (received, total) {
-        //TODO
+        if (context != null) {
+          progressIndicator!.updateProgress(setState!, received / total);
+        }
       },
       options: dio.Options(headers: headers),
     );
+
+    if (context != null) {
+      progressIndicator!.close();
+    }
   }
 
   Future<bool> rename(

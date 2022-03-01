@@ -160,6 +160,8 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
         _directoryManager.downloadMediaToDevice(
           item.file.title,
           item.file.id!,
+          context: context,
+          setState: setState,
         ),
       );
     }

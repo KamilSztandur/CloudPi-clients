@@ -104,9 +104,11 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
     }
   }
 
-  void _onDownloadRequested() => _service.downloadMediaToDevice(
+  void _onDownloadRequested() => _directoryManager.downloadMediaToDevice(
         widget.resourceName,
         widget.resourcePubId ?? '',
+        context: context,
+        setState: setState,
       );
 
   void _onRenameRequested() => RenameFilePopup(

@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
 import 'package:app/features/media_reader/data/media_reader_supported_types.dart';
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:mime/mime.dart';
 
@@ -63,22 +62,6 @@ class MediaReaderService {
     }
 
     return MediaReaderSupportedTypes.file;
-  }
-
-  Future<void> downloadMediaToDevice(String name, String pubId) async {
-    final dioClient = Dio();
-
-    final headers = await _getHeaders();
-    final requestUrl = '${Config.apiBaseUrl}/files/file/$pubId';
-
-    await dioClient.download(
-      requestUrl,
-      '/storage/emulated/0/Download/$name',
-      onReceiveProgress: (received, total) {
-        //TODO
-      },
-      options: Options(headers: headers),
-    );
   }
 
   Future<Map<String, String>> _getHeaders() async {
