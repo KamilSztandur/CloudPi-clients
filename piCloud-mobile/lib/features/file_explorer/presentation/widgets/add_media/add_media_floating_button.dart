@@ -7,6 +7,7 @@ import 'package:app/features/file_explorer/presentation/widgets/add_media/status
 import 'package:app/features/file_explorer/presentation/widgets/add_media/take_photo_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:leancode_lint/leancode_lint.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 
@@ -14,9 +15,11 @@ class AddMediaButton extends StatefulWidget {
   const AddMediaButton({
     Key? key,
     required this.currentPath,
+    required this.onNewMediaAdded,
   }) : super(key: key);
 
   final String currentPath;
+  final VoidCallback onNewMediaAdded;
 
   @override
   _AddMediaButtonState createState() => _AddMediaButtonState();
@@ -73,6 +76,10 @@ class _AddMediaButtonState extends State<AddMediaButton> {
             : 'Failed to create new directory $directoryName.',
       ),
     );
+
+    if (result) {
+      widget.onNewMediaAdded();
+    }
   }
 
   Future<void> _uploadFile(List<File> files) async {
@@ -102,7 +109,7 @@ class _AddMediaButtonState extends State<AddMediaButton> {
             counter++;
           }
         }
-
+        widget.onNewMediaAdded();
         ScaffoldMessenger.of(context).showSnackBar(
           _NotificationSnackbar(
             context: context,
@@ -123,14 +130,15 @@ class _AddMediaButtonState extends State<AddMediaButton> {
   }
 
   Future<void> _uploadPhoto(File file) async {
-    // ignore: unawaited_futures
-    showDialog<void>(
-      context: context,
-      builder: (context) => const Center(
-        child: SizedBox(
-          height: 100,
-          width: 100,
-          child: CircularProgressIndicator(),
+    unawaited(
+      showDialog<void>(
+        context: context,
+        builder: (context) => const Center(
+          child: SizedBox(
+            height: 100,
+            width: 100,
+            child: CircularProgressIndicator(),
+          ),
         ),
       ),
     );
@@ -150,6 +158,7 @@ class _AddMediaButtonState extends State<AddMediaButton> {
     }
 
     if (isSuccess) {
+      widget.onNewMediaAdded();
       PhotoTakenPopup(context: context, imageFile: file).show();
     }
   }

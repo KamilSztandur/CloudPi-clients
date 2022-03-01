@@ -137,7 +137,10 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
   Widget _getAddMediaButtonIfNeeded() {
     return (selection != null && selection!.amount > 0)
         ? const SizedBox()
-        : AddMediaButton(currentPath: widget.path);
+        : AddMediaButton(
+            currentPath: widget.path,
+            onNewMediaAdded: _refreshData,
+          );
   }
 
   Future<void> _refreshData() async {
