@@ -7,6 +7,7 @@ import 'package:app/features/file_explorer/presentation/widgets/add_media/status
 import 'package:app/features/file_explorer/presentation/widgets/add_media/take_photo_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+// ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 
 class AddMediaButton extends StatefulWidget {
@@ -47,9 +48,13 @@ class _AddMediaButtonState extends State<AddMediaButton> {
       elevation: 8,
       shape: const CircleBorder(),
       children: [
-        CreateDirectoryButton(onSubmitted: _createDirectory, context: context),
-        PickFileButton(onFilePicked: _uploadFile),
-        TakePhotoButton(onPhotoTaken: _uploadPhoto),
+        CreateDirectoryButton(
+          onSubmitted: _createDirectory,
+          context: context,
+          path: widget.currentPath,
+        ),
+        PickFileButton(onFilePicked: _uploadFile, context: context),
+        TakePhotoButton(onPhotoTaken: _uploadPhoto, context: context),
       ],
     );
   }

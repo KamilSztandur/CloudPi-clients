@@ -1,8 +1,15 @@
 import 'dart:io';
+import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 
 class NewMediaWizard {
+  const NewMediaWizard(
+    this._directoryManager,
+  );
+
+  final DirectoryManager _directoryManager;
+
   Future<List<File>> pickFiles() async {
     final result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
@@ -29,8 +36,8 @@ class NewMediaWizard {
     return parsedFiles;
   }
 
-  //TODO
-  Future<bool> isNameTaken(String name) async => false;
+  Future<bool> isNameTaken(String path, String name) async =>
+      _directoryManager.isNameTaken(path, name);
 
   bool isFilenameLegal(String name) =>
       RegExp(r'^[a-zA-Z0-9\(\). ]+$').hasMatch(name);

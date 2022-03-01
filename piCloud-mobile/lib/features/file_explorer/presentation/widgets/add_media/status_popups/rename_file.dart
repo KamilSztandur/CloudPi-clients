@@ -194,11 +194,11 @@ class RenameFilePopup {
   Future<void> _onGroupRenamePressed(
     void Function(void Function()) setState,
   ) async {
-    final wizard = NewMediaWizard();
+    final wizard = NewMediaWizard(context.read<DirectoryManager>());
     final newName = _controller.text;
 
     if (wizard.isFilenameLegal(newName)) {
-      if (await wizard.isNameTaken(newName)) {
+      if (await wizard.isNameTaken(currentPath, newName)) {
         setState(
           () {
             _warningMessage = 'Item with this name already exists.';
@@ -218,11 +218,11 @@ class RenameFilePopup {
   }
 
   Future<void> _onRenamePressed(void Function(void Function()) setState) async {
-    final wizard = NewMediaWizard();
+    final wizard = NewMediaWizard(context.read<DirectoryManager>());
     final newName = _controller.text;
 
     if (wizard.isFilenameLegal(newName)) {
-      if (await wizard.isNameTaken(newName)) {
+      if (await wizard.isNameTaken(currentPath, newName)) {
         setState(
           () {
             _warningMessage = 'Item with this name already exists.';

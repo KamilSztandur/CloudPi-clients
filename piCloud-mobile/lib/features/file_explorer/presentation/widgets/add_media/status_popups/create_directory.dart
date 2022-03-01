@@ -1,15 +1,19 @@
+import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/file_explorer/data/new_media_wizard.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 class CreateDirectoryPopup {
   CreateDirectoryPopup({
     required this.namePicked,
     required this.context,
+    required this.path,
   });
 
   final Function(String) namePicked;
   final BuildContext context;
+  final String path;
   final TextEditingController _controller = TextEditingController();
   String? _warningMessage;
 
@@ -124,11 +128,11 @@ class CreateDirectoryPopup {
       );
 
   Future<void> _onCreatePressed(void Function(void Function()) setState) async {
-    final wizard = NewMediaWizard();
+    final wizard = NewMediaWizard(context.read<DirectoryManager>());
     final name = _controller.text;
 
     if (wizard.isDirectoryNameLegal(name)) {
-      if (await wizard.isNameTaken(name)) {
+      if (await wizard.isNameTaken(path, name)) {
         setState(
           () {
             _warningMessage = 'Directory with this name already exists.';

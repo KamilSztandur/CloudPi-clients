@@ -40,6 +40,24 @@ class DirectoryManager {
     return result.isSuccessful;
   }
 
+  Future<bool> isNameTaken(String path, String name) async {
+    final username = await _authManager.getUsernameOfLoggedUser();
+    final fileStructureWithRoot = '$username$path';
+
+    final result = await _api.filesystemFileStructureGet(
+      structureLevels: 1,
+      fileStructureRoot: fileStructureWithRoot,
+    );
+
+    for (final dto in result.body?.root?.children ?? <FilesystemObjectDTO>[]) {
+      if (dto.name == name) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   Future<bool> uploadFile(String path, File file) async {
     final headers = await _getHeaders();
     final cloudPath = await _getCloudFilePath(path, file);
@@ -107,10 +125,6 @@ class DirectoryManager {
     final result = await _api.filesystemMovePatch(
       body: MoveFileRequest(filePubId: pubId, newPath: path),
     );
-
-    print(path);
-    print(result.statusCode);
-    print(pubId);
 
     return result.isSuccessful;
   }
