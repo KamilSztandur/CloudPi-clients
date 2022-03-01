@@ -4,6 +4,7 @@ import 'package:app/features/file_explorer/presentation/pages/file_explorer_page
 import 'package:app/features/home_page/presentation/pages/home_page.dart';
 import 'package:app/features/libraries_page/presentation/pages/libraries_page.dart';
 import 'package:app/features/login/presentation/pages/login_page.dart';
+import 'package:app/features/media_reader/presentation/pages/media_reader_page.dart';
 import 'package:app/features/settings/presentation/pages/cloud_settings_page.dart';
 import 'package:app/features/settings/presentation/pages/settings_page.dart';
 import 'package:app/features/shared_page/presentation/pages/shared_page.dart';
@@ -19,6 +20,10 @@ import 'package:auto_route/auto_route.dart';
     AutoRoute<void>(page: SharedPage),
     AutoRoute<void>(page: FavouritesPage),
     AutoRoute<void>(page: FileExplorerPage),
+    AutoRoute<void>(
+      page: MediaReaderPage,
+      fullscreenDialog: true,
+    ),
     AutoRoute<void>(page: LibrariesPage),
     AutoRoute<void>(page: UserProfilePage),
     AutoRoute<void>(

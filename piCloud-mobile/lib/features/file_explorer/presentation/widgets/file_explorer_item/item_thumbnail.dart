@@ -44,7 +44,7 @@ class _FileExplorerThumbnailState extends State<FileExplorerThumbnail> {
   @override
   Widget build(BuildContext context) {
     if (widget.file.hasThumbnail()) {
-      return BackendCachedImage(url: widget.file.thumbnailURL!);
+      return Image.memory(widget.file.thumbnail!);
     } else {
       return Image(
         fit: BoxFit.scaleDown,

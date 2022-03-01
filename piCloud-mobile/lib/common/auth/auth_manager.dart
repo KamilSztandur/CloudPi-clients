@@ -95,7 +95,7 @@ class AuthManager {
     final refreshToken = JwtDecoder.decode(encodedRefreshToken);
 
     final expiration = DateTime.fromMillisecondsSinceEpoch(
-      (refreshToken['exp'] as int) * 1000,
+      (int.parse(refreshToken['exp'].toString())) * 1000,
     );
 
     if (DateTime.now().isAfter(expiration)) {

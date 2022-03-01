@@ -52,8 +52,8 @@ class FileExplorerBloc extends Bloc<FileExplorerEvent, FileExplorerState> {
   Stream<FileExplorerState> _fetchPathDataErrorEvent(
     FetchDataErrorOccurredFileExplorerEvent event,
   ) async* {
-    yield const FetchingDataErrorFileExplorerState(
-      errorMessage: 'Failed to fetch data.',
+    yield FetchingDataErrorFileExplorerState(
+      errorMessage: 'Failed to fetch data. ${event.errorMessage}',
     );
   }
 
