@@ -2,6 +2,7 @@ import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/file_explorer/data/new_media_wizard.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+// ignore: implementation_imports
 import 'package:provider/src/provider.dart';
 
 class RenameFilePopup {
@@ -10,19 +11,24 @@ class RenameFilePopup {
     required this.currentName,
     required this.currentPath,
     required this.resourceId,
+    required this.amount,
+    required this.groupNamePicked,
   });
 
   final BuildContext context;
   final String currentName, currentPath, resourceId;
+  final int amount;
+
+  final Function(String) groupNamePicked;
 
   final TextEditingController _controller = TextEditingController();
   late DirectoryManager _directoryManager;
   String? _warningMessage;
 
-  void show() {
+  Future<void> show() async {
     _directoryManager = context.read<DirectoryManager>();
 
-    showDialog<void>(
+    await showDialog<void>(
       context: context,
       builder: (context) {
         return StatefulBuilder(
@@ -44,7 +50,51 @@ class RenameFilePopup {
                     const SizedBox(height: 5),
                     if (_warningMessage != null) _getWarningLabel(),
                     const SizedBox(height: 20),
-                    _getCreateButton(setState),
+                    _getRenameButton(setState),
+                    _getCancelButton(),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> showGroupRename() async {
+    _directoryManager = context.read<DirectoryManager>();
+
+    await showDialog<void>(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            contentPadding: const EdgeInsets.only(
+              top: 15,
+              right: 15,
+              left: 15,
+            ),
+            title: Text(
+              'Rename $amount items',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Theme.of(context).primaryColorDark,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            content: Wrap(
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _getHintLabel(),
+                    const SizedBox(height: 20),
+                    _getInputField(),
+                    const SizedBox(height: 5),
+                    if (_warningMessage != null) _getWarningLabel(),
+                    const SizedBox(height: 20),
+                    _getGroupRenameButton(setState),
                     _getCancelButton(),
                   ],
                 ),
@@ -112,11 +162,22 @@ class RenameFilePopup {
         textAlign: TextAlign.center,
       );
 
-  Widget _getCreateButton(void Function(void Function()) setState) => SizedBox(
+  Widget _getRenameButton(void Function(void Function()) setState) => SizedBox(
         width: double.infinity,
         child: ElevatedButton(
           onPressed: () => _onRenamePressed(setState),
           child: const Text('Rename'),
+        ),
+      );
+
+  Widget _getGroupRenameButton(
+    void Function(void Function()) setState,
+  ) =>
+      SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: () => _onGroupRenamePressed(setState),
+          child: const Text('Rename all'),
         ),
       );
 
@@ -130,15 +191,41 @@ class RenameFilePopup {
         ),
       );
 
+  Future<void> _onGroupRenamePressed(
+    void Function(void Function()) setState,
+  ) async {
+    final wizard = NewMediaWizard();
+    final newName = _controller.text;
+
+    if (wizard.isFilenameLegal(newName)) {
+      if (await wizard.isNameTaken(newName)) {
+        setState(
+          () {
+            _warningMessage = 'Item with this name already exists.';
+          },
+        );
+      } else {
+        _close();
+        groupNamePicked(newName);
+      }
+    } else {
+      setState(
+        () {
+          _warningMessage = 'Forbidden name.';
+        },
+      );
+    }
+  }
+
   Future<void> _onRenamePressed(void Function(void Function()) setState) async {
     final wizard = NewMediaWizard();
     final newName = _controller.text;
 
     if (wizard.isFilenameLegal(newName)) {
-      if (wizard.isNameTaken(newName)) {
+      if (await wizard.isNameTaken(newName)) {
         setState(
           () {
-            _warningMessage = 'Directory with this name already exists.';
+            _warningMessage = 'Item with this name already exists.';
           },
         );
       } else {

@@ -123,12 +123,12 @@ class CreateDirectoryPopup {
         ),
       );
 
-  void _onCreatePressed(void Function(void Function()) setState) {
+  Future<void> _onCreatePressed(void Function(void Function()) setState) async {
     final wizard = NewMediaWizard();
     final name = _controller.text;
 
     if (wizard.isDirectoryNameLegal(name)) {
-      if (wizard.isNameTaken(name)) {
+      if (await wizard.isNameTaken(name)) {
         setState(
           () {
             _warningMessage = 'Directory with this name already exists.';

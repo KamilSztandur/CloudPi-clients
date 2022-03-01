@@ -68,6 +68,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
       return SelectionAppBar(
         selection: selection ?? DragSelectGridViewController().value,
         allItems: items,
+        currentDirPath: widget.path,
       );
     } else {
       return PICloudAppBar(

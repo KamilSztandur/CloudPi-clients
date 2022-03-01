@@ -114,6 +114,8 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
         currentName: widget.resourceName,
         currentPath: widget.path,
         resourceId: widget.resourcePubId!,
+        amount: 1,
+        groupNamePicked: (name) {},
       ).show();
 
   Future<void> _onDeleteRequested() async {

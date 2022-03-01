@@ -1,14 +1,15 @@
 import 'dart:io';
 
-import 'package:app/contracts/client_index.dart';
 import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/selection_icon_button_choice.dart';
+import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/rename_file.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/src/provider.dart';
+import 'package:path/path.dart' as p;
 
 class SelectionAppBar extends StatefulWidget implements PreferredSizeWidget {
   const SelectionAppBar({
@@ -16,11 +17,13 @@ class SelectionAppBar extends StatefulWidget implements PreferredSizeWidget {
     this.title,
     this.selection = const Selection.empty(),
     required this.allItems,
+    required this.currentDirPath,
   }) : super(key: key);
 
   final Widget? title;
   final Selection selection;
   final List<FileExplorerItem> allItems;
+  final String currentDirPath;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -124,8 +127,17 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
     }
   }
 
-  void _onRenamePressed() {
-    //TODO
+  Future<void> _onRenamePressed() async {
+    final selectedItems = _getSelectedItems();
+
+    await RenameFilePopup(
+      context: context,
+      currentPath: widget.currentDirPath,
+      amount: selectedItems.length,
+      groupNamePicked: _renameSelectedItems,
+      resourceId: '',
+      currentName: '',
+    ).showGroupRename();
   }
 
   void _onAddToFavouritesPressed() {
@@ -275,6 +287,23 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
         ],
       ),
     );
+  }
+
+  Future<void> _renameSelectedItems(String newName) async {
+    final selectedItems = _getSelectedItems();
+
+    var counter = 1;
+    for (final item in selectedItems) {
+      final fileExtension = p.extension(item.file.title, 10);
+      final newItemName = '$newName (${counter++})$fileExtension';
+      final result = await _directoryManager.rename(
+        widget.currentDirPath,
+        newItemName,
+        item.file.id!,
+      );
+
+      print(result);
+    }
   }
 
   String _formatType(FileExplorerItemType type) {

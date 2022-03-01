@@ -30,7 +30,7 @@ class NewMediaWizard {
   }
 
   //TODO
-  bool isNameTaken(String name) => false;
+  Future<bool> isNameTaken(String name) async => false;
 
   bool isFilenameLegal(String name) =>
       RegExp(r'^[a-zA-Z0-9\(\). ]+$').hasMatch(name);
