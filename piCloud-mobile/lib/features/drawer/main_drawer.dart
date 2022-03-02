@@ -1,8 +1,12 @@
+import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
+import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:app/features/app/widgets/app_bar/user_profile_image.dart';
 import 'package:app/features/drawer/main_drawer_item.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/src/provider.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({
@@ -17,7 +21,16 @@ class MainDrawer extends StatelessWidget {
         color: Theme.of(context).primaryColor,
         child: Column(
           children: [
-            _getDrawerHeader(),
+            FutureBuilder(
+              future: _getDrawerHeader(context.read<AuthManager>()),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.data! as Widget;
+                } else {
+                  return const Text('Loading...');
+                }
+              },
+            ),
             _getDrawerOptions(context),
             const Spacer(flex: 3),
             _getVersionInfoLabel(),
@@ -27,7 +40,7 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
-  Widget _getDrawerHeader() {
+  Future<Widget> _getDrawerHeader(AuthManager authManager) async {
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -38,19 +51,19 @@ class MainDrawer extends StatelessWidget {
         child: DrawerHeader(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              SizedBox(
+            children: [
+              const SizedBox(
                 height: 70,
                 width: 74,
                 child: UserProfileImage(size: 60),
               ),
               Text(
-                'Adam44', //Mock or sth, should get username from user's data
-                style: TextStyle(
+                await authManager.getUsernameOfLoggedUser() ?? '',
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -64,17 +77,17 @@ class MainDrawer extends StatelessWidget {
         MainDrawerItem(
           value: 'User Profile',
           icon: Icons.account_box_outlined,
-          onPressed: _onUserProfileTapped,
+          onPressed: () => _onUserProfileTapped(context),
         ),
         MainDrawerItem(
           value: 'Settings',
           icon: Icons.settings_outlined,
-          onPressed: _onSettingsTapped,
+          onPressed: () => _onSettingsTapped(context),
         ),
         MainDrawerItem(
           value: 'Cloud Settings',
           icon: Icons.admin_panel_settings_outlined,
-          onPressed: _onCloudSettingsTapped,
+          onPressed: () => _onCloudSettingsTapped(context),
         ),
         MainDrawerItem(
           value: 'About',
@@ -84,7 +97,7 @@ class MainDrawer extends StatelessWidget {
         MainDrawerItem(
           value: 'Logout',
           icon: Icons.logout_outlined,
-          onPressed: _onLogoutTapped,
+          onPressed: () => _onLogoutTapped(context),
         ),
       ],
     );
@@ -106,17 +119,14 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
-  void _onUserProfileTapped() {
-    //TODO
-  }
+  void _onUserProfileTapped(BuildContext context) =>
+      AutoRouter.of(context).navigate(const UserProfileRoute());
 
-  void _onSettingsTapped() {
-    //TODO
-  }
+  void _onSettingsTapped(BuildContext context) =>
+      AutoRouter.of(context).navigate(const SettingsRoute());
 
-  void _onCloudSettingsTapped() {
-    //TODO
-  }
+  void _onCloudSettingsTapped(BuildContext context) =>
+      AutoRouter.of(context).navigate(const CloudSettingsRoute());
 
   void _onAboutTapped(BuildContext context) => showAboutDialog(
         context: context,
@@ -125,7 +135,8 @@ class MainDrawer extends StatelessWidget {
         applicationVersion: Config.version,
       );
 
-  void _onLogoutTapped() {
-    //TODO
+  void _onLogoutTapped(BuildContext context) {
+    context.read<AuthManager>().logout();
+    AutoRouter.of(context).replaceAll([const LoginRoute()]);
   }
 }
