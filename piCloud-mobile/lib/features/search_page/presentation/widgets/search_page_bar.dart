@@ -68,13 +68,13 @@ class _SearchPageBarState extends State<SearchPageBar> {
           fontStyle: FontStyle.italic,
         ),
         fillColor: Theme.of(context).primaryColorLight.withOpacity(0.3),
-        contentPadding: const EdgeInsets.only(left: 15, bottom: 10, top: 10),
+        contentPadding: const EdgeInsets.only(left: 15, bottom: 5, top: 5),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide.none,
         ),
         enabledBorder: UnderlineInputBorder(
-          borderRadius: BorderRadius.circular(25),
+          borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide.none,
         ),
       ),

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 
 class SearchResult {
@@ -6,14 +8,16 @@ class SearchResult {
     required this.lastModifiedOn,
     required this.type,
     required this.size,
-    required this.thumbnailURL,
+    required this.thumbnail,
+    required this.id,
   });
 
+  final String? id;
   final String title;
   final double size;
   final FileExplorerItemType type;
-  final String? thumbnailURL;
+  final Uint8List? thumbnail;
   final DateTime lastModifiedOn;
 
-  bool hasThumbnail() => thumbnailURL != null;
+  bool hasThumbnail() => thumbnail != null;
 }

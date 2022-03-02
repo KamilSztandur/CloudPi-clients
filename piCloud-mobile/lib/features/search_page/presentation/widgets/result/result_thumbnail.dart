@@ -44,7 +44,7 @@ class _SearchResultThumbnailState extends State<SearchResultThumbnail> {
   @override
   Widget build(BuildContext context) {
     if (widget.item.hasThumbnail()) {
-      return BackendCachedImage(url: widget.item.thumbnailURL!);
+      return Image.memory(widget.item.thumbnail!);
     } else {
       return Image(
         fit: BoxFit.scaleDown,
