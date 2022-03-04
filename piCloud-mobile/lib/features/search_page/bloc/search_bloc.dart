@@ -14,9 +14,8 @@ part 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   SearchBloc({
-    required Api api,
     required AuthManager authManager,
-  })  : _searchEngine = SearchEngine(api, authManager),
+  })  : _searchEngine = SearchEngine(authManager),
         super(InitialSearchState());
 
   final SearchEngine _searchEngine;

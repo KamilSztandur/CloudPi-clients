@@ -27,7 +27,6 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     _filters = FiltersSettingsModel.withDefaultSettings();
     _bloc = SearchBloc(
-      api: context.read<Api>(),
       authManager: context.read<AuthManager>(),
     );
 

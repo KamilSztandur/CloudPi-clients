@@ -37,7 +37,6 @@ Future<void> main() async {
         ),
         Provider(
           create: (context) => SearchEngine(
-            context.read<Api>(),
             context.read<AuthManager>(),
           ),
         ),
