@@ -1,13 +1,16 @@
+import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
 import 'package:app/contracts/api.enums.swagger.dart';
 import 'package:app/contracts/api.swagger.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
+import 'package:http/http.dart' as http;
 
 class UsersService {
-  const UsersService(this._api);
+  const UsersService(this._api, this._authManager);
 
   final Api _api;
+  final AuthManager _authManager;
 
   Future<int> getRegisteredUsersAmount() async {
     final response = await _api.userGet();
@@ -85,26 +88,10 @@ class UsersService {
         newAssignedSpace: user.allocatedMemoryInMb.toInt(),
       );
 
-      /*
       if (user.profilePic != null) {
-        final postImageResponse = await _api.filesImagePost(
-          body: FilesImagePost$RequestBody(
-            file: String.fromCharCodes(user.profilePic!.bytes),
-          ),
-        );
-
-        final attachImageToUserResponse = await _api.userUsernamePatch(
-          username: user.username,
-          body: PatchUserRequest(
-            profilePicturePubId: postImageResponse.body!.pubId,
-          ),
-        );
-
-        return allocationResponse.isSuccessful &&
-            postImageResponse.isSuccessful &&
-            attachImageToUserResponse.isSuccessful;
+        await _setProfilePictureOfUser(user);
       }
-      */
+
       return allocationResponse.isSuccessful;
     } else {
       return false;
@@ -124,6 +111,18 @@ class UsersService {
       username: user.username,
       newAssignedSpace: user.allocatedMemoryInMb.toInt(),
     );
+
+    /*
+    if (user.password != '') {
+      final changePasswordResponse = await _api.userPasswordPatch(
+        body: PatchPasswordRequest(newPassword: user.password),
+      );
+
+      return response.isSuccessful &&
+          memoryAllocationResponse.isSuccessful &&
+          changePasswordResponse.isSuccessful;
+    }
+    */
 
     return response.isSuccessful && memoryAllocationResponse.isSuccessful;
   }
@@ -169,5 +168,25 @@ class UsersService {
     } else {
       return 'Fill all required fields.';
     }
+  }
+
+  Future<bool> _setProfilePictureOfUser(User user) async {
+    final authString = 'Bearer ${(await _authManager.getAccessToken())!}';
+    final headers = {'Authorization': authString};
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse('${Config.apiBaseUrl}/user/profile-image'),
+    );
+
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'file',
+        user.profilePic!.path,
+      ),
+    );
+
+    request.headers.addAll(headers);
+    final response = await request.send();
+    return response.statusCode == 200;
   }
 }

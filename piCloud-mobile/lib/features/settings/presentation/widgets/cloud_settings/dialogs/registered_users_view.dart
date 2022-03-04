@@ -1,3 +1,4 @@
+import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
@@ -21,7 +22,7 @@ class _RegisteredUsersViewState extends State<RegisteredUsersView> {
 
   @override
   void initState() {
-    service = UsersService(context.read<Api>());
+    service = UsersService(context.read<Api>(), context.read<AuthManager>());
     super.initState();
   }
 
@@ -92,10 +93,17 @@ class _RegisteredUsersViewState extends State<RegisteredUsersView> {
   }
 
   Widget _buildTile(User user) {
+    ImageProvider<Object>? foregroundImage;
+
+    try {
+      foregroundImage = FileImage(user.profilePic!);
+    } catch (exception) {
+      foregroundImage = Image.asset('assets/profilepic.jpg').image;
+    }
+
     return ListTile(
       leading: CircleAvatar(
-        foregroundImage:
-            user.profilePic ?? Image.asset('assets/profilepic.jpg').image,
+        foregroundImage: foregroundImage,
       ),
       title: Text(user.nickname),
       subtitle: Text(_getAccountTypeSubtlitle(user.accountType)),

@@ -1,3 +1,4 @@
+import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
@@ -21,7 +22,7 @@ class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
 
   @override
   void initState() {
-    service = UsersService(context.read<Api>());
+    service = UsersService(context.read<Api>(), context.read<AuthManager>());
     super.initState();
   }
 

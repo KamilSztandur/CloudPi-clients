@@ -41,6 +41,8 @@ class MainDrawer extends StatelessWidget {
   }
 
   Future<Widget> _getDrawerHeader(AuthManager authManager) async {
+    final username = await authManager.getUsernameOfLoggedUser();
+
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -52,13 +54,16 @@ class MainDrawer extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const SizedBox(
+              SizedBox(
                 height: 70,
                 width: 74,
-                child: UserProfileImage(size: 60),
+                child: UserProfileImage(
+                  size: 60,
+                  username: username!,
+                ),
               ),
               Text(
-                await authManager.getUsernameOfLoggedUser() ?? '',
+                username,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,

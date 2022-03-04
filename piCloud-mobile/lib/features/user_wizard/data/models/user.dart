@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
 class User {
   User({
@@ -16,7 +16,7 @@ class User {
   String password;
   AccountType accountType;
   String? email;
-  MemoryImage? profilePic;
+  File? profilePic;
   double allocatedMemoryInMb;
 }
 

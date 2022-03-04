@@ -59,11 +59,14 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
     return ListView(
       children: [
         const SizedBox(height: 20),
-        const Center(
+        Center(
           child: SizedBox(
             width: 150,
             height: 142,
-            child: UserProfileImage(size: 20),
+            child: UserProfileImage(
+              size: 20,
+              username: widget.username,
+            ),
           ),
         ),
         Container(

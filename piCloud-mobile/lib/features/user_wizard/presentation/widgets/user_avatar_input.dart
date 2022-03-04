@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -7,7 +9,7 @@ class UserAvatarInput extends StatefulWidget {
     required this.imagePicked,
   }) : super(key: key);
 
-  final Function(MemoryImage) imagePicked;
+  final Function(File) imagePicked;
 
   @override
   _UserAvatarInputState createState() => _UserAvatarInputState();
@@ -15,10 +17,18 @@ class UserAvatarInput extends StatefulWidget {
 
 class _UserAvatarInputState extends State<UserAvatarInput> {
   final ImagePicker _picker = ImagePicker();
-  MemoryImage? image;
+  File? image;
 
   @override
   Widget build(BuildContext context) {
+    ImageProvider<Object>? fgImage;
+
+    try {
+      fgImage = FileImage(image!);
+    } catch (exception) {
+      fgImage = null;
+    }
+
     return FittedBox(
       fit: BoxFit.fitHeight,
       child: GestureDetector(
@@ -30,7 +40,7 @@ class _UserAvatarInputState extends State<UserAvatarInput> {
             shape: BoxShape.circle,
           ),
           child: CircleAvatar(
-            foregroundImage: image,
+            foregroundImage: fgImage,
             child: const Icon(Icons.add_photo_alternate_outlined),
           ),
         ),
@@ -42,7 +52,7 @@ class _UserAvatarInputState extends State<UserAvatarInput> {
     final image = await _picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
-      final parsedImage = MemoryImage(await image.readAsBytes());
+      final parsedImage = File(image.path);
 
       setState(() {
         this.image = parsedImage;

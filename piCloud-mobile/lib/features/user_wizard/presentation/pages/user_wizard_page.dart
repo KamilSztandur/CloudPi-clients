@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
@@ -30,7 +33,7 @@ class _UserWizardPageState extends State<UserWizardPage> {
   @override
   void initState() {
     _initializeDefaultUserData();
-    service = UsersService(context.read<Api>());
+    service = UsersService(context.read<Api>(), context.read<AuthManager>());
     super.initState();
   }
 
@@ -158,7 +161,7 @@ class _UserWizardPageState extends State<UserWizardPage> {
 
   void _onEmailChanged(String value) => user.email = value;
 
-  void _onUserAvatarChanged(MemoryImage value) => user.profilePic = value;
+  void _onUserAvatarChanged(File value) => user.profilePic = value;
 
   void _onMemoryAllocationChanged(double value) =>
       user.allocatedMemoryInMb = value;
