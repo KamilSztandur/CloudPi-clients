@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:app/common/auth/auth_manager.dart';
+import 'package:app/contracts/client_index.dart';
 import 'package:app/features/search_page/data/models/filters_settings_model.dart';
 import 'package:app/features/search_page/data/models/search_query_model.dart';
 import 'package:app/features/search_page/data/models/search_result.dart';
@@ -9,9 +13,13 @@ part 'search_event.dart';
 part 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
-  SearchBloc() : super(InitialSearchState());
+  SearchBloc({
+    required Api api,
+    required AuthManager authManager,
+  })  : _searchEngine = SearchEngine(api, authManager),
+        super(InitialSearchState());
 
-  final SearchEngine _searchEngine = SearchEngine();
+  final SearchEngine _searchEngine;
 
   @override
   Stream<SearchState> mapEventToState(SearchEvent event) async* {
@@ -44,8 +52,10 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
             results: results,
           );
         }
+      } on HttpException catch (httpException) {
+        yield SearchErrorSearchState(message: httpException.message);
       } catch (exception) {
-        yield const SearchErrorSearchState(message: 'Searching failed.');
+        yield const SearchErrorSearchState(message: 'Search failed.');
       }
     } catch (exception) {
       yield const SearchErrorSearchState(

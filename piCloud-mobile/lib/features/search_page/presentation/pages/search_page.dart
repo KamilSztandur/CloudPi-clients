@@ -1,3 +1,5 @@
+import 'package:app/common/auth/auth_manager.dart';
+import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/widgets/navigation_bar/bottom_navigation_bar.dart';
 import 'package:app/features/drawer/main_drawer.dart';
 import 'package:app/features/search_page/bloc/search_bloc.dart';
@@ -19,14 +21,15 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   late SearchBloc _bloc;
-  SearchQueryModel? _query;
   late FiltersSettingsModel _filters;
-  late Widget _resultsView;
 
   @override
   void initState() {
     _filters = FiltersSettingsModel.withDefaultSettings();
-    _bloc = SearchBloc();
+    _bloc = SearchBloc(
+      api: context.read<Api>(),
+      authManager: context.read<AuthManager>(),
+    );
 
     super.initState();
   }
