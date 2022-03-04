@@ -1,3 +1,5 @@
+import 'package:app/features/app/widgets/navigation_bar/bottom_navigation_bar.dart';
+import 'package:app/features/drawer/main_drawer.dart';
 import 'package:app/features/search_page/bloc/search_bloc.dart';
 import 'package:app/features/search_page/data/models/filters_settings_model.dart';
 import 'package:app/features/search_page/data/models/search_query_model.dart';
@@ -48,6 +50,8 @@ class _SearchPageState extends State<SearchPage> {
               onFiltersChanged: (filters) => _filters = filters,
               currentFilters: _filters,
             ),
+            drawer: const MainDrawer(),
+            bottomNavigationBar: const PICloudBottomNavigationBar(),
             body: ResultsView(searchState: state),
           ),
         ),

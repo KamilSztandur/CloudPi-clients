@@ -14,11 +14,6 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
   final List<PICloudBottomNavigationBarItem> items =
       <PICloudBottomNavigationBarItem>[
     PICloudBottomNavigationBarItem(
-      icon: const Icon(Icons.home_outlined),
-      label: 'Home',
-      route: const HomeRoute(),
-    ),
-    PICloudBottomNavigationBarItem(
       icon: const Icon(Icons.folder_outlined),
       label: 'Files',
       route: FileExplorerRoute(path: '/'),
@@ -29,14 +24,14 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
       route: const SharedRoute(),
     ),
     PICloudBottomNavigationBarItem(
-      icon: const Icon(Icons.dashboard_outlined),
-      label: 'Libraries',
-      route: const LibrariesRoute(),
-    ),
-    PICloudBottomNavigationBarItem(
       icon: const Icon(Icons.star_outline),
       label: 'Favourites',
       route: const FavouritesRoute(),
+    ),
+    PICloudBottomNavigationBarItem(
+      icon: const Icon(Icons.search_outlined),
+      label: 'Search',
+      route: const SearchRoute(),
     ),
   ];
 
