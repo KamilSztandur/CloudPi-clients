@@ -26,6 +26,23 @@ class _$Api extends Api {
   }
 
   @override
+  Future<Response<String>> userProfileImageGet({required String? username}) {
+    final $url = '/user/profile-image';
+    final $params = <String, dynamic>{'username': username};
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<String, String>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> userProfileImagePost(
+      {required UserProfileImagePost$RequestBody? body}) {
+    final $url = '/user/profile-image';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
   Future<Response<dynamic>> userNewPost({required PostUserRequest? body}) {
     final $url = '/user/new';
     final $body = body;
@@ -185,6 +202,15 @@ class _$Api extends Api {
   Future<Response<dynamic>> userUsernamePatch(
       {required String? username, required PatchUserRequest? body}) {
     final $url = '/user/${username}';
+    final $body = body;
+    final $request = Request('PATCH', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> userPasswordPatch(
+      {required PatchPasswordRequest? body}) {
+    final $url = '/user/password';
     final $body = body;
     final $request = Request('PATCH', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);

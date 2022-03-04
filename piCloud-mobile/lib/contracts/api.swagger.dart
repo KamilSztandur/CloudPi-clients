@@ -33,6 +33,17 @@ abstract class Api extends ChopperService {
   Future<chopper.Response<FileInfoDTO>> filesystemDirectoryPut(
       {@Query('directoryPath') required String? directoryPath});
 
+  ///Downloads user's profile image
+  ///@param username
+  @Get(path: '/user/profile-image')
+  Future<chopper.Response<String>> userProfileImageGet(
+      {@Query('username') required String? username});
+
+  ///
+  @Post(path: '/user/profile-image')
+  Future<chopper.Response> userProfileImagePost(
+      {@Body() required UserProfileImagePost$RequestBody? body});
+
   ///Creates user with given values
   ///@param user JSON object of users registration data
   @Post(path: '/user/new')
@@ -150,6 +161,11 @@ abstract class Api extends ChopperService {
   Future<chopper.Response> userUsernamePatch(
       {@Path('username') required String? username,
       @Body() required PatchUserRequest? body});
+
+  ///updates user's password
+  @Patch(path: '/user/password')
+  Future<chopper.Response> userPasswordPatch(
+      {@Body() required PatchPasswordRequest? body});
 
   ///moves file
   @Patch(path: '/filesystem/move')
@@ -286,6 +302,7 @@ final Map<Type, Object Function(Map<String, dynamic>)> ApiJsonDecoderMappings =
   PostDriveRequest: PostDriveRequest.fromJsonFactory,
   DriveDTO: DriveDTO.fromJsonFactory,
   PatchUserRequest: PatchUserRequest.fromJsonFactory,
+  PatchPasswordRequest: PatchPasswordRequest.fromJsonFactory,
   MoveFileRequest: MoveFileRequest.fromJsonFactory,
   UserDetailsDTO: UserDetailsDTO.fromJsonFactory,
   UserIdDTO: UserIdDTO.fromJsonFactory,
@@ -601,7 +618,8 @@ extension $LoginRequestExtension on LoginRequest {
 class FileQueryDTO {
   FileQueryDTO({
     this.name,
-    this.type,
+    this.path,
+    this.types,
     this.created,
     this.lastModified,
   });
@@ -611,11 +629,13 @@ class FileQueryDTO {
 
   @JsonKey(name: 'name')
   final String? name;
+  @JsonKey(name: 'path')
+  final String? path;
   @JsonKey(
-      name: 'type',
-      toJson: fileQueryDTOTypeToJson,
-      fromJson: fileQueryDTOTypeFromJson)
-  final enums.FileQueryDTOType? type;
+      name: 'types',
+      toJson: fileQueryDTOTypesListToJson,
+      fromJson: fileQueryDTOTypesListFromJson)
+  final List<enums.FileQueryDTOTypes>? types;
   @JsonKey(name: 'created')
   final TimePeriod? created;
   @JsonKey(name: 'lastModified')
@@ -630,8 +650,10 @@ class FileQueryDTO {
         (other is FileQueryDTO &&
             (identical(other.name, name) ||
                 const DeepCollectionEquality().equals(other.name, name)) &&
-            (identical(other.type, type) ||
-                const DeepCollectionEquality().equals(other.type, type)) &&
+            (identical(other.path, path) ||
+                const DeepCollectionEquality().equals(other.path, path)) &&
+            (identical(other.types, types) ||
+                const DeepCollectionEquality().equals(other.types, types)) &&
             (identical(other.created, created) ||
                 const DeepCollectionEquality()
                     .equals(other.created, created)) &&
@@ -643,7 +665,8 @@ class FileQueryDTO {
   @override
   int get hashCode =>
       const DeepCollectionEquality().hash(name) ^
-      const DeepCollectionEquality().hash(type) ^
+      const DeepCollectionEquality().hash(path) ^
+      const DeepCollectionEquality().hash(types) ^
       const DeepCollectionEquality().hash(created) ^
       const DeepCollectionEquality().hash(lastModified) ^
       runtimeType.hashCode;
@@ -652,12 +675,14 @@ class FileQueryDTO {
 extension $FileQueryDTOExtension on FileQueryDTO {
   FileQueryDTO copyWith(
       {String? name,
-      enums.FileQueryDTOType? type,
+      String? path,
+      List<enums.FileQueryDTOTypes>? types,
       TimePeriod? created,
       TimePeriod? lastModified}) {
     return FileQueryDTO(
         name: name ?? this.name,
-        type: type ?? this.type,
+        path: path ?? this.path,
+        types: types ?? this.types,
         created: created ?? this.created,
         lastModified: lastModified ?? this.lastModified);
   }
@@ -904,7 +929,6 @@ class PatchUserRequest {
   PatchUserRequest({
     this.nickname,
     this.email,
-    this.profilePicturePubId,
   });
 
   factory PatchUserRequest.fromJson(Map<String, dynamic> json) =>
@@ -914,8 +938,6 @@ class PatchUserRequest {
   final String? nickname;
   @JsonKey(name: 'email')
   final String? email;
-  @JsonKey(name: 'profilePicturePubId')
-  final String? profilePicturePubId;
   static const fromJsonFactory = _$PatchUserRequestFromJson;
   static const toJsonFactory = _$PatchUserRequestToJson;
   Map<String, dynamic> toJson() => _$PatchUserRequestToJson(this);
@@ -928,27 +950,66 @@ class PatchUserRequest {
                 const DeepCollectionEquality()
                     .equals(other.nickname, nickname)) &&
             (identical(other.email, email) ||
-                const DeepCollectionEquality().equals(other.email, email)) &&
-            (identical(other.profilePicturePubId, profilePicturePubId) ||
-                const DeepCollectionEquality()
-                    .equals(other.profilePicturePubId, profilePicturePubId)));
+                const DeepCollectionEquality().equals(other.email, email)));
   }
 
   @override
   int get hashCode =>
       const DeepCollectionEquality().hash(nickname) ^
       const DeepCollectionEquality().hash(email) ^
-      const DeepCollectionEquality().hash(profilePicturePubId) ^
       runtimeType.hashCode;
 }
 
 extension $PatchUserRequestExtension on PatchUserRequest {
-  PatchUserRequest copyWith(
-      {String? nickname, String? email, String? profilePicturePubId}) {
+  PatchUserRequest copyWith({String? nickname, String? email}) {
     return PatchUserRequest(
-        nickname: nickname ?? this.nickname,
-        email: email ?? this.email,
-        profilePicturePubId: profilePicturePubId ?? this.profilePicturePubId);
+        nickname: nickname ?? this.nickname, email: email ?? this.email);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class PatchPasswordRequest {
+  PatchPasswordRequest({
+    this.currentPassword,
+    this.newPassword,
+  });
+
+  factory PatchPasswordRequest.fromJson(Map<String, dynamic> json) =>
+      _$PatchPasswordRequestFromJson(json);
+
+  @JsonKey(name: 'currentPassword')
+  final String? currentPassword;
+  @JsonKey(name: 'newPassword')
+  final String? newPassword;
+  static const fromJsonFactory = _$PatchPasswordRequestFromJson;
+  static const toJsonFactory = _$PatchPasswordRequestToJson;
+  Map<String, dynamic> toJson() => _$PatchPasswordRequestToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is PatchPasswordRequest &&
+            (identical(other.currentPassword, currentPassword) ||
+                const DeepCollectionEquality()
+                    .equals(other.currentPassword, currentPassword)) &&
+            (identical(other.newPassword, newPassword) ||
+                const DeepCollectionEquality()
+                    .equals(other.newPassword, newPassword)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(currentPassword) ^
+      const DeepCollectionEquality().hash(newPassword) ^
+      runtimeType.hashCode;
+}
+
+extension $PatchPasswordRequestExtension on PatchPasswordRequest {
+  PatchPasswordRequest copyWith(
+      {String? currentPassword, String? newPassword}) {
+    return PatchPasswordRequest(
+        currentPassword: currentPassword ?? this.currentPassword,
+        newPassword: newPassword ?? this.newPassword);
   }
 }
 
@@ -1001,7 +1062,7 @@ class UserDetailsDTO {
   UserDetailsDTO({
     this.username,
     this.email,
-    this.profilePicturePubId,
+    this.hasProfileImage,
     this.nickname,
     this.pubId,
     this.roles,
@@ -1014,8 +1075,8 @@ class UserDetailsDTO {
   final String? username;
   @JsonKey(name: 'email')
   final String? email;
-  @JsonKey(name: 'profilePicturePubId')
-  final String? profilePicturePubId;
+  @JsonKey(name: 'hasProfileImage')
+  final bool? hasProfileImage;
   @JsonKey(name: 'nickname')
   final String? nickname;
   @JsonKey(name: 'pubId')
@@ -1038,9 +1099,9 @@ class UserDetailsDTO {
                     .equals(other.username, username)) &&
             (identical(other.email, email) ||
                 const DeepCollectionEquality().equals(other.email, email)) &&
-            (identical(other.profilePicturePubId, profilePicturePubId) ||
+            (identical(other.hasProfileImage, hasProfileImage) ||
                 const DeepCollectionEquality()
-                    .equals(other.profilePicturePubId, profilePicturePubId)) &&
+                    .equals(other.hasProfileImage, hasProfileImage)) &&
             (identical(other.nickname, nickname) ||
                 const DeepCollectionEquality()
                     .equals(other.nickname, nickname)) &&
@@ -1054,7 +1115,7 @@ class UserDetailsDTO {
   int get hashCode =>
       const DeepCollectionEquality().hash(username) ^
       const DeepCollectionEquality().hash(email) ^
-      const DeepCollectionEquality().hash(profilePicturePubId) ^
+      const DeepCollectionEquality().hash(hasProfileImage) ^
       const DeepCollectionEquality().hash(nickname) ^
       const DeepCollectionEquality().hash(pubId) ^
       const DeepCollectionEquality().hash(roles) ^
@@ -1065,14 +1126,14 @@ extension $UserDetailsDTOExtension on UserDetailsDTO {
   UserDetailsDTO copyWith(
       {String? username,
       String? email,
-      String? profilePicturePubId,
+      bool? hasProfileImage,
       String? nickname,
       String? pubId,
       List<enums.UserDetailsDTORoles>? roles}) {
     return UserDetailsDTO(
         username: username ?? this.username,
         email: email ?? this.email,
-        profilePicturePubId: profilePicturePubId ?? this.profilePicturePubId,
+        hasProfileImage: hasProfileImage ?? this.hasProfileImage,
         nickname: nickname ?? this.nickname,
         pubId: pubId ?? this.pubId,
         roles: roles ?? this.roles);
@@ -1085,7 +1146,7 @@ class UserIdDTO {
     this.username,
     this.pubId,
     this.nickname,
-    this.profilePicturePubId,
+    this.hasProfileImage,
   });
 
   factory UserIdDTO.fromJson(Map<String, dynamic> json) =>
@@ -1097,8 +1158,8 @@ class UserIdDTO {
   final String? pubId;
   @JsonKey(name: 'nickname')
   final String? nickname;
-  @JsonKey(name: 'profilePicturePubId')
-  final String? profilePicturePubId;
+  @JsonKey(name: 'hasProfileImage')
+  final bool? hasProfileImage;
   static const fromJsonFactory = _$UserIdDTOFromJson;
   static const toJsonFactory = _$UserIdDTOToJson;
   Map<String, dynamic> toJson() => _$UserIdDTOToJson(this);
@@ -1115,9 +1176,9 @@ class UserIdDTO {
             (identical(other.nickname, nickname) ||
                 const DeepCollectionEquality()
                     .equals(other.nickname, nickname)) &&
-            (identical(other.profilePicturePubId, profilePicturePubId) ||
+            (identical(other.hasProfileImage, hasProfileImage) ||
                 const DeepCollectionEquality()
-                    .equals(other.profilePicturePubId, profilePicturePubId)));
+                    .equals(other.hasProfileImage, hasProfileImage)));
   }
 
   @override
@@ -1125,7 +1186,7 @@ class UserIdDTO {
       const DeepCollectionEquality().hash(username) ^
       const DeepCollectionEquality().hash(pubId) ^
       const DeepCollectionEquality().hash(nickname) ^
-      const DeepCollectionEquality().hash(profilePicturePubId) ^
+      const DeepCollectionEquality().hash(hasProfileImage) ^
       runtimeType.hashCode;
 }
 
@@ -1134,12 +1195,12 @@ extension $UserIdDTOExtension on UserIdDTO {
       {String? username,
       String? pubId,
       String? nickname,
-      String? profilePicturePubId}) {
+      bool? hasProfileImage}) {
     return UserIdDTO(
         username: username ?? this.username,
         pubId: pubId ?? this.pubId,
         nickname: nickname ?? this.nickname,
-        profilePicturePubId: profilePicturePubId ?? this.profilePicturePubId);
+        hasProfileImage: hasProfileImage ?? this.hasProfileImage);
   }
 }
 
@@ -1799,41 +1860,41 @@ List<enums.PostRoleRequestRoles> postRoleRequestRolesListFromJson(
       .toList();
 }
 
-String? fileQueryDTOTypeToJson(enums.FileQueryDTOType? fileQueryDTOType) {
-  return enums.$FileQueryDTOTypeMap[fileQueryDTOType];
+String? fileQueryDTOTypesToJson(enums.FileQueryDTOTypes? fileQueryDTOTypes) {
+  return enums.$FileQueryDTOTypesMap[fileQueryDTOTypes];
 }
 
-enums.FileQueryDTOType fileQueryDTOTypeFromJson(String? fileQueryDTOType) {
-  if (fileQueryDTOType == null) {
-    return enums.FileQueryDTOType.swaggerGeneratedUnknown;
+enums.FileQueryDTOTypes fileQueryDTOTypesFromJson(String? fileQueryDTOTypes) {
+  if (fileQueryDTOTypes == null) {
+    return enums.FileQueryDTOTypes.swaggerGeneratedUnknown;
   }
 
-  return enums.$FileQueryDTOTypeMap.entries
+  return enums.$FileQueryDTOTypesMap.entries
       .firstWhere(
           (element) =>
-              element.value.toLowerCase() == fileQueryDTOType.toLowerCase(),
+              element.value.toLowerCase() == fileQueryDTOTypes.toLowerCase(),
           orElse: () => const MapEntry(
-              enums.FileQueryDTOType.swaggerGeneratedUnknown, ''))
+              enums.FileQueryDTOTypes.swaggerGeneratedUnknown, ''))
       .key;
 }
 
-List<String> fileQueryDTOTypeListToJson(
-    List<enums.FileQueryDTOType>? fileQueryDTOType) {
-  if (fileQueryDTOType == null) {
+List<String> fileQueryDTOTypesListToJson(
+    List<enums.FileQueryDTOTypes>? fileQueryDTOTypes) {
+  if (fileQueryDTOTypes == null) {
     return [];
   }
 
-  return fileQueryDTOType.map((e) => enums.$FileQueryDTOTypeMap[e]!).toList();
+  return fileQueryDTOTypes.map((e) => enums.$FileQueryDTOTypesMap[e]!).toList();
 }
 
-List<enums.FileQueryDTOType> fileQueryDTOTypeListFromJson(
-    List? fileQueryDTOType) {
-  if (fileQueryDTOType == null) {
+List<enums.FileQueryDTOTypes> fileQueryDTOTypesListFromJson(
+    List? fileQueryDTOTypes) {
+  if (fileQueryDTOTypes == null) {
     return [];
   }
 
-  return fileQueryDTOType
-      .map((e) => fileQueryDTOTypeFromJson(e.toString()))
+  return fileQueryDTOTypes
+      .map((e) => fileQueryDTOTypesFromJson(e.toString()))
       .toList();
 }
 
@@ -2147,6 +2208,43 @@ List<enums.DeletePermissionsRequestPermissions>
   return deletePermissionsRequestPermissions
       .map((e) => deletePermissionsRequestPermissionsFromJson(e.toString()))
       .toList();
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserProfileImagePost$RequestBody {
+  UserProfileImagePost$RequestBody({
+    this.file,
+  });
+
+  factory UserProfileImagePost$RequestBody.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserProfileImagePost$RequestBodyFromJson(json);
+
+  @JsonKey(name: 'file')
+  final String? file;
+  static const fromJsonFactory = _$UserProfileImagePost$RequestBodyFromJson;
+  static const toJsonFactory = _$UserProfileImagePost$RequestBodyToJson;
+  Map<String, dynamic> toJson() =>
+      _$UserProfileImagePost$RequestBodyToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is UserProfileImagePost$RequestBody &&
+            (identical(other.file, file) ||
+                const DeepCollectionEquality().equals(other.file, file)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(file) ^ runtimeType.hashCode;
+}
+
+extension $UserProfileImagePost$RequestBodyExtension
+    on UserProfileImagePost$RequestBody {
+  UserProfileImagePost$RequestBody copyWith({String? file}) {
+    return UserProfileImagePost$RequestBody(file: file ?? this.file);
+  }
 }
 
 @JsonSerializable(explicitToJson: true)

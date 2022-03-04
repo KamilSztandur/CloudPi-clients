@@ -95,6 +95,126 @@
         }
       }
     },
+    "/user/profile-image": {
+      "get": {
+        "tags": [
+          "User Management API"
+        ],
+        "summary": "Downloads user's profile image",
+        "description": "Downloads user's profile image as byte array",
+        "operationId": "downloadProfileImage",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "User Management API"
+        ],
+        "operationId": "setProfileImage",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/user/new": {
       "post": {
         "tags": [
@@ -1217,6 +1337,61 @@
         }
       }
     },
+    "/user/password": {
+      "patch": {
+        "tags": [
+          "User Management API"
+        ],
+        "summary": "updates user's password",
+        "description": "Takes current and new password, and set new password to currently logged user",
+        "operationId": "updateUserPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchPasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/filesystem/move": {
       "patch": {
         "tags": [
@@ -1909,7 +2084,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/octet-stream": {
                 "schema": {
                   "type": "string",
                   "format": "binary"
@@ -2561,20 +2736,30 @@
             "description": "nullable",
             "nullable": true
           },
-          "type": {
+          "path": {
             "type": "string",
             "description": "nullable",
+            "nullable": true
+          },
+          "types": {
+            "type": "array",
+            "description": "nullable",
             "nullable": true,
-            "enum": [
-              "DIRECTORY",
-              "IMAGE",
-              "VIDEO",
-              "TEXT_FILE",
-              "PDF",
-              "MUSIC",
-              "COMPRESSED",
-              "UNDEFINED"
-            ]
+            "items": {
+              "type": "string",
+              "description": "nullable",
+              "nullable": true,
+              "enum": [
+                "DIRECTORY",
+                "IMAGE",
+                "VIDEO",
+                "TEXT_FILE",
+                "PDF",
+                "MUSIC",
+                "COMPRESSED",
+                "UNDEFINED"
+              ]
+            }
           },
           "created": {
             "$ref": "#/components/schemas/TimePeriod"
@@ -2695,11 +2880,17 @@
           "email": {
             "type": "string",
             "description": "nullable"
+          }
+        }
+      },
+      "PatchPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "currentPassword": {
+            "type": "string"
           },
-          "profilePicturePubId": {
-            "type": "string",
-            "description": "nullable",
-            "format": "uuid"
+          "newPassword": {
+            "type": "string"
           }
         }
       },
@@ -2728,9 +2919,8 @@
           "email": {
             "type": "string"
           },
-          "profilePicturePubId": {
-            "type": "string",
-            "format": "uuid"
+          "hasProfileImage": {
+            "type": "boolean"
           },
           "nickname": {
             "type": "string"
@@ -2765,9 +2955,8 @@
           "nickname": {
             "type": "string"
           },
-          "profilePicturePubId": {
-            "type": "string",
-            "format": "uuid"
+          "hasProfileImage": {
+            "type": "boolean"
           }
         }
       },

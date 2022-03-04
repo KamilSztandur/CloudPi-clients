@@ -54,7 +54,7 @@ const $PostRoleRequestRolesMap = {
   PostRoleRequestRoles.swaggerGeneratedUnknown: ''
 };
 
-enum FileQueryDTOType {
+enum FileQueryDTOTypes {
   @JsonValue('swaggerGeneratedUnknown')
   swaggerGeneratedUnknown,
   @JsonValue('DIRECTORY')
@@ -75,16 +75,16 @@ enum FileQueryDTOType {
   undefined
 }
 
-const $FileQueryDTOTypeMap = {
-  FileQueryDTOType.directory: 'DIRECTORY',
-  FileQueryDTOType.image: 'IMAGE',
-  FileQueryDTOType.video: 'VIDEO',
-  FileQueryDTOType.textFile: 'TEXT_FILE',
-  FileQueryDTOType.pdf: 'PDF',
-  FileQueryDTOType.music: 'MUSIC',
-  FileQueryDTOType.compressed: 'COMPRESSED',
-  FileQueryDTOType.undefined: 'UNDEFINED',
-  FileQueryDTOType.swaggerGeneratedUnknown: ''
+const $FileQueryDTOTypesMap = {
+  FileQueryDTOTypes.directory: 'DIRECTORY',
+  FileQueryDTOTypes.image: 'IMAGE',
+  FileQueryDTOTypes.video: 'VIDEO',
+  FileQueryDTOTypes.textFile: 'TEXT_FILE',
+  FileQueryDTOTypes.pdf: 'PDF',
+  FileQueryDTOTypes.music: 'MUSIC',
+  FileQueryDTOTypes.compressed: 'COMPRESSED',
+  FileQueryDTOTypes.undefined: 'UNDEFINED',
+  FileQueryDTOTypes.swaggerGeneratedUnknown: ''
 };
 
 enum PostAddPermissionRequestPermissions {
