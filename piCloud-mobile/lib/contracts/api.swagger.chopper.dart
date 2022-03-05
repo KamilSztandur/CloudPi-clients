@@ -17,6 +17,24 @@ class _$Api extends Api {
   final definitionType = Api;
 
   @override
+  Future<Response<dynamic>> userPasswordPut(
+      {required PutUserPasswordRequest? body}) {
+    final $url = '/user/password';
+    final $body = body;
+    final $request = Request('PUT', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> userPasswordPatch(
+      {required PatchPasswordRequest? body}) {
+    final $url = '/user/password';
+    final $body = body;
+    final $request = Request('PATCH', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
   Future<Response<FileInfoDTO>> filesystemDirectoryPut(
       {required String? directoryPath}) {
     final $url = '/filesystem/directory';
@@ -37,6 +55,16 @@ class _$Api extends Api {
   Future<Response<dynamic>> userProfileImagePost(
       {required UserProfileImagePost$RequestBody? body}) {
     final $url = '/user/profile-image';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> userProfileImageUsernamePost(
+      {required String? username,
+      required UserProfileImageUsernamePost$RequestBody? body}) {
+    final $url = '/user/profile-image/${username}';
     final $body = body;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
@@ -202,15 +230,6 @@ class _$Api extends Api {
   Future<Response<dynamic>> userUsernamePatch(
       {required String? username, required PatchUserRequest? body}) {
     final $url = '/user/${username}';
-    final $body = body;
-    final $request = Request('PATCH', $url, client.baseUrl, body: $body);
-    return client.send<dynamic, dynamic>($request);
-  }
-
-  @override
-  Future<Response<dynamic>> userPasswordPatch(
-      {required PatchPasswordRequest? body}) {
-    final $url = '/user/password';
     final $body = body;
     final $request = Request('PATCH', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);

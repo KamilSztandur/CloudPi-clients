@@ -27,6 +27,16 @@ abstract class Api extends ChopperService {
     return _$Api(newClient);
   }
 
+  ///updates user's password as admin
+  @Put(path: '/user/password')
+  Future<chopper.Response> userPasswordPut(
+      {@Body() required PutUserPasswordRequest? body});
+
+  ///updates user's password
+  @Patch(path: '/user/password')
+  Future<chopper.Response> userPasswordPatch(
+      {@Body() required PatchPasswordRequest? body});
+
   ///creates a directory
   ///@param directoryPath
   @Put(path: '/filesystem/directory', optionalBody: true)
@@ -43,6 +53,13 @@ abstract class Api extends ChopperService {
   @Post(path: '/user/profile-image')
   Future<chopper.Response> userProfileImagePost(
       {@Body() required UserProfileImagePost$RequestBody? body});
+
+  ///
+  ///@param username
+  @Post(path: '/user/profile-image/{username}')
+  Future<chopper.Response> userProfileImageUsernamePost(
+      {@Path('username') required String? username,
+      @Body() required UserProfileImageUsernamePost$RequestBody? body});
 
   ///Creates user with given values
   ///@param user JSON object of users registration data
@@ -161,11 +178,6 @@ abstract class Api extends ChopperService {
   Future<chopper.Response> userUsernamePatch(
       {@Path('username') required String? username,
       @Body() required PatchUserRequest? body});
-
-  ///updates user's password
-  @Patch(path: '/user/password')
-  Future<chopper.Response> userPasswordPatch(
-      {@Body() required PatchPasswordRequest? body});
 
   ///moves file
   @Patch(path: '/filesystem/move')
@@ -291,6 +303,7 @@ abstract class Api extends ChopperService {
 final Map<Type, Object Function(Map<String, dynamic>)> ApiJsonDecoderMappings =
     {
   ErrorBody: ErrorBody.fromJsonFactory,
+  PutUserPasswordRequest: PutUserPasswordRequest.fromJsonFactory,
   FileInfoDTO: FileInfoDTO.fromJsonFactory,
   PostUserRequest: PostUserRequest.fromJsonFactory,
   PostRoleRequest: PostRoleRequest.fromJsonFactory,
@@ -350,6 +363,51 @@ class ErrorBody {
 extension $ErrorBodyExtension on ErrorBody {
   ErrorBody copyWith({String? errorCode}) {
     return ErrorBody(errorCode: errorCode ?? this.errorCode);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class PutUserPasswordRequest {
+  PutUserPasswordRequest({
+    this.username,
+    this.newPassword,
+  });
+
+  factory PutUserPasswordRequest.fromJson(Map<String, dynamic> json) =>
+      _$PutUserPasswordRequestFromJson(json);
+
+  @JsonKey(name: 'username')
+  final String? username;
+  @JsonKey(name: 'newPassword')
+  final String? newPassword;
+  static const fromJsonFactory = _$PutUserPasswordRequestFromJson;
+  static const toJsonFactory = _$PutUserPasswordRequestToJson;
+  Map<String, dynamic> toJson() => _$PutUserPasswordRequestToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is PutUserPasswordRequest &&
+            (identical(other.username, username) ||
+                const DeepCollectionEquality()
+                    .equals(other.username, username)) &&
+            (identical(other.newPassword, newPassword) ||
+                const DeepCollectionEquality()
+                    .equals(other.newPassword, newPassword)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(username) ^
+      const DeepCollectionEquality().hash(newPassword) ^
+      runtimeType.hashCode;
+}
+
+extension $PutUserPasswordRequestExtension on PutUserPasswordRequest {
+  PutUserPasswordRequest copyWith({String? username, String? newPassword}) {
+    return PutUserPasswordRequest(
+        username: username ?? this.username,
+        newPassword: newPassword ?? this.newPassword);
   }
 }
 
@@ -2244,6 +2302,44 @@ extension $UserProfileImagePost$RequestBodyExtension
     on UserProfileImagePost$RequestBody {
   UserProfileImagePost$RequestBody copyWith({String? file}) {
     return UserProfileImagePost$RequestBody(file: file ?? this.file);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserProfileImageUsernamePost$RequestBody {
+  UserProfileImageUsernamePost$RequestBody({
+    this.file,
+  });
+
+  factory UserProfileImageUsernamePost$RequestBody.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserProfileImageUsernamePost$RequestBodyFromJson(json);
+
+  @JsonKey(name: 'file')
+  final String? file;
+  static const fromJsonFactory =
+      _$UserProfileImageUsernamePost$RequestBodyFromJson;
+  static const toJsonFactory = _$UserProfileImageUsernamePost$RequestBodyToJson;
+  Map<String, dynamic> toJson() =>
+      _$UserProfileImageUsernamePost$RequestBodyToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is UserProfileImageUsernamePost$RequestBody &&
+            (identical(other.file, file) ||
+                const DeepCollectionEquality().equals(other.file, file)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(file) ^ runtimeType.hashCode;
+}
+
+extension $UserProfileImageUsernamePost$RequestBodyExtension
+    on UserProfileImageUsernamePost$RequestBody {
+  UserProfileImageUsernamePost$RequestBody copyWith({String? file}) {
+    return UserProfileImageUsernamePost$RequestBody(file: file ?? this.file);
   }
 }
 

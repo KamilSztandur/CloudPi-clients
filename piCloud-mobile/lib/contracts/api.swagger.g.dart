@@ -14,6 +14,20 @@ Map<String, dynamic> _$ErrorBodyToJson(ErrorBody instance) => <String, dynamic>{
       'errorCode': instance.errorCode,
     };
 
+PutUserPasswordRequest _$PutUserPasswordRequestFromJson(
+        Map<String, dynamic> json) =>
+    PutUserPasswordRequest(
+      username: json['username'] as String?,
+      newPassword: json['newPassword'] as String?,
+    );
+
+Map<String, dynamic> _$PutUserPasswordRequestToJson(
+        PutUserPasswordRequest instance) =>
+    <String, dynamic>{
+      'username': instance.username,
+      'newPassword': instance.newPassword,
+    };
+
 FileInfoDTO _$FileInfoDTOFromJson(Map<String, dynamic> json) => FileInfoDTO(
       pubId: json['pubId'] as String?,
       name: json['name'] as String?,
@@ -409,6 +423,19 @@ UserProfileImagePost$RequestBody _$UserProfileImagePost$RequestBodyFromJson(
 
 Map<String, dynamic> _$UserProfileImagePost$RequestBodyToJson(
         UserProfileImagePost$RequestBody instance) =>
+    <String, dynamic>{
+      'file': instance.file,
+    };
+
+UserProfileImageUsernamePost$RequestBody
+    _$UserProfileImageUsernamePost$RequestBodyFromJson(
+            Map<String, dynamic> json) =>
+        UserProfileImageUsernamePost$RequestBody(
+          file: json['file'] as String?,
+        );
+
+Map<String, dynamic> _$UserProfileImageUsernamePost$RequestBodyToJson(
+        UserProfileImageUsernamePost$RequestBody instance) =>
     <String, dynamic>{
       'file': instance.file,
     };
