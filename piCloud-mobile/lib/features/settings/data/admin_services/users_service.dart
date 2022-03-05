@@ -112,17 +112,18 @@ class UsersService {
       newAssignedSpace: user.allocatedMemoryInMb.toInt(),
     );
 
-    /*
     if (user.password != '') {
-      final changePasswordResponse = await _api.userPasswordPatch(
-        body: PatchPasswordRequest(newPassword: user.password),
+      final changePasswordResponse = await _api.userPasswordPut(
+        body: PutUserPasswordRequest(
+          username: user.username,
+          newPassword: user.password,
+        ),
       );
 
       return response.isSuccessful &&
           memoryAllocationResponse.isSuccessful &&
           changePasswordResponse.isSuccessful;
     }
-    */
 
     return response.isSuccessful && memoryAllocationResponse.isSuccessful;
   }
@@ -175,7 +176,7 @@ class UsersService {
     final headers = {'Authorization': authString};
     final request = http.MultipartRequest(
       'POST',
-      Uri.parse('${Config.apiBaseUrl}/user/profile-image'),
+      Uri.parse('${Config.apiBaseUrl}/user/profile-image/${user.username}'),
     );
 
     request.files.add(
