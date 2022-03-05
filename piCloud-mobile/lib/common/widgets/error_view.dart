@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class FileExplorerErrorWidget extends StatelessWidget {
-  const FileExplorerErrorWidget({
+class ErrorView extends StatelessWidget {
+  const ErrorView({
     Key? key,
     this.errorMessage,
   }) : super(key: key);

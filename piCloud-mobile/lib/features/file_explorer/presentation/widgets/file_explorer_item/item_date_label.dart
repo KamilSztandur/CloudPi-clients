@@ -1,4 +1,4 @@
-import 'package:app/features/file_explorer/data/models/file_item.dart';
+import 'package:app/common/models/file_item.dart';
 import 'package:flutter/material.dart';
 
 class FileExplorerItemDateLabel extends StatelessWidget {

@@ -1,10 +1,10 @@
-import 'package:app/features/file_explorer/data/models/file_item.dart';
+import 'package:app/common/models/file_item.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/item_date_label.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/item_thumbnail.dart';
 import 'package:flutter/material.dart';
 
-class FileExplorerItem extends StatelessWidget {
-  const FileExplorerItem({
+class FileItemView extends StatelessWidget {
+  const FileItemView({
     Key? key,
     required this.file,
   }) : super(key: key);
