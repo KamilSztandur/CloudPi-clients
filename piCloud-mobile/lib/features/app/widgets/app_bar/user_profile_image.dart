@@ -23,7 +23,7 @@ class UserProfileImage extends StatelessWidget {
           if (snapshot.hasData) {
             return _getPicture(snapshot.data! as ImageProvider);
           } else {
-            return _getPicture(const AssetImage('assets/profilepic.jpg'));
+            return const CircularProgressIndicator();
           }
         },
       ),

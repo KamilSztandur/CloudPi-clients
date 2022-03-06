@@ -7,9 +7,11 @@ class UserAvatarInput extends StatefulWidget {
   const UserAvatarInput({
     Key? key,
     required this.imagePicked,
+    this.oldImage,
   }) : super(key: key);
 
   final Function(File) imagePicked;
+  final ImageProvider? oldImage;
 
   @override
   _UserAvatarInputState createState() => _UserAvatarInputState();
@@ -40,7 +42,7 @@ class _UserAvatarInputState extends State<UserAvatarInput> {
             shape: BoxShape.circle,
           ),
           child: CircleAvatar(
-            foregroundImage: fgImage,
+            foregroundImage: fgImage ?? widget.oldImage,
             child: const Icon(Icons.add_photo_alternate_outlined),
           ),
         ),

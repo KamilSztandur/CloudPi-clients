@@ -169,9 +169,7 @@ class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
           ),
         );
       } else if (!value && _isAdmin(key)) {
-        print(key.nickname);
-
-        final request = await api.rolesDelete(
+        await api.rolesDelete(
           body: DeleteRoleRequest(
             username: key.username,
             roles: <DeleteRoleRequestRoles>[
@@ -179,8 +177,6 @@ class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
             ],
           ),
         );
-
-        print(request.statusCode);
       }
     });
 

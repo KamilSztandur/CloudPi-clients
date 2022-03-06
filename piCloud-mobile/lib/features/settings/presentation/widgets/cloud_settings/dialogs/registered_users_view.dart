@@ -1,6 +1,7 @@
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
+import 'package:app/features/app/widgets/app_bar/user_profile_image.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
 import 'package:app/features/settings/presentation/widgets/cloud_settings/dialogs/submit_user_delete.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
@@ -102,8 +103,9 @@ class _RegisteredUsersViewState extends State<RegisteredUsersView> {
     }
 
     return ListTile(
-      leading: CircleAvatar(
-        foregroundImage: foregroundImage,
+      leading: UserProfileImage(
+        username: user.username,
+        size: 40,
       ),
       title: Text(user.nickname),
       subtitle: Text(_getAccountTypeSubtlitle(user.accountType)),

@@ -4,6 +4,7 @@ import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
+import 'package:app/features/user_wizard/data/models/image_wrapper.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
 import 'package:app/features/user_wizard/presentation/widgets/input_field.dart';
 import 'package:app/features/user_wizard/presentation/widgets/memory_allocation_input.dart';
@@ -65,8 +66,21 @@ class _UserWizardPageState extends State<UserWizardPage> {
                 Container(
                   height: 75,
                   padding: const EdgeInsets.only(right: 20),
-                  child: UserAvatarInput(
-                    imagePicked: _onUserAvatarChanged,
+                  child: FutureBuilder(
+                    future: service.getCurrentProfilePic(user.username),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final wrappedImage = snapshot.data! as ImageWrapper;
+                        return UserAvatarInput(
+                          imagePicked: _onUserAvatarChanged,
+                          oldImage: _isThisNewUserCreation()
+                              ? null
+                              : wrappedImage.image,
+                        );
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    },
                   ),
                 ),
               ],

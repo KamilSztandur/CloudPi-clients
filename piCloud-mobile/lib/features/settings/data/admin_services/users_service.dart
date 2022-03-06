@@ -3,7 +3,9 @@ import 'package:app/common/core/config.dart';
 import 'package:app/contracts/api.enums.swagger.dart';
 import 'package:app/contracts/api.swagger.dart';
 import 'package:app/contracts/client_index.dart';
+import 'package:app/features/user_wizard/data/models/image_wrapper.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 class UsersService {
@@ -82,20 +84,16 @@ class UsersService {
       ),
     );
 
-    if (response.isSuccessful) {
-      final allocationResponse = await _api.filesystemUsernamePost(
-        username: user.username,
-        newAssignedSpace: user.allocatedMemoryInMb.toInt(),
-      );
-
-      if (user.profilePic != null) {
-        await _setProfilePictureOfUser(user);
-      }
-
-      return allocationResponse.isSuccessful;
-    } else {
+    if (!response.isSuccessful) {
       return false;
     }
+
+    if (user.profilePic != null) {
+      final setProfilePicSuccess = await _setProfilePictureOfUser(user);
+      return setProfilePicSuccess;
+    }
+
+    return true;
   }
 
   Future<bool> editUser(User user) async {
@@ -107,11 +105,6 @@ class UsersService {
       ),
     );
 
-    final memoryAllocationResponse = await _api.filesystemUsernamePost(
-      username: user.username,
-      newAssignedSpace: user.allocatedMemoryInMb.toInt(),
-    );
-
     if (user.password != '') {
       final changePasswordResponse = await _api.userPasswordPut(
         body: PutUserPasswordRequest(
@@ -120,12 +113,15 @@ class UsersService {
         ),
       );
 
-      return response.isSuccessful &&
-          memoryAllocationResponse.isSuccessful &&
-          changePasswordResponse.isSuccessful;
+      return response.isSuccessful && changePasswordResponse.isSuccessful;
     }
 
-    return response.isSuccessful && memoryAllocationResponse.isSuccessful;
+    if (user.profilePic != null) {
+      final changeProfilePicResult = await _setProfilePictureOfUser(user);
+      return response.isSuccessful && changeProfilePicResult;
+    }
+
+    return response.isSuccessful;
   }
 
   String? getWarningMessageForUserData(User user, bool creatingNewUser) {
@@ -169,6 +165,16 @@ class UsersService {
     } else {
       return 'Fill all required fields.';
     }
+  }
+
+  Future<ImageWrapper> getCurrentProfilePic(String username) async {
+    final response = await _api.userProfileImageGet(username: username);
+
+    if (response.isSuccessful) {
+      return ImageWrapper(MemoryImage(response.bodyBytes));
+    }
+
+    return const ImageWrapper(null);
   }
 
   Future<bool> _setProfilePictureOfUser(User user) async {

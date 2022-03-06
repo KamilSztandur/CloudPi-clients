@@ -64,6 +64,8 @@ class MainDrawer extends StatelessWidget {
               ),
               Text(
                 username,
+                maxLines: 1,
+                overflow: TextOverflow.fade,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,
