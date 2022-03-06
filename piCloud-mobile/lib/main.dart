@@ -4,6 +4,7 @@ import 'package:app/common/core/config.dart';
 import 'package:app/contracts/api.swagger.dart';
 import 'package:app/features/app/widgets/picloud_app.dart';
 import 'package:app/features/file_explorer/data/directory_manager.dart';
+import 'package:app/features/media_reader/data/media_reader_service.dart';
 import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -27,7 +28,17 @@ Future<void> main() async {
           ),
         ),
         Provider(create: (context) => Api.create(context.read())),
-        Provider(create: (context) => DirectoryManager(context.read())),
+        Provider(
+          create: (context) => DirectoryManager(
+            context.read<Api>(),
+            context.read<AuthManager>(),
+          ),
+        ),
+        Provider(
+          create: (context) => MediaReaderService(
+            context.read<AuthManager>(),
+          ),
+        ),
       ],
       child: const PICloudApp(),
     ),

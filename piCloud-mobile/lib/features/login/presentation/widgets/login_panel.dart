@@ -47,7 +47,7 @@ class _LoginPanelState extends State<LoginPanel> {
         listener: _blocListener,
         child: BlocBuilder<LoginBloc, LoginState>(
           builder: (context, state) {
-            if (state is LoginRequiredState) {
+            if (state is LoginRequiredState || state is LoginFailedLoginState) {
               return _buildLoginPanel(state);
             } else if (state is UserIsAlreadyLoggedState) {
               return Text(
@@ -55,7 +55,7 @@ class _LoginPanelState extends State<LoginPanel> {
                 style: Theme.of(context).textTheme.headline4,
               );
             } else {
-              return const CircularProgressIndicator(color: Colors.white);
+              return Container();
             }
           },
         ),
