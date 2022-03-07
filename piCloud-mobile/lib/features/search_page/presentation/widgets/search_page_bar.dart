@@ -66,7 +66,16 @@ class _SearchPageBarState extends State<SearchPageBar> {
           fontSize: fontSize,
           fontStyle: FontStyle.italic,
         ),
+        fillColor: Colors.transparent,
+        focusColor: Colors.transparent,
+        hoverColor: Colors.transparent,
         contentPadding: const EdgeInsets.only(left: 15, bottom: 5, top: 5),
+        enabledBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+        focusedBorder: const UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
       ),
     );
   }
