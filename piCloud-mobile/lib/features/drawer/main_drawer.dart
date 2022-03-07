@@ -6,7 +6,7 @@ import 'package:app/features/drawer/main_drawer_item.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer({

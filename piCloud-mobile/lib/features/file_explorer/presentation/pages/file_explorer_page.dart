@@ -13,7 +13,7 @@ import 'package:app/features/loading_baner/presentation/loading_panel.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class FileExplorerPage extends StatefulWidget {
   const FileExplorerPage({

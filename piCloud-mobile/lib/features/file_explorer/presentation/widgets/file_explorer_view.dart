@@ -1,16 +1,14 @@
+import 'package:app/common/models/view_mode.dart';
+import 'package:app/common/preferences/view_mode_cubit.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
-import 'package:app/features/file_explorer/bloc/file_explorer_bloc.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/models/file_item.dart';
-import 'package:app/features/file_explorer/presentation/widgets/file_explorer_error.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:app/features/file_explorer/presentation/widgets/selection/selected_item_frame.dart';
-import 'package:app/features/loading_baner/presentation/loading_panel.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'file_explorer_item/file_explorer_list_item.dart';
 
@@ -47,16 +45,9 @@ class _FileExplorerViewState extends State<FileExplorerView> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _checkIfPreferredViewIsList(),
-      builder: (context, snapshot) {
-        if (snapshot.data != null) {
-          return _buildFileExplorerView(snapshot.data! as bool);
-        } else {
-          return const LoadingPanel();
-        }
-      },
-    );
+    final viewMode = context.watch<ViewModeCubit>().state;
+
+    return _buildFileExplorerView(viewMode == ViewMode.list);
   }
 
   Widget _buildFileExplorerView(bool displayAsListView) {
@@ -134,12 +125,6 @@ class _FileExplorerViewState extends State<FileExplorerView> {
       widget.setItems(items);
       return items;
     }
-  }
-
-  Future<bool> _checkIfPreferredViewIsList() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    return prefs.getString('preferredView') == 'list';
   }
 
   List<FileExplorerListItem> _getItemWidgetsListForListView() {

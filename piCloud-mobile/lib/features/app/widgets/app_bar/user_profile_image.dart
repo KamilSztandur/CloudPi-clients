@@ -1,7 +1,7 @@
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class UserProfileImage extends StatelessWidget {
   const UserProfileImage({

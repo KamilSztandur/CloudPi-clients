@@ -308,13 +308,12 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
     for (final item in selectedItems) {
       final fileExtension = p.extension(item.file.title, 10);
       final newItemName = '$newName (${counter++})$fileExtension';
-      final result = await _directoryManager.rename(
+
+      await _directoryManager.rename(
         widget.currentDirPath,
         newItemName,
         item.file.id!,
       );
-
-      print(result);
     }
   }
 
