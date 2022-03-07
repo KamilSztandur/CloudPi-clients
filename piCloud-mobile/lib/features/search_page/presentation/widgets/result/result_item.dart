@@ -121,7 +121,7 @@ class _ResultItemState extends State<ResultItem> {
       );
 
   Future<void> _onOpenLocalizationClicked() async =>
-      AutoRouter.of(context).replaceAll(await _getFullItemRouteList());
+      AutoRouter.of(context).pushAll(await _getFullItemRouteList());
 
   Future<void> _onDetailsClicked() async {
     final path = await _getContainingDirectoryPath();
