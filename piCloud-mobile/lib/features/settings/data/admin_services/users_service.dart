@@ -167,6 +167,16 @@ class UsersService {
     }
   }
 
+  Future<bool> checkIfUserIsAdmin(String username) async {
+    final response = await _api.userUsernameDetailsGet(username: username);
+    if (response.isSuccessful &&
+        response.body!.roles!.contains(UserDetailsDTORoles.admin)) {
+      return true;
+    }
+
+    return false;
+  }
+
   Future<ImageWrapper> getCurrentProfilePic(String username) async {
     final response = await _api.userProfileImageGet(username: username);
 
