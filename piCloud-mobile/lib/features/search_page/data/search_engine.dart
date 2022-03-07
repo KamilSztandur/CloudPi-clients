@@ -121,7 +121,7 @@ class SearchEngine {
       'name': query.name,
       'path': '$username/',
       'types': _getAllowedTypesList(filters),
-      'created': {
+      'lastModified': {
         'from': _getFormattedDate(filters.minDate!),
         'to': _getFormattedDate(filters.maxDate!),
       },
