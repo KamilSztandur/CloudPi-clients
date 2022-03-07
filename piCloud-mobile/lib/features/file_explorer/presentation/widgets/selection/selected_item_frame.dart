@@ -1,13 +1,12 @@
-import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:flutter/material.dart';
 
 class SelectedItemFrame extends StatelessWidget {
   const SelectedItemFrame({
     Key? key,
-    required this.item,
+    required this.child,
   }) : super(key: key);
 
-  final FileExplorerItem item;
+  final Widget child;
   // ignore: unused_field
   final double _selectedIconOffset = 5;
 
@@ -16,7 +15,7 @@ class SelectedItemFrame extends StatelessWidget {
     return Stack(
       children: [
         Center(child: _SelectedFileBackground()),
-        Center(child: item)
+        Center(child: child)
         /*  TODO: Fix for mobile - unknown error widget appears.
       Positioned(
         top: _selectedIconOffset,

@@ -4,7 +4,7 @@ import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/features/app/widgets/app_bar/preview_app_bar.dart';
 import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/rename_file.dart';
-import 'package:app/features/file_explorer/presentation/widgets/file_explorer_error.dart';
+import 'package:app/common/widgets/error_view.dart';
 import 'package:app/features/loading_baner/presentation/loading_panel.dart';
 import 'package:app/features/media_reader/bloc/media_reader_bloc.dart';
 import 'package:app/features/media_reader/data/media_reader_service.dart';
@@ -67,11 +67,11 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
                   final resourceBytes = state.resourceBytes;
                   return _buildPreviewForResourceOfType(resourceBytes);
                 } else if (state is MediaDownloadFailureState) {
-                  return const FileExplorerErrorWidget(
+                  return const ErrorView(
                     errorMessage: 'Check your internet connection.',
                   );
                 } else if (state is MediaFileDamagedState) {
-                  return const FileExplorerErrorWidget(
+                  return const ErrorView(
                     errorMessage: 'File is damaged. Contact administrator.',
                   );
                 } else {

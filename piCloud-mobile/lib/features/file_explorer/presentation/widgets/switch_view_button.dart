@@ -3,19 +3,11 @@ import 'package:app/common/preferences/view_mode_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SwitchViewButton extends StatefulWidget {
+class SwitchViewButton extends StatelessWidget {
   const SwitchViewButton({
     Key? key,
-    required this.viewSwitched,
   }) : super(key: key);
 
-  final VoidCallback viewSwitched;
-
-  @override
-  _SwitchViewButtonState createState() => _SwitchViewButtonState();
-}
-
-class _SwitchViewButtonState extends State<SwitchViewButton> {
   @override
   Widget build(BuildContext context) {
     final viewMode = context.watch<ViewModeCubit>().state;

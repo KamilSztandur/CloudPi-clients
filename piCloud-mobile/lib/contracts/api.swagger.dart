@@ -27,17 +27,54 @@ abstract class Api extends ChopperService {
     return _$Api(newClient);
   }
 
+  ///updates user's password as admin
+  @Put(path: '/user/password')
+  Future<chopper.Response> userPasswordPut(
+      {@Body() required PutUserPasswordRequest? body});
+
+  ///updates user's password
+  @Patch(path: '/user/password')
+  Future<chopper.Response> userPasswordPatch(
+      {@Body() required PatchPasswordRequest? body});
+
   ///creates a directory
   ///@param directoryPath
   @Put(path: '/filesystem/directory', optionalBody: true)
   Future<chopper.Response<FileInfoDTO>> filesystemDirectoryPut(
       {@Query('directoryPath') required String? directoryPath});
 
+  ///Downloads user's profile image
+  ///@param username
+  @Get(path: '/user/profile-image')
+  Future<chopper.Response<String>> userProfileImageGet(
+      {@Query('username') required String? username});
+
+  ///
+  @Post(path: '/user/profile-image')
+  Future<chopper.Response> userProfileImagePost(
+      {@Body() required UserProfileImagePost$RequestBody? body});
+
+  ///
+  ///@param username
+  @Post(path: '/user/profile-image/{username}')
+  Future<chopper.Response> userProfileImageUsernamePost(
+      {@Path('username') required String? username,
+      @Body() required UserProfileImageUsernamePost$RequestBody? body});
+
   ///Creates user with given values
   ///@param user JSON object of users registration data
   @Post(path: '/user/new')
   Future<chopper.Response> userNewPost(
       {@Body() required PostUserRequest? body});
+
+  ///Gives user roles specified in request body
+  @Post(path: '/roles/')
+  Future<chopper.Response> rolesPost({@Body() required PostRoleRequest? body});
+
+  ///Remove user's roles specified in request body
+  @Delete(path: '/roles/')
+  Future<chopper.Response> rolesDelete(
+      {@Body() required DeleteRoleRequest? body});
 
   ///
   @Post(path: '/refresh/refresh-token', optionalBody: true)
@@ -72,19 +109,22 @@ abstract class Api extends ChopperService {
       {@Path('username') required String? username,
       @Query('newAssignedSpace') required int? newAssignedSpace});
 
-  ///
+  ///Takes query in request body and search for files matching given criteria
   @Post(path: '/filesystem/search')
   Future<chopper.Response<List<FileInfoDTO>>> filesystemSearchPost(
       {@Body() required FileQueryDTO? body});
 
-  ///uploads new image
-  ///@param imageName
-  @Post(path: '/files/image/{imageName}')
-  Future<chopper.Response<FileInfoDTO>> filesImageImageNamePost(
-      {@Path('imageName') required String? imageName,
-      @Body() required FilesImageImageNamePost$RequestBody? body});
+  ///Not implemented: Retrieves information about requested file
+  @Post(path: '/filesystem/get-by-path')
+  Future<chopper.Response<FileInfoDTO>> filesystemGetByPathPost(
+      {@Body() required GetFileByPathRequest? body});
 
-  ///uploads new file
+  ///uploads new image
+  @Post(path: '/files/image')
+  Future<chopper.Response<FileInfoDTO>> filesImagePost(
+      {@Body() required FilesImagePost$RequestBody? body});
+
+  ///uploads new file, or modify it if exist
   ///@param fileType
   ///@param filepath
   Future<chopper.Response<FileInfoDTO>> filesFilePost(
@@ -97,7 +137,7 @@ abstract class Api extends ChopperService {
         body: body);
   }
 
-  ///uploads new file
+  ///uploads new file, or modify it if exist
   ///@param fileType
   ///@param filepath
   @Post(path: '/files/file')
@@ -110,7 +150,18 @@ abstract class Api extends ChopperService {
   @Delete(path: '/files/file')
   Future<chopper.Response> filesFileDelete();
 
-  ///
+  ///Add given permission to given file and user
+  @Post(path: '/file-permission/permissions')
+  Future<chopper.Response> filePermissionPermissionsPost(
+      {@Body() required PostAddPermissionRequest? body});
+
+  ///<h2><font color="#911">Method not implemented</font> [priority: medium]</h2>
+  ///Removes permission with parameters in request body
+  @Delete(path: '/file-permission/permissions')
+  Future<chopper.Response> filePermissionPermissionsDelete(
+      {@Body() required DeletePermissionsRequest? body});
+
+  ///Creates new cloudpi drive in selected directory
   @Post(path: '/drive/new')
   Future<chopper.Response<DriveDTO>> driveNewPost(
       {@Body() required PostDriveRequest? body});
@@ -133,6 +184,12 @@ abstract class Api extends ChopperService {
   Future<chopper.Response> filesystemMovePatch(
       {@Body() required MoveFileRequest? body});
 
+  ///changes file's favour state
+  ///@param fileId
+  @Patch(path: '/favourite/{fileId}', optionalBody: true)
+  Future<chopper.Response> favouriteFileIdPatch(
+      {@Path('fileId') required String? fileId});
+
   ///returns all details of user with provided username
   ///@param usernames One or more usernames whose details you want to acquire
   ///@param username
@@ -144,7 +201,22 @@ abstract class Api extends ChopperService {
   @Get(path: '/user/')
   Future<chopper.Response<List<UserIdDTO>>> userGet();
 
-  ///retrieves information about requested file
+  ///Get all user's roles
+  ///@param username
+  @Get(path: '/roles/{username}')
+  Future<chopper.Response> rolesUsernameGet(
+      {@Path('username') required String? username});
+
+  ///Returns list of files that was shared to user
+  @Get(path: '/filesystem/files-shared-to-user')
+  Future<chopper.Response<List<FileInfoDTO>>> filesystemFilesSharedToUserGet();
+
+  ///<h2><font color="#911">Method not implemented</font> [priority: medium]</h2>
+  ///Returns list of files that user shared
+  @Get(path: '/filesystem/files-shared-by-user')
+  Future<chopper.Response<List<FileInfoDTO>>> filesystemFilesSharedByUserGet();
+
+  ///Retrieves information about requested file
   ///@param fileId
   ///@param with-permissions
   @Get(path: '/filesystem/file/{fileId}')
@@ -158,7 +230,7 @@ abstract class Api extends ChopperService {
   @Get(path: '/filesystem/file-structure')
   Future<chopper.Response<FileStructureDTO>> filesystemFileStructureGet(
       {@Query('structureLevels') int? structureLevels,
-      @Query('fileStructureRoot') String? fileStructureRoot});
+      @Query('fileStructureRoot') required String? fileStructureRoot});
 
   ///creates image preview with provided resolution
   ///@param previewResolution
@@ -180,17 +252,39 @@ abstract class Api extends ChopperService {
   Future<chopper.Response> filesFileFileIdDelete(
       {@Path('fileId') required String? fileId});
 
-  ///
+  ///compresses and returns a selected directory
   ///@param directoryId
   @Get(path: '/files/directory/{directoryId}')
   Future<chopper.Response<String>> filesDirectoryDirectoryIdGet(
       {@Path('directoryId') required String? directoryId});
 
-  ///
+  ///<h2><font color="#911">Method not implemented</font> [priority: low]</h2>
+  ///Returns list of all permissions assigned to given file
+  ///@param filePubId
+  @Get(path: '/file-permission/permissions/{filePubId}')
+  Future<chopper.Response<FilePermissionsDTO>>
+      filePermissionPermissionsFilePubIdGet(
+          {@Path('filePubId') required String? filePubId});
+
+  ///<h2><font color="#911">Method not implemented</font> [priority: low]</h2>
+  ///Returns permissions that user have to given file.
+  ///@param filePubId
+  @Get(path: '/file-permission/my-permission/{filePubId}')
+  Future<chopper.Response<UserFilePermissionsDTO>>
+      filePermissionMyPermissionFilePubIdGet(
+          {@Path('filePubId') required String? filePubId});
+
+  ///retrieves all files marked as favourite
+  @Get(path: '/favourite/all')
+  Future<chopper.Response<List<FileInfoDTO>>> favouriteAllGet();
+
+  ///<h2><font color="#911">Method not implemented</font> [priority: low]</h2>
+  ///Returns all drives
   @Get(path: '/drive')
   Future<chopper.Response<List<DriveDTO>>> driveGet();
 
-  ///
+  ///<h2><font color="#911">Method not implemented</font> [priority: low]</h2>
+  ///Returns all detected discs
   @Get(path: '/drive/discs')
   Future<chopper.Response<List<DiscDTO>>> driveDiscsGet();
 
@@ -199,26 +293,42 @@ abstract class Api extends ChopperService {
   @Delete(path: '/filesystem/directory/{directoryId}')
   Future<chopper.Response> filesystemDirectoryDirectoryIdDelete(
       {@Path('directoryId') required String? directoryId});
+
+  ///Removes permission all parameters for specified user and file
+  @Delete(path: '/file-permission/permissions/all')
+  Future<chopper.Response> filePermissionPermissionsAllDelete(
+      {@Body() required DeleteAllPermissionsRequest? body});
 }
 
 final Map<Type, Object Function(Map<String, dynamic>)> ApiJsonDecoderMappings =
     {
   ErrorBody: ErrorBody.fromJsonFactory,
+  PutUserPasswordRequest: PutUserPasswordRequest.fromJsonFactory,
   FileInfoDTO: FileInfoDTO.fromJsonFactory,
   PostUserRequest: PostUserRequest.fromJsonFactory,
+  PostRoleRequest: PostRoleRequest.fromJsonFactory,
   LoginRequest: LoginRequest.fromJsonFactory,
   FileQueryDTO: FileQueryDTO.fromJsonFactory,
   TimePeriod: TimePeriod.fromJsonFactory,
+  GetFileByPathRequest: GetFileByPathRequest.fromJsonFactory,
+  PostAddPermissionRequest: PostAddPermissionRequest.fromJsonFactory,
   PostDriveRequest: PostDriveRequest.fromJsonFactory,
   DriveDTO: DriveDTO.fromJsonFactory,
   PatchUserRequest: PatchUserRequest.fromJsonFactory,
+  PatchPasswordRequest: PatchPasswordRequest.fromJsonFactory,
   MoveFileRequest: MoveFileRequest.fromJsonFactory,
   UserDetailsDTO: UserDetailsDTO.fromJsonFactory,
   UserIdDTO: UserIdDTO.fromJsonFactory,
   FilesystemInfoDTO: FilesystemInfoDTO.fromJsonFactory,
   FileStructureDTO: FileStructureDTO.fromJsonFactory,
   FilesystemObjectDTO: FilesystemObjectDTO.fromJsonFactory,
+  FilePermissionsDTO: FilePermissionsDTO.fromJsonFactory,
+  PermissionDTO: PermissionDTO.fromJsonFactory,
+  UserFilePermissionsDTO: UserFilePermissionsDTO.fromJsonFactory,
   DiscDTO: DiscDTO.fromJsonFactory,
+  DeleteRoleRequest: DeleteRoleRequest.fromJsonFactory,
+  DeletePermissionsRequest: DeletePermissionsRequest.fromJsonFactory,
+  DeleteAllPermissionsRequest: DeleteAllPermissionsRequest.fromJsonFactory,
 };
 
 @JsonSerializable(explicitToJson: true)
@@ -257,17 +367,62 @@ extension $ErrorBodyExtension on ErrorBody {
 }
 
 @JsonSerializable(explicitToJson: true)
+class PutUserPasswordRequest {
+  PutUserPasswordRequest({
+    this.username,
+    this.newPassword,
+  });
+
+  factory PutUserPasswordRequest.fromJson(Map<String, dynamic> json) =>
+      _$PutUserPasswordRequestFromJson(json);
+
+  @JsonKey(name: 'username')
+  final String? username;
+  @JsonKey(name: 'newPassword')
+  final String? newPassword;
+  static const fromJsonFactory = _$PutUserPasswordRequestFromJson;
+  static const toJsonFactory = _$PutUserPasswordRequestToJson;
+  Map<String, dynamic> toJson() => _$PutUserPasswordRequestToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is PutUserPasswordRequest &&
+            (identical(other.username, username) ||
+                const DeepCollectionEquality()
+                    .equals(other.username, username)) &&
+            (identical(other.newPassword, newPassword) ||
+                const DeepCollectionEquality()
+                    .equals(other.newPassword, newPassword)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(username) ^
+      const DeepCollectionEquality().hash(newPassword) ^
+      runtimeType.hashCode;
+}
+
+extension $PutUserPasswordRequestExtension on PutUserPasswordRequest {
+  PutUserPasswordRequest copyWith({String? username, String? newPassword}) {
+    return PutUserPasswordRequest(
+        username: username ?? this.username,
+        newPassword: newPassword ?? this.newPassword);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
 class FileInfoDTO {
   FileInfoDTO({
     this.pubId,
     this.name,
     this.path,
-    this.parentUUID,
     this.hasThumbnail,
     this.type,
     this.size,
     this.modifiedAt,
     this.createdAt,
+    this.isFavourite,
   });
 
   factory FileInfoDTO.fromJson(Map<String, dynamic> json) =>
@@ -279,8 +434,6 @@ class FileInfoDTO {
   final String? name;
   @JsonKey(name: 'path')
   final String? path;
-  @JsonKey(name: 'parentUUID')
-  final String? parentUUID;
   @JsonKey(name: 'hasThumbnail')
   final bool? hasThumbnail;
   @JsonKey(
@@ -294,6 +447,8 @@ class FileInfoDTO {
   final DateTime? modifiedAt;
   @JsonKey(name: 'createdAt')
   final DateTime? createdAt;
+  @JsonKey(name: 'isFavourite')
+  final bool? isFavourite;
   static const fromJsonFactory = _$FileInfoDTOFromJson;
   static const toJsonFactory = _$FileInfoDTOToJson;
   Map<String, dynamic> toJson() => _$FileInfoDTOToJson(this);
@@ -308,9 +463,6 @@ class FileInfoDTO {
                 const DeepCollectionEquality().equals(other.name, name)) &&
             (identical(other.path, path) ||
                 const DeepCollectionEquality().equals(other.path, path)) &&
-            (identical(other.parentUUID, parentUUID) ||
-                const DeepCollectionEquality()
-                    .equals(other.parentUUID, parentUUID)) &&
             (identical(other.hasThumbnail, hasThumbnail) ||
                 const DeepCollectionEquality()
                     .equals(other.hasThumbnail, hasThumbnail)) &&
@@ -323,7 +475,10 @@ class FileInfoDTO {
                     .equals(other.modifiedAt, modifiedAt)) &&
             (identical(other.createdAt, createdAt) ||
                 const DeepCollectionEquality()
-                    .equals(other.createdAt, createdAt)));
+                    .equals(other.createdAt, createdAt)) &&
+            (identical(other.isFavourite, isFavourite) ||
+                const DeepCollectionEquality()
+                    .equals(other.isFavourite, isFavourite)));
   }
 
   @override
@@ -331,12 +486,12 @@ class FileInfoDTO {
       const DeepCollectionEquality().hash(pubId) ^
       const DeepCollectionEquality().hash(name) ^
       const DeepCollectionEquality().hash(path) ^
-      const DeepCollectionEquality().hash(parentUUID) ^
       const DeepCollectionEquality().hash(hasThumbnail) ^
       const DeepCollectionEquality().hash(type) ^
       const DeepCollectionEquality().hash(size) ^
       const DeepCollectionEquality().hash(modifiedAt) ^
       const DeepCollectionEquality().hash(createdAt) ^
+      const DeepCollectionEquality().hash(isFavourite) ^
       runtimeType.hashCode;
 }
 
@@ -345,22 +500,22 @@ extension $FileInfoDTOExtension on FileInfoDTO {
       {String? pubId,
       String? name,
       String? path,
-      String? parentUUID,
       bool? hasThumbnail,
       enums.FileInfoDTOType? type,
       int? size,
       DateTime? modifiedAt,
-      DateTime? createdAt}) {
+      DateTime? createdAt,
+      bool? isFavourite}) {
     return FileInfoDTO(
         pubId: pubId ?? this.pubId,
         name: name ?? this.name,
         path: path ?? this.path,
-        parentUUID: parentUUID ?? this.parentUUID,
         hasThumbnail: hasThumbnail ?? this.hasThumbnail,
         type: type ?? this.type,
         size: size ?? this.size,
         modifiedAt: modifiedAt ?? this.modifiedAt,
-        createdAt: createdAt ?? this.createdAt);
+        createdAt: createdAt ?? this.createdAt,
+        isFavourite: isFavourite ?? this.isFavourite);
   }
 }
 
@@ -426,6 +581,53 @@ extension $PostUserRequestExtension on PostUserRequest {
 }
 
 @JsonSerializable(explicitToJson: true)
+class PostRoleRequest {
+  PostRoleRequest({
+    this.roles,
+    this.username,
+  });
+
+  factory PostRoleRequest.fromJson(Map<String, dynamic> json) =>
+      _$PostRoleRequestFromJson(json);
+
+  @JsonKey(
+      name: 'roles',
+      toJson: postRoleRequestRolesListToJson,
+      fromJson: postRoleRequestRolesListFromJson)
+  final List<enums.PostRoleRequestRoles>? roles;
+  @JsonKey(name: 'username')
+  final String? username;
+  static const fromJsonFactory = _$PostRoleRequestFromJson;
+  static const toJsonFactory = _$PostRoleRequestToJson;
+  Map<String, dynamic> toJson() => _$PostRoleRequestToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is PostRoleRequest &&
+            (identical(other.roles, roles) ||
+                const DeepCollectionEquality().equals(other.roles, roles)) &&
+            (identical(other.username, username) ||
+                const DeepCollectionEquality()
+                    .equals(other.username, username)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(roles) ^
+      const DeepCollectionEquality().hash(username) ^
+      runtimeType.hashCode;
+}
+
+extension $PostRoleRequestExtension on PostRoleRequest {
+  PostRoleRequest copyWith(
+      {List<enums.PostRoleRequestRoles>? roles, String? username}) {
+    return PostRoleRequest(
+        roles: roles ?? this.roles, username: username ?? this.username);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
 class LoginRequest {
   LoginRequest({
     this.username,
@@ -474,7 +676,8 @@ extension $LoginRequestExtension on LoginRequest {
 class FileQueryDTO {
   FileQueryDTO({
     this.name,
-    this.type,
+    this.path,
+    this.types,
     this.created,
     this.lastModified,
   });
@@ -484,11 +687,13 @@ class FileQueryDTO {
 
   @JsonKey(name: 'name')
   final String? name;
+  @JsonKey(name: 'path')
+  final String? path;
   @JsonKey(
-      name: 'type',
-      toJson: fileQueryDTOTypeToJson,
-      fromJson: fileQueryDTOTypeFromJson)
-  final enums.FileQueryDTOType? type;
+      name: 'types',
+      toJson: fileQueryDTOTypesListToJson,
+      fromJson: fileQueryDTOTypesListFromJson)
+  final List<enums.FileQueryDTOTypes>? types;
   @JsonKey(name: 'created')
   final TimePeriod? created;
   @JsonKey(name: 'lastModified')
@@ -503,8 +708,10 @@ class FileQueryDTO {
         (other is FileQueryDTO &&
             (identical(other.name, name) ||
                 const DeepCollectionEquality().equals(other.name, name)) &&
-            (identical(other.type, type) ||
-                const DeepCollectionEquality().equals(other.type, type)) &&
+            (identical(other.path, path) ||
+                const DeepCollectionEquality().equals(other.path, path)) &&
+            (identical(other.types, types) ||
+                const DeepCollectionEquality().equals(other.types, types)) &&
             (identical(other.created, created) ||
                 const DeepCollectionEquality()
                     .equals(other.created, created)) &&
@@ -516,7 +723,8 @@ class FileQueryDTO {
   @override
   int get hashCode =>
       const DeepCollectionEquality().hash(name) ^
-      const DeepCollectionEquality().hash(type) ^
+      const DeepCollectionEquality().hash(path) ^
+      const DeepCollectionEquality().hash(types) ^
       const DeepCollectionEquality().hash(created) ^
       const DeepCollectionEquality().hash(lastModified) ^
       runtimeType.hashCode;
@@ -525,12 +733,14 @@ class FileQueryDTO {
 extension $FileQueryDTOExtension on FileQueryDTO {
   FileQueryDTO copyWith(
       {String? name,
-      enums.FileQueryDTOType? type,
+      String? path,
+      List<enums.FileQueryDTOTypes>? types,
       TimePeriod? created,
       TimePeriod? lastModified}) {
     return FileQueryDTO(
         name: name ?? this.name,
-        type: type ?? this.type,
+        path: path ?? this.path,
+        types: types ?? this.types,
         created: created ?? this.created,
         lastModified: lastModified ?? this.lastModified);
   }
@@ -574,6 +784,100 @@ class TimePeriod {
 extension $TimePeriodExtension on TimePeriod {
   TimePeriod copyWith({DateTime? from, DateTime? to}) {
     return TimePeriod(from: from ?? this.from, to: to ?? this.to);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class GetFileByPathRequest {
+  GetFileByPathRequest({
+    this.filePaths,
+  });
+
+  factory GetFileByPathRequest.fromJson(Map<String, dynamic> json) =>
+      _$GetFileByPathRequestFromJson(json);
+
+  @JsonKey(name: 'filePaths', defaultValue: <String>[])
+  final List<String>? filePaths;
+  static const fromJsonFactory = _$GetFileByPathRequestFromJson;
+  static const toJsonFactory = _$GetFileByPathRequestToJson;
+  Map<String, dynamic> toJson() => _$GetFileByPathRequestToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is GetFileByPathRequest &&
+            (identical(other.filePaths, filePaths) ||
+                const DeepCollectionEquality()
+                    .equals(other.filePaths, filePaths)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(filePaths) ^ runtimeType.hashCode;
+}
+
+extension $GetFileByPathRequestExtension on GetFileByPathRequest {
+  GetFileByPathRequest copyWith({List<String>? filePaths}) {
+    return GetFileByPathRequest(filePaths: filePaths ?? this.filePaths);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class PostAddPermissionRequest {
+  PostAddPermissionRequest({
+    this.filePubId,
+    this.ownerUsername,
+    this.permissions,
+  });
+
+  factory PostAddPermissionRequest.fromJson(Map<String, dynamic> json) =>
+      _$PostAddPermissionRequestFromJson(json);
+
+  @JsonKey(name: 'filePubId')
+  final String? filePubId;
+  @JsonKey(name: 'ownerUsername')
+  final String? ownerUsername;
+  @JsonKey(
+      name: 'permissions',
+      toJson: postAddPermissionRequestPermissionsListToJson,
+      fromJson: postAddPermissionRequestPermissionsListFromJson)
+  final List<enums.PostAddPermissionRequestPermissions>? permissions;
+  static const fromJsonFactory = _$PostAddPermissionRequestFromJson;
+  static const toJsonFactory = _$PostAddPermissionRequestToJson;
+  Map<String, dynamic> toJson() => _$PostAddPermissionRequestToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is PostAddPermissionRequest &&
+            (identical(other.filePubId, filePubId) ||
+                const DeepCollectionEquality()
+                    .equals(other.filePubId, filePubId)) &&
+            (identical(other.ownerUsername, ownerUsername) ||
+                const DeepCollectionEquality()
+                    .equals(other.ownerUsername, ownerUsername)) &&
+            (identical(other.permissions, permissions) ||
+                const DeepCollectionEquality()
+                    .equals(other.permissions, permissions)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(filePubId) ^
+      const DeepCollectionEquality().hash(ownerUsername) ^
+      const DeepCollectionEquality().hash(permissions) ^
+      runtimeType.hashCode;
+}
+
+extension $PostAddPermissionRequestExtension on PostAddPermissionRequest {
+  PostAddPermissionRequest copyWith(
+      {String? filePubId,
+      String? ownerUsername,
+      List<enums.PostAddPermissionRequestPermissions>? permissions}) {
+    return PostAddPermissionRequest(
+        filePubId: filePubId ?? this.filePubId,
+        ownerUsername: ownerUsername ?? this.ownerUsername,
+        permissions: permissions ?? this.permissions);
   }
 }
 
@@ -683,7 +987,6 @@ class PatchUserRequest {
   PatchUserRequest({
     this.nickname,
     this.email,
-    this.profilePicturePubId,
   });
 
   factory PatchUserRequest.fromJson(Map<String, dynamic> json) =>
@@ -693,8 +996,6 @@ class PatchUserRequest {
   final String? nickname;
   @JsonKey(name: 'email')
   final String? email;
-  @JsonKey(name: 'profilePicturePubId')
-  final String? profilePicturePubId;
   static const fromJsonFactory = _$PatchUserRequestFromJson;
   static const toJsonFactory = _$PatchUserRequestToJson;
   Map<String, dynamic> toJson() => _$PatchUserRequestToJson(this);
@@ -707,27 +1008,66 @@ class PatchUserRequest {
                 const DeepCollectionEquality()
                     .equals(other.nickname, nickname)) &&
             (identical(other.email, email) ||
-                const DeepCollectionEquality().equals(other.email, email)) &&
-            (identical(other.profilePicturePubId, profilePicturePubId) ||
-                const DeepCollectionEquality()
-                    .equals(other.profilePicturePubId, profilePicturePubId)));
+                const DeepCollectionEquality().equals(other.email, email)));
   }
 
   @override
   int get hashCode =>
       const DeepCollectionEquality().hash(nickname) ^
       const DeepCollectionEquality().hash(email) ^
-      const DeepCollectionEquality().hash(profilePicturePubId) ^
       runtimeType.hashCode;
 }
 
 extension $PatchUserRequestExtension on PatchUserRequest {
-  PatchUserRequest copyWith(
-      {String? nickname, String? email, String? profilePicturePubId}) {
+  PatchUserRequest copyWith({String? nickname, String? email}) {
     return PatchUserRequest(
-        nickname: nickname ?? this.nickname,
-        email: email ?? this.email,
-        profilePicturePubId: profilePicturePubId ?? this.profilePicturePubId);
+        nickname: nickname ?? this.nickname, email: email ?? this.email);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class PatchPasswordRequest {
+  PatchPasswordRequest({
+    this.currentPassword,
+    this.newPassword,
+  });
+
+  factory PatchPasswordRequest.fromJson(Map<String, dynamic> json) =>
+      _$PatchPasswordRequestFromJson(json);
+
+  @JsonKey(name: 'currentPassword')
+  final String? currentPassword;
+  @JsonKey(name: 'newPassword')
+  final String? newPassword;
+  static const fromJsonFactory = _$PatchPasswordRequestFromJson;
+  static const toJsonFactory = _$PatchPasswordRequestToJson;
+  Map<String, dynamic> toJson() => _$PatchPasswordRequestToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is PatchPasswordRequest &&
+            (identical(other.currentPassword, currentPassword) ||
+                const DeepCollectionEquality()
+                    .equals(other.currentPassword, currentPassword)) &&
+            (identical(other.newPassword, newPassword) ||
+                const DeepCollectionEquality()
+                    .equals(other.newPassword, newPassword)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(currentPassword) ^
+      const DeepCollectionEquality().hash(newPassword) ^
+      runtimeType.hashCode;
+}
+
+extension $PatchPasswordRequestExtension on PatchPasswordRequest {
+  PatchPasswordRequest copyWith(
+      {String? currentPassword, String? newPassword}) {
+    return PatchPasswordRequest(
+        currentPassword: currentPassword ?? this.currentPassword,
+        newPassword: newPassword ?? this.newPassword);
   }
 }
 
@@ -780,7 +1120,7 @@ class UserDetailsDTO {
   UserDetailsDTO({
     this.username,
     this.email,
-    this.profilePicturePubId,
+    this.hasProfileImage,
     this.nickname,
     this.pubId,
     this.roles,
@@ -793,8 +1133,8 @@ class UserDetailsDTO {
   final String? username;
   @JsonKey(name: 'email')
   final String? email;
-  @JsonKey(name: 'profilePicturePubId')
-  final String? profilePicturePubId;
+  @JsonKey(name: 'hasProfileImage')
+  final bool? hasProfileImage;
   @JsonKey(name: 'nickname')
   final String? nickname;
   @JsonKey(name: 'pubId')
@@ -817,9 +1157,9 @@ class UserDetailsDTO {
                     .equals(other.username, username)) &&
             (identical(other.email, email) ||
                 const DeepCollectionEquality().equals(other.email, email)) &&
-            (identical(other.profilePicturePubId, profilePicturePubId) ||
+            (identical(other.hasProfileImage, hasProfileImage) ||
                 const DeepCollectionEquality()
-                    .equals(other.profilePicturePubId, profilePicturePubId)) &&
+                    .equals(other.hasProfileImage, hasProfileImage)) &&
             (identical(other.nickname, nickname) ||
                 const DeepCollectionEquality()
                     .equals(other.nickname, nickname)) &&
@@ -833,7 +1173,7 @@ class UserDetailsDTO {
   int get hashCode =>
       const DeepCollectionEquality().hash(username) ^
       const DeepCollectionEquality().hash(email) ^
-      const DeepCollectionEquality().hash(profilePicturePubId) ^
+      const DeepCollectionEquality().hash(hasProfileImage) ^
       const DeepCollectionEquality().hash(nickname) ^
       const DeepCollectionEquality().hash(pubId) ^
       const DeepCollectionEquality().hash(roles) ^
@@ -844,14 +1184,14 @@ extension $UserDetailsDTOExtension on UserDetailsDTO {
   UserDetailsDTO copyWith(
       {String? username,
       String? email,
-      String? profilePicturePubId,
+      bool? hasProfileImage,
       String? nickname,
       String? pubId,
       List<enums.UserDetailsDTORoles>? roles}) {
     return UserDetailsDTO(
         username: username ?? this.username,
         email: email ?? this.email,
-        profilePicturePubId: profilePicturePubId ?? this.profilePicturePubId,
+        hasProfileImage: hasProfileImage ?? this.hasProfileImage,
         nickname: nickname ?? this.nickname,
         pubId: pubId ?? this.pubId,
         roles: roles ?? this.roles);
@@ -864,7 +1204,7 @@ class UserIdDTO {
     this.username,
     this.pubId,
     this.nickname,
-    this.profilePicturePubId,
+    this.hasProfileImage,
   });
 
   factory UserIdDTO.fromJson(Map<String, dynamic> json) =>
@@ -876,8 +1216,8 @@ class UserIdDTO {
   final String? pubId;
   @JsonKey(name: 'nickname')
   final String? nickname;
-  @JsonKey(name: 'profilePicturePubId')
-  final String? profilePicturePubId;
+  @JsonKey(name: 'hasProfileImage')
+  final bool? hasProfileImage;
   static const fromJsonFactory = _$UserIdDTOFromJson;
   static const toJsonFactory = _$UserIdDTOToJson;
   Map<String, dynamic> toJson() => _$UserIdDTOToJson(this);
@@ -894,9 +1234,9 @@ class UserIdDTO {
             (identical(other.nickname, nickname) ||
                 const DeepCollectionEquality()
                     .equals(other.nickname, nickname)) &&
-            (identical(other.profilePicturePubId, profilePicturePubId) ||
+            (identical(other.hasProfileImage, hasProfileImage) ||
                 const DeepCollectionEquality()
-                    .equals(other.profilePicturePubId, profilePicturePubId)));
+                    .equals(other.hasProfileImage, hasProfileImage)));
   }
 
   @override
@@ -904,7 +1244,7 @@ class UserIdDTO {
       const DeepCollectionEquality().hash(username) ^
       const DeepCollectionEquality().hash(pubId) ^
       const DeepCollectionEquality().hash(nickname) ^
-      const DeepCollectionEquality().hash(profilePicturePubId) ^
+      const DeepCollectionEquality().hash(hasProfileImage) ^
       runtimeType.hashCode;
 }
 
@@ -913,12 +1253,12 @@ extension $UserIdDTOExtension on UserIdDTO {
       {String? username,
       String? pubId,
       String? nickname,
-      String? profilePicturePubId}) {
+      bool? hasProfileImage}) {
     return UserIdDTO(
         username: username ?? this.username,
         pubId: pubId ?? this.pubId,
         nickname: nickname ?? this.nickname,
-        profilePicturePubId: profilePicturePubId ?? this.profilePicturePubId);
+        hasProfileImage: hasProfileImage ?? this.hasProfileImage);
   }
 }
 
@@ -1109,6 +1449,160 @@ extension $FilesystemObjectDTOExtension on FilesystemObjectDTO {
 }
 
 @JsonSerializable(explicitToJson: true)
+class FilePermissionsDTO {
+  FilePermissionsDTO({
+    this.filePubId,
+    this.permissions,
+  });
+
+  factory FilePermissionsDTO.fromJson(Map<String, dynamic> json) =>
+      _$FilePermissionsDTOFromJson(json);
+
+  @JsonKey(name: 'filePubId')
+  final String? filePubId;
+  @JsonKey(name: 'permissions', defaultValue: <PermissionDTO>[])
+  final List<PermissionDTO>? permissions;
+  static const fromJsonFactory = _$FilePermissionsDTOFromJson;
+  static const toJsonFactory = _$FilePermissionsDTOToJson;
+  Map<String, dynamic> toJson() => _$FilePermissionsDTOToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is FilePermissionsDTO &&
+            (identical(other.filePubId, filePubId) ||
+                const DeepCollectionEquality()
+                    .equals(other.filePubId, filePubId)) &&
+            (identical(other.permissions, permissions) ||
+                const DeepCollectionEquality()
+                    .equals(other.permissions, permissions)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(filePubId) ^
+      const DeepCollectionEquality().hash(permissions) ^
+      runtimeType.hashCode;
+}
+
+extension $FilePermissionsDTOExtension on FilePermissionsDTO {
+  FilePermissionsDTO copyWith(
+      {String? filePubId, List<PermissionDTO>? permissions}) {
+    return FilePermissionsDTO(
+        filePubId: filePubId ?? this.filePubId,
+        permissions: permissions ?? this.permissions);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class PermissionDTO {
+  PermissionDTO({
+    this.ownerUsername,
+    this.permissions,
+  });
+
+  factory PermissionDTO.fromJson(Map<String, dynamic> json) =>
+      _$PermissionDTOFromJson(json);
+
+  @JsonKey(name: 'ownerUsername')
+  final String? ownerUsername;
+  @JsonKey(
+      name: 'permissions',
+      toJson: permissionDTOPermissionsListToJson,
+      fromJson: permissionDTOPermissionsListFromJson)
+  final List<enums.PermissionDTOPermissions>? permissions;
+  static const fromJsonFactory = _$PermissionDTOFromJson;
+  static const toJsonFactory = _$PermissionDTOToJson;
+  Map<String, dynamic> toJson() => _$PermissionDTOToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is PermissionDTO &&
+            (identical(other.ownerUsername, ownerUsername) ||
+                const DeepCollectionEquality()
+                    .equals(other.ownerUsername, ownerUsername)) &&
+            (identical(other.permissions, permissions) ||
+                const DeepCollectionEquality()
+                    .equals(other.permissions, permissions)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(ownerUsername) ^
+      const DeepCollectionEquality().hash(permissions) ^
+      runtimeType.hashCode;
+}
+
+extension $PermissionDTOExtension on PermissionDTO {
+  PermissionDTO copyWith(
+      {String? ownerUsername,
+      List<enums.PermissionDTOPermissions>? permissions}) {
+    return PermissionDTO(
+        ownerUsername: ownerUsername ?? this.ownerUsername,
+        permissions: permissions ?? this.permissions);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserFilePermissionsDTO {
+  UserFilePermissionsDTO({
+    this.types,
+    this.username,
+    this.filePubId,
+  });
+
+  factory UserFilePermissionsDTO.fromJson(Map<String, dynamic> json) =>
+      _$UserFilePermissionsDTOFromJson(json);
+
+  @JsonKey(
+      name: 'types',
+      toJson: userFilePermissionsDTOTypesListToJson,
+      fromJson: userFilePermissionsDTOTypesListFromJson)
+  final List<enums.UserFilePermissionsDTOTypes>? types;
+  @JsonKey(name: 'username')
+  final String? username;
+  @JsonKey(name: 'filePubId')
+  final String? filePubId;
+  static const fromJsonFactory = _$UserFilePermissionsDTOFromJson;
+  static const toJsonFactory = _$UserFilePermissionsDTOToJson;
+  Map<String, dynamic> toJson() => _$UserFilePermissionsDTOToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is UserFilePermissionsDTO &&
+            (identical(other.types, types) ||
+                const DeepCollectionEquality().equals(other.types, types)) &&
+            (identical(other.username, username) ||
+                const DeepCollectionEquality()
+                    .equals(other.username, username)) &&
+            (identical(other.filePubId, filePubId) ||
+                const DeepCollectionEquality()
+                    .equals(other.filePubId, filePubId)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(types) ^
+      const DeepCollectionEquality().hash(username) ^
+      const DeepCollectionEquality().hash(filePubId) ^
+      runtimeType.hashCode;
+}
+
+extension $UserFilePermissionsDTOExtension on UserFilePermissionsDTO {
+  UserFilePermissionsDTO copyWith(
+      {List<enums.UserFilePermissionsDTOTypes>? types,
+      String? username,
+      String? filePubId}) {
+    return UserFilePermissionsDTO(
+        types: types ?? this.types,
+        username: username ?? this.username,
+        filePubId: filePubId ?? this.filePubId);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
 class DiscDTO {
   DiscDTO({
     this.discName,
@@ -1158,6 +1652,147 @@ extension $DiscDTOExtension on DiscDTO {
         discName: discName ?? this.discName,
         discSize: discSize ?? this.discSize,
         discSpaceAvailable: discSpaceAvailable ?? this.discSpaceAvailable);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteRoleRequest {
+  DeleteRoleRequest({
+    this.roles,
+    this.username,
+  });
+
+  factory DeleteRoleRequest.fromJson(Map<String, dynamic> json) =>
+      _$DeleteRoleRequestFromJson(json);
+
+  @JsonKey(
+      name: 'roles',
+      toJson: deleteRoleRequestRolesListToJson,
+      fromJson: deleteRoleRequestRolesListFromJson)
+  final List<enums.DeleteRoleRequestRoles>? roles;
+  @JsonKey(name: 'username')
+  final String? username;
+  static const fromJsonFactory = _$DeleteRoleRequestFromJson;
+  static const toJsonFactory = _$DeleteRoleRequestToJson;
+  Map<String, dynamic> toJson() => _$DeleteRoleRequestToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is DeleteRoleRequest &&
+            (identical(other.roles, roles) ||
+                const DeepCollectionEquality().equals(other.roles, roles)) &&
+            (identical(other.username, username) ||
+                const DeepCollectionEquality()
+                    .equals(other.username, username)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(roles) ^
+      const DeepCollectionEquality().hash(username) ^
+      runtimeType.hashCode;
+}
+
+extension $DeleteRoleRequestExtension on DeleteRoleRequest {
+  DeleteRoleRequest copyWith(
+      {List<enums.DeleteRoleRequestRoles>? roles, String? username}) {
+    return DeleteRoleRequest(
+        roles: roles ?? this.roles, username: username ?? this.username);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeletePermissionsRequest {
+  DeletePermissionsRequest({
+    this.filePubId,
+    this.ownerUsername,
+    this.permissions,
+  });
+
+  factory DeletePermissionsRequest.fromJson(Map<String, dynamic> json) =>
+      _$DeletePermissionsRequestFromJson(json);
+
+  @JsonKey(name: 'filePubId')
+  final String? filePubId;
+  @JsonKey(name: 'ownerUsername')
+  final String? ownerUsername;
+  @JsonKey(
+      name: 'permissions',
+      toJson: deletePermissionsRequestPermissionsListToJson,
+      fromJson: deletePermissionsRequestPermissionsListFromJson)
+  final List<enums.DeletePermissionsRequestPermissions>? permissions;
+  static const fromJsonFactory = _$DeletePermissionsRequestFromJson;
+  static const toJsonFactory = _$DeletePermissionsRequestToJson;
+  Map<String, dynamic> toJson() => _$DeletePermissionsRequestToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is DeletePermissionsRequest &&
+            (identical(other.filePubId, filePubId) ||
+                const DeepCollectionEquality()
+                    .equals(other.filePubId, filePubId)) &&
+            (identical(other.ownerUsername, ownerUsername) ||
+                const DeepCollectionEquality()
+                    .equals(other.ownerUsername, ownerUsername)) &&
+            (identical(other.permissions, permissions) ||
+                const DeepCollectionEquality()
+                    .equals(other.permissions, permissions)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(filePubId) ^
+      const DeepCollectionEquality().hash(ownerUsername) ^
+      const DeepCollectionEquality().hash(permissions) ^
+      runtimeType.hashCode;
+}
+
+extension $DeletePermissionsRequestExtension on DeletePermissionsRequest {
+  DeletePermissionsRequest copyWith(
+      {String? filePubId,
+      String? ownerUsername,
+      List<enums.DeletePermissionsRequestPermissions>? permissions}) {
+    return DeletePermissionsRequest(
+        filePubId: filePubId ?? this.filePubId,
+        ownerUsername: ownerUsername ?? this.ownerUsername,
+        permissions: permissions ?? this.permissions);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class DeleteAllPermissionsRequest {
+  DeleteAllPermissionsRequest({
+    this.filePubId,
+  });
+
+  factory DeleteAllPermissionsRequest.fromJson(Map<String, dynamic> json) =>
+      _$DeleteAllPermissionsRequestFromJson(json);
+
+  @JsonKey(name: 'filePubId')
+  final String? filePubId;
+  static const fromJsonFactory = _$DeleteAllPermissionsRequestFromJson;
+  static const toJsonFactory = _$DeleteAllPermissionsRequestToJson;
+  Map<String, dynamic> toJson() => _$DeleteAllPermissionsRequestToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is DeleteAllPermissionsRequest &&
+            (identical(other.filePubId, filePubId) ||
+                const DeepCollectionEquality()
+                    .equals(other.filePubId, filePubId)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(filePubId) ^ runtimeType.hashCode;
+}
+
+extension $DeleteAllPermissionsRequestExtension on DeleteAllPermissionsRequest {
+  DeleteAllPermissionsRequest copyWith({String? filePubId}) {
+    return DeleteAllPermissionsRequest(filePubId: filePubId ?? this.filePubId);
   }
 }
 
@@ -1241,41 +1876,132 @@ List<enums.FileInfoDTOType> fileInfoDTOTypeListFromJson(List? fileInfoDTOType) {
       .toList();
 }
 
-String? fileQueryDTOTypeToJson(enums.FileQueryDTOType? fileQueryDTOType) {
-  return enums.$FileQueryDTOTypeMap[fileQueryDTOType];
+String? postRoleRequestRolesToJson(
+    enums.PostRoleRequestRoles? postRoleRequestRoles) {
+  return enums.$PostRoleRequestRolesMap[postRoleRequestRoles];
 }
 
-enums.FileQueryDTOType fileQueryDTOTypeFromJson(String? fileQueryDTOType) {
-  if (fileQueryDTOType == null) {
-    return enums.FileQueryDTOType.swaggerGeneratedUnknown;
+enums.PostRoleRequestRoles postRoleRequestRolesFromJson(
+    String? postRoleRequestRoles) {
+  if (postRoleRequestRoles == null) {
+    return enums.PostRoleRequestRoles.swaggerGeneratedUnknown;
   }
 
-  return enums.$FileQueryDTOTypeMap.entries
+  return enums.$PostRoleRequestRolesMap.entries
       .firstWhere(
           (element) =>
-              element.value.toLowerCase() == fileQueryDTOType.toLowerCase(),
+              element.value.toLowerCase() == postRoleRequestRoles.toLowerCase(),
           orElse: () => const MapEntry(
-              enums.FileQueryDTOType.swaggerGeneratedUnknown, ''))
+              enums.PostRoleRequestRoles.swaggerGeneratedUnknown, ''))
       .key;
 }
 
-List<String> fileQueryDTOTypeListToJson(
-    List<enums.FileQueryDTOType>? fileQueryDTOType) {
-  if (fileQueryDTOType == null) {
+List<String> postRoleRequestRolesListToJson(
+    List<enums.PostRoleRequestRoles>? postRoleRequestRoles) {
+  if (postRoleRequestRoles == null) {
     return [];
   }
 
-  return fileQueryDTOType.map((e) => enums.$FileQueryDTOTypeMap[e]!).toList();
+  return postRoleRequestRoles
+      .map((e) => enums.$PostRoleRequestRolesMap[e]!)
+      .toList();
 }
 
-List<enums.FileQueryDTOType> fileQueryDTOTypeListFromJson(
-    List? fileQueryDTOType) {
-  if (fileQueryDTOType == null) {
+List<enums.PostRoleRequestRoles> postRoleRequestRolesListFromJson(
+    List? postRoleRequestRoles) {
+  if (postRoleRequestRoles == null) {
     return [];
   }
 
-  return fileQueryDTOType
-      .map((e) => fileQueryDTOTypeFromJson(e.toString()))
+  return postRoleRequestRoles
+      .map((e) => postRoleRequestRolesFromJson(e.toString()))
+      .toList();
+}
+
+String? fileQueryDTOTypesToJson(enums.FileQueryDTOTypes? fileQueryDTOTypes) {
+  return enums.$FileQueryDTOTypesMap[fileQueryDTOTypes];
+}
+
+enums.FileQueryDTOTypes fileQueryDTOTypesFromJson(String? fileQueryDTOTypes) {
+  if (fileQueryDTOTypes == null) {
+    return enums.FileQueryDTOTypes.swaggerGeneratedUnknown;
+  }
+
+  return enums.$FileQueryDTOTypesMap.entries
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() == fileQueryDTOTypes.toLowerCase(),
+          orElse: () => const MapEntry(
+              enums.FileQueryDTOTypes.swaggerGeneratedUnknown, ''))
+      .key;
+}
+
+List<String> fileQueryDTOTypesListToJson(
+    List<enums.FileQueryDTOTypes>? fileQueryDTOTypes) {
+  if (fileQueryDTOTypes == null) {
+    return [];
+  }
+
+  return fileQueryDTOTypes.map((e) => enums.$FileQueryDTOTypesMap[e]!).toList();
+}
+
+List<enums.FileQueryDTOTypes> fileQueryDTOTypesListFromJson(
+    List? fileQueryDTOTypes) {
+  if (fileQueryDTOTypes == null) {
+    return [];
+  }
+
+  return fileQueryDTOTypes
+      .map((e) => fileQueryDTOTypesFromJson(e.toString()))
+      .toList();
+}
+
+String? postAddPermissionRequestPermissionsToJson(
+    enums.PostAddPermissionRequestPermissions?
+        postAddPermissionRequestPermissions) {
+  return enums.$PostAddPermissionRequestPermissionsMap[
+      postAddPermissionRequestPermissions];
+}
+
+enums.PostAddPermissionRequestPermissions
+    postAddPermissionRequestPermissionsFromJson(
+        String? postAddPermissionRequestPermissions) {
+  if (postAddPermissionRequestPermissions == null) {
+    return enums.PostAddPermissionRequestPermissions.swaggerGeneratedUnknown;
+  }
+
+  return enums.$PostAddPermissionRequestPermissionsMap.entries
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() ==
+              postAddPermissionRequestPermissions.toLowerCase(),
+          orElse: () => const MapEntry(
+              enums.PostAddPermissionRequestPermissions.swaggerGeneratedUnknown,
+              ''))
+      .key;
+}
+
+List<String> postAddPermissionRequestPermissionsListToJson(
+    List<enums.PostAddPermissionRequestPermissions>?
+        postAddPermissionRequestPermissions) {
+  if (postAddPermissionRequestPermissions == null) {
+    return [];
+  }
+
+  return postAddPermissionRequestPermissions
+      .map((e) => enums.$PostAddPermissionRequestPermissionsMap[e]!)
+      .toList();
+}
+
+List<enums.PostAddPermissionRequestPermissions>
+    postAddPermissionRequestPermissionsListFromJson(
+        List? postAddPermissionRequestPermissions) {
+  if (postAddPermissionRequestPermissions == null) {
+    return [];
+  }
+
+  return postAddPermissionRequestPermissions
+      .map((e) => postAddPermissionRequestPermissionsFromJson(e.toString()))
       .toList();
 }
 
@@ -1364,27 +2090,205 @@ List<enums.FilesystemObjectDTOType> filesystemObjectDTOTypeListFromJson(
       .toList();
 }
 
+String? permissionDTOPermissionsToJson(
+    enums.PermissionDTOPermissions? permissionDTOPermissions) {
+  return enums.$PermissionDTOPermissionsMap[permissionDTOPermissions];
+}
+
+enums.PermissionDTOPermissions permissionDTOPermissionsFromJson(
+    String? permissionDTOPermissions) {
+  if (permissionDTOPermissions == null) {
+    return enums.PermissionDTOPermissions.swaggerGeneratedUnknown;
+  }
+
+  return enums.$PermissionDTOPermissionsMap.entries
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() ==
+              permissionDTOPermissions.toLowerCase(),
+          orElse: () => const MapEntry(
+              enums.PermissionDTOPermissions.swaggerGeneratedUnknown, ''))
+      .key;
+}
+
+List<String> permissionDTOPermissionsListToJson(
+    List<enums.PermissionDTOPermissions>? permissionDTOPermissions) {
+  if (permissionDTOPermissions == null) {
+    return [];
+  }
+
+  return permissionDTOPermissions
+      .map((e) => enums.$PermissionDTOPermissionsMap[e]!)
+      .toList();
+}
+
+List<enums.PermissionDTOPermissions> permissionDTOPermissionsListFromJson(
+    List? permissionDTOPermissions) {
+  if (permissionDTOPermissions == null) {
+    return [];
+  }
+
+  return permissionDTOPermissions
+      .map((e) => permissionDTOPermissionsFromJson(e.toString()))
+      .toList();
+}
+
+String? userFilePermissionsDTOTypesToJson(
+    enums.UserFilePermissionsDTOTypes? userFilePermissionsDTOTypes) {
+  return enums.$UserFilePermissionsDTOTypesMap[userFilePermissionsDTOTypes];
+}
+
+enums.UserFilePermissionsDTOTypes userFilePermissionsDTOTypesFromJson(
+    String? userFilePermissionsDTOTypes) {
+  if (userFilePermissionsDTOTypes == null) {
+    return enums.UserFilePermissionsDTOTypes.swaggerGeneratedUnknown;
+  }
+
+  return enums.$UserFilePermissionsDTOTypesMap.entries
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() ==
+              userFilePermissionsDTOTypes.toLowerCase(),
+          orElse: () => const MapEntry(
+              enums.UserFilePermissionsDTOTypes.swaggerGeneratedUnknown, ''))
+      .key;
+}
+
+List<String> userFilePermissionsDTOTypesListToJson(
+    List<enums.UserFilePermissionsDTOTypes>? userFilePermissionsDTOTypes) {
+  if (userFilePermissionsDTOTypes == null) {
+    return [];
+  }
+
+  return userFilePermissionsDTOTypes
+      .map((e) => enums.$UserFilePermissionsDTOTypesMap[e]!)
+      .toList();
+}
+
+List<enums.UserFilePermissionsDTOTypes> userFilePermissionsDTOTypesListFromJson(
+    List? userFilePermissionsDTOTypes) {
+  if (userFilePermissionsDTOTypes == null) {
+    return [];
+  }
+
+  return userFilePermissionsDTOTypes
+      .map((e) => userFilePermissionsDTOTypesFromJson(e.toString()))
+      .toList();
+}
+
+String? deleteRoleRequestRolesToJson(
+    enums.DeleteRoleRequestRoles? deleteRoleRequestRoles) {
+  return enums.$DeleteRoleRequestRolesMap[deleteRoleRequestRoles];
+}
+
+enums.DeleteRoleRequestRoles deleteRoleRequestRolesFromJson(
+    String? deleteRoleRequestRoles) {
+  if (deleteRoleRequestRoles == null) {
+    return enums.DeleteRoleRequestRoles.swaggerGeneratedUnknown;
+  }
+
+  return enums.$DeleteRoleRequestRolesMap.entries
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() ==
+              deleteRoleRequestRoles.toLowerCase(),
+          orElse: () => const MapEntry(
+              enums.DeleteRoleRequestRoles.swaggerGeneratedUnknown, ''))
+      .key;
+}
+
+List<String> deleteRoleRequestRolesListToJson(
+    List<enums.DeleteRoleRequestRoles>? deleteRoleRequestRoles) {
+  if (deleteRoleRequestRoles == null) {
+    return [];
+  }
+
+  return deleteRoleRequestRoles
+      .map((e) => enums.$DeleteRoleRequestRolesMap[e]!)
+      .toList();
+}
+
+List<enums.DeleteRoleRequestRoles> deleteRoleRequestRolesListFromJson(
+    List? deleteRoleRequestRoles) {
+  if (deleteRoleRequestRoles == null) {
+    return [];
+  }
+
+  return deleteRoleRequestRoles
+      .map((e) => deleteRoleRequestRolesFromJson(e.toString()))
+      .toList();
+}
+
+String? deletePermissionsRequestPermissionsToJson(
+    enums.DeletePermissionsRequestPermissions?
+        deletePermissionsRequestPermissions) {
+  return enums.$DeletePermissionsRequestPermissionsMap[
+      deletePermissionsRequestPermissions];
+}
+
+enums.DeletePermissionsRequestPermissions
+    deletePermissionsRequestPermissionsFromJson(
+        String? deletePermissionsRequestPermissions) {
+  if (deletePermissionsRequestPermissions == null) {
+    return enums.DeletePermissionsRequestPermissions.swaggerGeneratedUnknown;
+  }
+
+  return enums.$DeletePermissionsRequestPermissionsMap.entries
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() ==
+              deletePermissionsRequestPermissions.toLowerCase(),
+          orElse: () => const MapEntry(
+              enums.DeletePermissionsRequestPermissions.swaggerGeneratedUnknown,
+              ''))
+      .key;
+}
+
+List<String> deletePermissionsRequestPermissionsListToJson(
+    List<enums.DeletePermissionsRequestPermissions>?
+        deletePermissionsRequestPermissions) {
+  if (deletePermissionsRequestPermissions == null) {
+    return [];
+  }
+
+  return deletePermissionsRequestPermissions
+      .map((e) => enums.$DeletePermissionsRequestPermissionsMap[e]!)
+      .toList();
+}
+
+List<enums.DeletePermissionsRequestPermissions>
+    deletePermissionsRequestPermissionsListFromJson(
+        List? deletePermissionsRequestPermissions) {
+  if (deletePermissionsRequestPermissions == null) {
+    return [];
+  }
+
+  return deletePermissionsRequestPermissions
+      .map((e) => deletePermissionsRequestPermissionsFromJson(e.toString()))
+      .toList();
+}
+
 @JsonSerializable(explicitToJson: true)
-class FilesImageImageNamePost$RequestBody {
-  FilesImageImageNamePost$RequestBody({
+class UserProfileImagePost$RequestBody {
+  UserProfileImagePost$RequestBody({
     this.file,
   });
 
-  factory FilesImageImageNamePost$RequestBody.fromJson(
+  factory UserProfileImagePost$RequestBody.fromJson(
           Map<String, dynamic> json) =>
-      _$FilesImageImageNamePost$RequestBodyFromJson(json);
+      _$UserProfileImagePost$RequestBodyFromJson(json);
 
   @JsonKey(name: 'file')
   final String? file;
-  static const fromJsonFactory = _$FilesImageImageNamePost$RequestBodyFromJson;
-  static const toJsonFactory = _$FilesImageImageNamePost$RequestBodyToJson;
+  static const fromJsonFactory = _$UserProfileImagePost$RequestBodyFromJson;
+  static const toJsonFactory = _$UserProfileImagePost$RequestBodyToJson;
   Map<String, dynamic> toJson() =>
-      _$FilesImageImageNamePost$RequestBodyToJson(this);
+      _$UserProfileImagePost$RequestBodyToJson(this);
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other is FilesImageImageNamePost$RequestBody &&
+        (other is UserProfileImagePost$RequestBody &&
             (identical(other.file, file) ||
                 const DeepCollectionEquality().equals(other.file, file)));
   }
@@ -1394,10 +2298,82 @@ class FilesImageImageNamePost$RequestBody {
       const DeepCollectionEquality().hash(file) ^ runtimeType.hashCode;
 }
 
-extension $FilesImageImageNamePost$RequestBodyExtension
-    on FilesImageImageNamePost$RequestBody {
-  FilesImageImageNamePost$RequestBody copyWith({String? file}) {
-    return FilesImageImageNamePost$RequestBody(file: file ?? this.file);
+extension $UserProfileImagePost$RequestBodyExtension
+    on UserProfileImagePost$RequestBody {
+  UserProfileImagePost$RequestBody copyWith({String? file}) {
+    return UserProfileImagePost$RequestBody(file: file ?? this.file);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class UserProfileImageUsernamePost$RequestBody {
+  UserProfileImageUsernamePost$RequestBody({
+    this.file,
+  });
+
+  factory UserProfileImageUsernamePost$RequestBody.fromJson(
+          Map<String, dynamic> json) =>
+      _$UserProfileImageUsernamePost$RequestBodyFromJson(json);
+
+  @JsonKey(name: 'file')
+  final String? file;
+  static const fromJsonFactory =
+      _$UserProfileImageUsernamePost$RequestBodyFromJson;
+  static const toJsonFactory = _$UserProfileImageUsernamePost$RequestBodyToJson;
+  Map<String, dynamic> toJson() =>
+      _$UserProfileImageUsernamePost$RequestBodyToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is UserProfileImageUsernamePost$RequestBody &&
+            (identical(other.file, file) ||
+                const DeepCollectionEquality().equals(other.file, file)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(file) ^ runtimeType.hashCode;
+}
+
+extension $UserProfileImageUsernamePost$RequestBodyExtension
+    on UserProfileImageUsernamePost$RequestBody {
+  UserProfileImageUsernamePost$RequestBody copyWith({String? file}) {
+    return UserProfileImageUsernamePost$RequestBody(file: file ?? this.file);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
+class FilesImagePost$RequestBody {
+  FilesImagePost$RequestBody({
+    this.file,
+  });
+
+  factory FilesImagePost$RequestBody.fromJson(Map<String, dynamic> json) =>
+      _$FilesImagePost$RequestBodyFromJson(json);
+
+  @JsonKey(name: 'file')
+  final String? file;
+  static const fromJsonFactory = _$FilesImagePost$RequestBodyFromJson;
+  static const toJsonFactory = _$FilesImagePost$RequestBodyToJson;
+  Map<String, dynamic> toJson() => _$FilesImagePost$RequestBodyToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is FilesImagePost$RequestBody &&
+            (identical(other.file, file) ||
+                const DeepCollectionEquality().equals(other.file, file)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(file) ^ runtimeType.hashCode;
+}
+
+extension $FilesImagePost$RequestBodyExtension on FilesImagePost$RequestBody {
+  FilesImagePost$RequestBody copyWith({String? file}) {
+    return FilesImagePost$RequestBody(file: file ?? this.file);
   }
 }
 
