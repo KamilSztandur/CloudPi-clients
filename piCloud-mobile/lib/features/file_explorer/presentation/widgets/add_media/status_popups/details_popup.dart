@@ -99,7 +99,7 @@ class _DetailsViewState extends State<DetailsView> {
       final sizeInKilobytes = sizeInBytes / pow(10, 3);
       label = '${sizeInKilobytes.toStringAsFixed(3)}Kb';
     } else {
-      label = '{$sizeInBytes.toStringAsFixed(3)} b';
+      label = '${sizeInBytes.toStringAsFixed(3)} b';
     }
 
     return label;

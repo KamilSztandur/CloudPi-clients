@@ -11,11 +11,13 @@ class SearchPageBar extends StatefulWidget implements PreferredSizeWidget {
     required this.currentFilters,
     required this.queryRequested,
     required this.onFiltersChanged,
+    required this.path,
   }) : super(key: key);
 
   final Function(SearchQueryModel) queryRequested;
   final Function(FiltersSettingsModel) onFiltersChanged;
   final FiltersSettingsModel currentFilters;
+  final String? path;
 
   @override
   _SearchPageBarState createState() => _SearchPageBarState();
@@ -99,7 +101,12 @@ class _SearchPageBarState extends State<SearchPageBar> {
   void _search({String? value}) {
     _clearQuery();
 
-    widget.queryRequested(SearchQueryModel(name: value));
+    widget.queryRequested(
+      SearchQueryModel(
+        name: value,
+        path: widget.path,
+      ),
+    );
   }
 
   void _unfocusKeyboard() {

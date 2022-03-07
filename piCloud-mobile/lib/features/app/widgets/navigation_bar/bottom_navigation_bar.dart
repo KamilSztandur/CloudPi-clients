@@ -31,7 +31,7 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
     PICloudBottomNavigationBarItem(
       icon: const Icon(Icons.search_outlined),
       label: 'Search',
-      route: const SearchRoute(),
+      route: SearchRoute(),
     ),
   ];
 

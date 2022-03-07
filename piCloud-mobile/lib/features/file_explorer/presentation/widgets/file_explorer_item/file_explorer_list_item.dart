@@ -104,7 +104,7 @@ class FileExplorerListItem extends FileExplorerItem {
       final sizeInKilobytes = sizeInBytes / (pow(10, 3));
       label = '${sizeInKilobytes.toStringAsFixed(3)}Kb';
     } else {
-      label = '{$sizeInBytes.toStringAsFixed(3)} b';
+      label = '${sizeInBytes.toStringAsFixed(3)} b';
     }
 
     return Text(label, style: const TextStyle(color: Colors.grey));

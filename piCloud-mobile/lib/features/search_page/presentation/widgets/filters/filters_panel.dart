@@ -3,7 +3,6 @@ import 'package:app/features/search_page/presentation/widgets/filters/date_range
 import 'package:app/features/search_page/presentation/widgets/filters/file_types_choice.dart';
 import 'package:app/features/search_page/presentation/widgets/filters/filters_choice_header.dart';
 import 'package:app/features/search_page/presentation/widgets/filters/filters_dialog_control_buttons.dart';
-import 'package:app/features/search_page/presentation/widgets/filters/misc_settings_choice.dart';
 import 'package:app/features/search_page/presentation/widgets/filters/search_range_choice.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,7 +38,7 @@ class _FiltersPanelState extends State<FiltersPanel> {
       content: ConstrainedBox(
         constraints: const BoxConstraints(
           maxWidth: 600,
-          maxHeight: 550,
+          maxHeight: 400,
         ),
         child: _buildWindowContent(),
       ),
@@ -74,17 +73,12 @@ class _FiltersPanelState extends State<FiltersPanel> {
   Widget _buildBody() => Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           const FiltersChoiceHeader(title: 'Search range'),
           _buildInFrame(
             SearchRangeChoice(settings: settings),
             'SearchRange',
-            false,
-          ),
-          const FiltersChoiceHeader(title: 'Miscellaneous'),
-          _buildInFrame(
-            SizedBox(height: 75, child: MiscSettingsChoice(settings: settings)),
-            'Miscellaneous',
             false,
           ),
           const FiltersChoiceHeader(title: 'Time range'),

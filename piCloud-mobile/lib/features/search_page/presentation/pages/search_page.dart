@@ -1,5 +1,4 @@
 import 'package:app/common/auth/auth_manager.dart';
-import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/widgets/navigation_bar/bottom_navigation_bar.dart';
 import 'package:app/features/drawer/main_drawer.dart';
 import 'package:app/features/search_page/bloc/search_bloc.dart';
@@ -7,13 +6,17 @@ import 'package:app/features/search_page/data/models/filters_settings_model.dart
 import 'package:app/features/search_page/data/models/search_query_model.dart';
 import 'package:app/features/search_page/presentation/widgets/results_view.dart';
 import 'package:app/features/search_page/presentation/widgets/search_page_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({
     Key? key,
+    this.currentPath,
   }) : super(key: key);
+
+  final String? currentPath;
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -51,10 +54,14 @@ class _SearchPageState extends State<SearchPage> {
               queryRequested: _handleQueryRequest,
               onFiltersChanged: (filters) => _filters = filters,
               currentFilters: _filters,
+              path: widget.currentPath,
             ),
             drawer: const MainDrawer(),
             bottomNavigationBar: const PICloudBottomNavigationBar(),
-            body: ResultsView(searchState: state),
+            body: ResultsView(
+              searchState: state,
+              path: widget.currentPath,
+            ),
           ),
         ),
       ),

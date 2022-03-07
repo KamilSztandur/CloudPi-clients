@@ -1,5 +1,6 @@
 import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
+import 'package:app/features/app/widgets/app_bar/search_button.dart';
 import 'package:app/features/app/widgets/app_bar/selection_app_bar.dart';
 import 'package:app/features/app/widgets/navigation_bar/bottom_navigation_bar.dart';
 import 'package:app/features/drawer/main_drawer.dart';
@@ -83,7 +84,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
 
   Widget _getScaffold({required Widget child}) {
     return Scaffold(
-      appBar: _getBar(context.read<Api>()),
+      appBar: _getBar(),
       drawer: const MainDrawer(),
       body: RefreshIndicator(onRefresh: _refreshData, child: child),
       floatingActionButton: _getAddMediaButtonIfNeeded(),
@@ -110,7 +111,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
     }
   }
 
-  PreferredSizeWidget _getBar(Api api) {
+  PreferredSizeWidget _getBar() {
     if (_isSelecting()) {
       return SelectionAppBar(
         selection: selection ?? DragSelectGridViewController().value,
@@ -122,6 +123,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
       return PICloudAppBar(
         title: _getTitle(),
         actions: [
+          SearchButton(path: widget.path),
           SwitchViewButton(viewSwitched: () => setState(() {})),
         ],
       );

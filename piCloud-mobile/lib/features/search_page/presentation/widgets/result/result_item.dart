@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:app/features/app/router/app_router.gr.dart';
+import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/details_popup.dart';
+import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:app/features/search_page/data/models/search_result.dart';
 import 'package:app/features/search_page/data/search_engine.dart';
 import 'package:app/features/search_page/presentation/widgets/result/more_actions_menu.dart';
@@ -95,9 +97,11 @@ class _ResultItemState extends State<ResultItem> {
       label = '${sizeInMegabytes.toStringAsFixed(3)} Mb';
     } else if (sizeInBytes > 10 ^ 3) {
       final sizeInKilobytes = sizeInBytes / pow(10, 3);
-      label = '${sizeInKilobytes.toStringAsFixed(3)}Kb';
+      label = '${sizeInKilobytes.toStringAsFixed(3)} Kb';
+    } else if (sizeInBytes > 0) {
+      label = '${sizeInBytes.toStringAsFixed(3)} b';
     } else {
-      label = '{$sizeInBytes.toStringAsFixed(3)} b';
+      label = 'Unknown';
     }
 
     return Text(label, style: const TextStyle(color: Colors.grey));
@@ -112,13 +116,21 @@ class _ResultItemState extends State<ResultItem> {
         ),
       );
 
-  Future<void> _onItemClicked() async => AutoRouter.of(context).push(
-        MediaReaderRoute(
-          path: await _getFileLocalizationPath(),
-          resourceName: widget.item.title,
-          resourcePubId: widget.item.id,
+  Future<void> _onItemClicked() async {
+    if (widget.item.type == FileExplorerItemType.directory) {
+      unawaited(_onOpenLocalizationClicked());
+    } else {
+      unawaited(
+        AutoRouter.of(context).push(
+          MediaReaderRoute(
+            path: await _getFileLocalizationPath(),
+            resourceName: widget.item.title,
+            resourcePubId: widget.item.id,
+          ),
         ),
       );
+    }
+  }
 
   Future<void> _onOpenLocalizationClicked() async =>
       AutoRouter.of(context).pushAll(await _getFullItemRouteList());

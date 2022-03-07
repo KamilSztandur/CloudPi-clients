@@ -117,9 +117,14 @@ class SearchEngine {
     FiltersSettingsModel filters,
   ) async {
     final username = await _authManager.getUsernameOfLoggedUser();
+
+    final path = query.path != null
+        ? '$username${query.path}'
+        : await _getUsersHomeDirectoryPath();
+
     final body = json.encode({
       'name': query.name,
-      'path': '$username/',
+      'path': path,
       'types': _getAllowedTypesList(filters),
       'lastModified': {
         'from': _getFormattedDate(filters.minDate!),
@@ -135,6 +140,13 @@ class SearchEngine {
     final formattedDate = '${formatter.format(date)}Z';
 
     return formattedDate;
+  }
+
+  Future<String> _getUsersHomeDirectoryPath() async {
+    final username = await _authManager.getUsernameOfLoggedUser();
+    final homePath = '$username/';
+
+    return homePath;
   }
 
   List<String> _getAllowedTypesList(FiltersSettingsModel filters) {
@@ -214,7 +226,7 @@ class SearchEngine {
   Future<String> getFilePathFromPubId(String pubId) async {
     final headers = await _getHeaders();
 
-    var request = http.Request(
+    final request = http.Request(
       'GET',
       Uri.parse(
         '${Config.apiBaseUrl}/filesystem/file/$pubId',

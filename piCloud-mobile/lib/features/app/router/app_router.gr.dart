@@ -5,6 +5,7 @@
 // **************************************************************************
 
 import 'package:auto_route/auto_route.dart' as _i11;
+import 'package:flutter/cupertino.dart' as _i14;
 import 'package:flutter/material.dart' as _i12;
 
 import '../../favourites_page/presentation/pages/favourites_page.dart' as _i3;
@@ -16,7 +17,7 @@ import '../../settings/presentation/pages/cloud_settings_page.dart' as _i9;
 import '../../settings/presentation/pages/settings_page.dart' as _i8;
 import '../../shared_page/presentation/pages/shared_page.dart' as _i2;
 import '../../user_profile/presentation/pages/user_profile_page.dart' as _i6;
-import '../../user_wizard/data/models/user.dart' as _i14;
+import '../../user_wizard/data/models/user.dart' as _i15;
 import '../../user_wizard/presentation/pages/user_wizard_page.dart' as _i10;
 import 'guards/admin_guard.dart' as _i13;
 
@@ -64,9 +65,11 @@ class AppRouter extends _i11.RootStackRouter {
           routeData: routeData, child: const _i6.UserProfilePage());
     },
     SearchRoute.name: (routeData) {
+      final args = routeData.argsAs<SearchRouteArgs>(
+          orElse: () => const SearchRouteArgs());
       return _i11.MaterialPageX<void>(
           routeData: routeData,
-          child: const _i7.SearchPage(),
+          child: _i7.SearchPage(key: args.key, currentPath: args.currentPath),
           fullscreenDialog: true);
     },
     SettingsRoute.name: (routeData) {
@@ -131,7 +134,7 @@ class FavouritesRoute extends _i11.PageRouteInfo<void> {
 
 /// generated route for [_i4.FileExplorerPage]
 class FileExplorerRoute extends _i11.PageRouteInfo<FileExplorerRouteArgs> {
-  FileExplorerRoute({_i12.Key? key, required String path})
+  FileExplorerRoute({_i14.Key? key, required String path})
       : super(name,
             path: '/file-explorer-page',
             args: FileExplorerRouteArgs(key: key, path: path));
@@ -142,7 +145,7 @@ class FileExplorerRoute extends _i11.PageRouteInfo<FileExplorerRouteArgs> {
 class FileExplorerRouteArgs {
   const FileExplorerRouteArgs({this.key, required this.path});
 
-  final _i12.Key? key;
+  final _i14.Key? key;
 
   final String path;
 }
@@ -150,7 +153,7 @@ class FileExplorerRouteArgs {
 /// generated route for [_i5.MediaReaderPage]
 class MediaReaderRoute extends _i11.PageRouteInfo<MediaReaderRouteArgs> {
   MediaReaderRoute(
-      {_i12.Key? key,
+      {_i14.Key? key,
       required String path,
       required String resourceName,
       required String? resourcePubId})
@@ -172,7 +175,7 @@ class MediaReaderRouteArgs {
       required this.resourceName,
       required this.resourcePubId});
 
-  final _i12.Key? key;
+  final _i14.Key? key;
 
   final String path;
 
@@ -189,10 +192,21 @@ class UserProfileRoute extends _i11.PageRouteInfo<void> {
 }
 
 /// generated route for [_i7.SearchPage]
-class SearchRoute extends _i11.PageRouteInfo<void> {
-  const SearchRoute() : super(name, path: '/search-page');
+class SearchRoute extends _i11.PageRouteInfo<SearchRouteArgs> {
+  SearchRoute({_i14.Key? key, String? currentPath})
+      : super(name,
+            path: '/search-page',
+            args: SearchRouteArgs(key: key, currentPath: currentPath));
 
   static const String name = 'SearchRoute';
+}
+
+class SearchRouteArgs {
+  const SearchRouteArgs({this.key, this.currentPath});
+
+  final _i14.Key? key;
+
+  final String? currentPath;
 }
 
 /// generated route for [_i8.SettingsPage]
@@ -211,7 +225,7 @@ class CloudSettingsRoute extends _i11.PageRouteInfo<void> {
 
 /// generated route for [_i10.UserWizardPage]
 class UserWizardRoute extends _i11.PageRouteInfo<UserWizardRouteArgs> {
-  UserWizardRoute({_i12.Key? key, _i14.User? user})
+  UserWizardRoute({_i14.Key? key, _i15.User? user})
       : super(name,
             path: '/user-wizard-page',
             args: UserWizardRouteArgs(key: key, user: user));
@@ -222,7 +236,7 @@ class UserWizardRoute extends _i11.PageRouteInfo<UserWizardRouteArgs> {
 class UserWizardRouteArgs {
   const UserWizardRouteArgs({this.key, this.user});
 
-  final _i12.Key? key;
+  final _i14.Key? key;
 
-  final _i14.User? user;
+  final _i15.User? user;
 }
