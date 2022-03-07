@@ -10,6 +10,7 @@ import 'package:app/features/search_page/data/models/search_query_model.dart';
 import 'package:app/features/search_page/data/models/search_result.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 
 class SearchEngine {
   const SearchEngine(
@@ -120,9 +121,20 @@ class SearchEngine {
       'name': query.name,
       'path': '$username/',
       'types': _getAllowedTypesList(filters),
+      'created': {
+        'from': _getFormattedDate(filters.minDate!),
+        'to': _getFormattedDate(filters.maxDate!),
+      },
     });
 
     return body;
+  }
+
+  String _getFormattedDate(DateTime date) {
+    final formatter = DateFormat('yyyy-MM-ddTHH:mm:ss.000');
+    final formattedDate = '${formatter.format(date)}Z';
+
+    return formattedDate;
   }
 
   List<String> _getAllowedTypesList(FiltersSettingsModel filters) {
