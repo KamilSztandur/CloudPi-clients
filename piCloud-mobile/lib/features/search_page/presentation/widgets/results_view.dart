@@ -101,14 +101,15 @@ class _ResultsViewState extends State<ResultsView> {
             style: TextStyle(
               fontSize: 15,
               color: Theme.of(context).primaryColorDark,
+              fontWeight: FontWeight.bold,
             ),
             children: <TextSpan>[
               TextSpan(
                 text: widget.path,
                 style: TextStyle(
-                  fontSize: 25,
+                  fontSize: 15,
                   color: Theme.of(context).primaryColorDark,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.normal,
                 ),
               ),
             ],
