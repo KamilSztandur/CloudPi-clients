@@ -15,7 +15,6 @@ class MoreActionsMenu extends StatelessWidget {
       onSelected: _onMoreMenuOptionSelected,
       itemBuilder: (_) => <PopupMenuEntry<String>>[
         _buildPopupListItem('Open localization', Icons.folder_open),
-        _buildPopupListItem('Share', Icons.share),
         _buildPopupListItem('Details', Icons.info_outline),
       ],
     );
@@ -36,10 +35,6 @@ class MoreActionsMenu extends StatelessWidget {
   void _onMoreMenuOptionSelected(String value) {
     switch (value) {
       case 'Open localization':
-        //TODO
-        break;
-
-      case 'Share':
         //TODO
         break;
 

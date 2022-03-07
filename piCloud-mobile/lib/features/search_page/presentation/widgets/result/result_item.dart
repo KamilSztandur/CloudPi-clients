@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:app/features/search_page/data/models/search_result.dart';
 import 'package:app/features/search_page/presentation/widgets/result/more_actions_menu.dart';
 import 'package:app/features/search_page/presentation/widgets/result/result_item_date_label.dart';
@@ -50,17 +52,28 @@ class ResultItem extends StatelessWidget {
               ),
             ),
           ),
-          const Spacer(flex: 4),
           MoreActionsMenu(item: item),
         ],
       ),
     );
   }
 
-  Widget _buildSizeLabel() => Text(
-        '${item.size} Mb',
-        style: const TextStyle(color: Colors.grey),
-      );
+  Widget _buildSizeLabel() {
+    var label = '';
+    final sizeInBytes = item.size;
+
+    if (sizeInBytes > 10 ^ 6) {
+      final sizeInMegabytes = sizeInBytes / pow(10, 6);
+      label = '${sizeInMegabytes.toStringAsFixed(3)} Mb';
+    } else if (sizeInBytes > 10 ^ 3) {
+      final sizeInKilobytes = sizeInBytes / pow(10, 3);
+      label = '${sizeInKilobytes.toStringAsFixed(3)}Kb';
+    } else {
+      label = '{$sizeInBytes.toStringAsFixed(3)} b';
+    }
+
+    return Text(label, style: const TextStyle(color: Colors.grey));
+  }
 
   Widget _buildDotSpacer() => const Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),

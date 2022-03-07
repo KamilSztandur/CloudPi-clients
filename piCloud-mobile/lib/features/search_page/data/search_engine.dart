@@ -53,7 +53,7 @@ class SearchEngine {
     final response = await request.send();
 
     if (response.statusCode == 200) {
-      final searchResult = _readSearchResultsList(response);
+      final searchResult = await _readSearchResultsList(response);
 
       return searchResult;
     } else {
@@ -84,8 +84,29 @@ class SearchEngine {
         thumbnail: result.thumbnail,
       );
 
-  List<SearchResult> _readSearchResultsList(StreamedResponse response) {
+  Future<List<SearchResult>> _readSearchResultsList(
+    StreamedResponse response,
+  ) async {
     final items = <SearchResult>[];
+
+    final responseItems = json.decode(
+      await response.stream.bytesToString(),
+    ) as List<dynamic>;
+
+    for (final item in responseItems) {
+      final data = item as Map<String, dynamic>;
+
+      final parsedItem = SearchResult(
+        title: data['name'] as String,
+        lastModifiedOn: DateTime.parse(data['modifiedAt'] as String),
+        type: _getFileTypeFromString(data['type'] as String),
+        size: (data['size'] as int).toDouble(),
+        thumbnail: null,
+        id: data['pubId'] as String,
+      );
+
+      items.add(parsedItem);
+    }
 
     return items;
   }
@@ -99,10 +120,6 @@ class SearchEngine {
       'name': query.name,
       'path': '$username/',
       'types': _getAllowedTypesList(filters),
-      'created': {
-        'from': filters.minDate.toString(),
-        'to': filters.maxDate.toString(),
-      },
     });
     print(body);
     return body;
@@ -162,5 +179,23 @@ class SearchEngine {
     };
 
     return headers;
+  }
+
+  FileExplorerItemType _getFileTypeFromString(String data) {
+    if (data.contains('DIRECTORY')) {
+      return FileExplorerItemType.directory;
+    } else if (data.contains('IMAGE')) {
+      return FileExplorerItemType.image;
+    } else if (data.contains('VIDEO')) {
+      return FileExplorerItemType.video;
+    } else if (data.contains('MUSIC')) {
+      return FileExplorerItemType.music;
+    } else if (data.contains('PDF')) {
+      return FileExplorerItemType.pdf;
+    } else if (data.contains('TEXT_FILE')) {
+      return FileExplorerItemType.text;
+    } else {
+      return FileExplorerItemType.file;
+    }
   }
 }

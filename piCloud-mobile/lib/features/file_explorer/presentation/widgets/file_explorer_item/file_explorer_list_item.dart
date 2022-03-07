@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:app/features/file_explorer/data/models/file_item.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/item_date_label.dart';
@@ -64,10 +66,7 @@ class FileExplorerListItem extends FileExplorerItem {
           ),
           Flexible(
             flex: 12,
-            child: Text(
-              '${file.size} Mb',
-              style: TextStyle(color: colorOfAdditionalInfo),
-            ),
+            child: _buildSizeLabel(),
           ),
         ],
       ),
@@ -92,6 +91,23 @@ class FileExplorerListItem extends FileExplorerItem {
         ],
       ),
     );
+  }
+
+  Widget _buildSizeLabel() {
+    var label = '';
+    final sizeInBytes = file.size;
+
+    if (sizeInBytes > 10 ^ 6) {
+      final sizeInMegabytes = sizeInBytes / pow(10, 6);
+      label = '${sizeInMegabytes.toStringAsFixed(3)} Mb';
+    } else if (sizeInBytes > 10 ^ 3) {
+      final sizeInKilobytes = sizeInBytes / (pow(10, 3));
+      label = '${sizeInKilobytes.toStringAsFixed(3)}Kb';
+    } else {
+      label = '{$sizeInBytes.toStringAsFixed(3)} b';
+    }
+
+    return Text(label, style: const TextStyle(color: Colors.grey));
   }
 
   String _getProperTimeFormat(DateTime dateTime) {
