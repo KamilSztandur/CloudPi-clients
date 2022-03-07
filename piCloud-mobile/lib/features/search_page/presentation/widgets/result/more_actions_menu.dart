@@ -5,9 +5,12 @@ class MoreActionsMenu extends StatelessWidget {
   const MoreActionsMenu({
     Key? key,
     required this.item,
+    required this.onOpenLocalizationClicked,
+    required this.onDetailsClicked,
   }) : super(key: key);
 
   final SearchResult item;
+  final VoidCallback onOpenLocalizationClicked, onDetailsClicked;
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +38,11 @@ class MoreActionsMenu extends StatelessWidget {
   void _onMoreMenuOptionSelected(String value) {
     switch (value) {
       case 'Open localization':
-        //TODO
+        onOpenLocalizationClicked();
         break;
 
       case 'Details':
-        //TODO
+        onDetailsClicked();
         break;
 
       default:

@@ -75,7 +75,7 @@ class SearchEngine {
       );
   }
 
-  FileItem _parseSearchResultIntoFileItem(SearchResult result) => FileItem(
+  FileItem parseSearchResultIntoFileItem(SearchResult result) => FileItem(
         title: result.title,
         lastModifiedOn: result.lastModifiedOn,
         type: result.type,
@@ -121,7 +121,7 @@ class SearchEngine {
       'path': '$username/',
       'types': _getAllowedTypesList(filters),
     });
-    print(body);
+
     return body;
   }
 
@@ -196,6 +196,35 @@ class SearchEngine {
       return FileExplorerItemType.text;
     } else {
       return FileExplorerItemType.file;
+    }
+  }
+
+  Future<String> getFilePathFromPubId(String pubId) async {
+    final headers = await _getHeaders();
+
+    var request = http.Request(
+      'GET',
+      Uri.parse(
+        '${Config.apiBaseUrl}/filesystem/file/$pubId',
+      ),
+    );
+
+    request.headers.addAll(headers);
+
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(
+        await response.stream.bytesToString(),
+      ) as Map<String, dynamic>;
+
+      final path = data['path'] as String;
+
+      return path;
+    } else {
+      throw HttpException(
+        'File info fetching failed (${response.statusCode}).',
+      );
     }
   }
 }

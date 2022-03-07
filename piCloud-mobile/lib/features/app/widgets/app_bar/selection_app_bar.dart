@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/data/selection_icon_button_choice.dart';
+import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/details_popup.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/rename_file.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
@@ -242,32 +243,7 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
     return AlertDialog(
       contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
       title: Text('File $currentIndex/$length'),
-      content: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _getDetailWidget(
-              'Title',
-              currentItem.file.title,
-            ),
-            _getDetailWidget(
-              'Type',
-              _formatType(currentItem.file.type),
-            ),
-            _getDetailWidget(
-              'Last modified',
-              _formatDate(currentItem.file.lastModifiedOn),
-            ),
-            if (currentItem.file.type != FileExplorerItemType.directory)
-              _getDetailWidget(
-                'Size',
-                currentItem.file.size.toString(),
-              )
-            else
-              Container(height: 0),
-          ],
-        ),
-      ),
+      content: DetailsView(item: currentItem.file),
       actions: [
         TextButton(
           onPressed: () {
@@ -279,25 +255,6 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
           ),
         )
       ],
-    );
-  }
-
-  Widget _getDetailWidget(String label, String value) {
-    return Container(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 16),
-          ),
-        ],
-      ),
     );
   }
 
@@ -313,34 +270,7 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
         newItemName,
         item.file.id!,
       );
-
-      print(result);
     }
-  }
-
-  String _formatType(FileExplorerItemType type) {
-    switch (type) {
-      case FileExplorerItemType.directory:
-        return 'Directory';
-      case FileExplorerItemType.file:
-        return 'File';
-      case FileExplorerItemType.image:
-        return 'Image';
-      case FileExplorerItemType.music:
-        return 'Music file';
-      case FileExplorerItemType.pdf:
-        return 'PDF file';
-      case FileExplorerItemType.text:
-        return 'Text file';
-      case FileExplorerItemType.video:
-        return 'Video';
-    }
-  }
-
-  String _formatDate(DateTime dateTime) {
-    final result = dateTime.toString();
-    final indexOfDot = result.indexOf('.');
-    return result.substring(0, indexOfDot);
   }
 
   List<FileExplorerItem> _getSelectedItems() {
