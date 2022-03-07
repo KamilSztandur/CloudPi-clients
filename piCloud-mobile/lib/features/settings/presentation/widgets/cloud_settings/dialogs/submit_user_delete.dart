@@ -1,5 +1,6 @@
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/contracts/client_index.dart';
+import 'package:app/features/app/widgets/app_bar/user_profile_image.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
 import 'package:auto_route/auto_route.dart';
@@ -68,8 +69,9 @@ class _DeleteUserViewState extends State<DeleteUserView> {
         SizedBox(
           height: 100,
           width: 100,
-          child: CircleAvatar(
-            foregroundImage: Image.asset('assets/profilepic.jpg').image,
+          child: UserProfileImage(
+            username: widget.user.username,
+            size: 20,
           ),
         ),
         const SizedBox(height: 20),
@@ -108,9 +110,9 @@ class _DeleteUserViewState extends State<DeleteUserView> {
     ];
   }
 
-  void _onDeletePressed() {
-    service.deleteUser(widget.user.username);
-    AutoRouter.of(context).pop();
+  Future<void> _onDeletePressed() async {
+    await service.deleteUser(widget.user.username);
+    await AutoRouter.of(context).pop();
   }
 
   void _onCancelPressed() => AutoRouter.of(context).pop();

@@ -104,7 +104,7 @@ class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
           final isChecked = _permissionsDictionary![user];
 
           return ListTile(
-            title: Text(user.username),
+            title: Text('${user.username} (${user.nickname})'),
             trailing: _buildCheckBox(user, isChecked),
           );
         },
@@ -115,7 +115,7 @@ class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
   Widget _buildListHeader() {
     return const ListTile(
       title: Text(
-        'Username',
+        'Username (nickname)',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 17.5,
