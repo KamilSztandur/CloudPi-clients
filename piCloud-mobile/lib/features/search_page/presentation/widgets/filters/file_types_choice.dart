@@ -1,4 +1,4 @@
-import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
+import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/features/search_page/data/models/filters_settings_model.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';

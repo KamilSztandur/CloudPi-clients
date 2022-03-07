@@ -3,8 +3,8 @@ import 'dart:io';
 
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
-import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
-import 'package:app/features/file_explorer/data/models/file_item.dart';
+import 'package:app/common/models/file_explorer_item_type.dart';
+import 'package:app/common/models/file_item.dart';
 import 'package:app/features/search_page/data/models/filters_settings_model.dart';
 import 'package:app/features/search_page/data/models/search_query_model.dart';
 import 'package:app/features/search_page/data/models/search_result.dart';
@@ -118,7 +118,7 @@ class SearchEngine {
   ) async {
     final username = await _authManager.getUsernameOfLoggedUser();
 
-    final path = query.path != null
+    final path = (filters.range != SearchRange.everywhere && query.path != null)
         ? '$username${query.path}'
         : await _getUsersHomeDirectoryPath();
 

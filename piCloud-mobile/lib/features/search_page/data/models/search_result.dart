@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 
-import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
+import 'package:app/common/models/file_explorer_item_type.dart';
 
 class SearchResult {
   SearchResult({

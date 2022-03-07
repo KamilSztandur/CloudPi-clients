@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
-import 'package:app/features/file_explorer/data/models/file_item.dart';
+import 'package:app/common/models/file_explorer_item_type.dart';
+import 'package:app/common/models/file_item.dart';
 import 'package:flutter/material.dart';
 
 class DetailsView extends StatefulWidget {

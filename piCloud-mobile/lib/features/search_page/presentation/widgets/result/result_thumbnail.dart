@@ -1,5 +1,4 @@
-import 'package:app/features/cached_image/presentation/cached_image.dart';
-import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
+import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/features/search_page/data/models/search_result.dart';
 import 'package:flutter/material.dart';
 

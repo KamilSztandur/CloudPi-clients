@@ -1,9 +1,8 @@
 import 'dart:math';
 
+import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
-import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/details_popup.dart';
-import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:app/features/search_page/data/models/search_result.dart';
 import 'package:app/features/search_page/data/search_engine.dart';
 import 'package:app/features/search_page/presentation/widgets/result/more_actions_menu.dart';

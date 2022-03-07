@@ -57,9 +57,6 @@ class _SearchRangeChoiceState extends State<SearchRangeChoice> {
       case SearchRange.inThisDirectoryAndTheirSubdirectories:
         return 'In this directory and subdirectories';
 
-      case SearchRange.onlyInThisDirectory:
-        return 'Only in this directory';
-
       default:
         return '???';
     }
