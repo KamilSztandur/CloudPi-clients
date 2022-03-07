@@ -1,6 +1,4 @@
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
-import 'package:app/features/settings/presentation/widgets/cloud_settings/memory_settings.dart';
-import 'package:app/features/settings/presentation/widgets/cloud_settings/misc_settings.dart';
 import 'package:app/features/settings/presentation/widgets/cloud_settings/permissions_settings.dart';
 import 'package:app/features/settings/presentation/widgets/cloud_settings/users_settings.dart';
 import 'package:app/features/settings/presentation/widgets/setting_panel.dart';
@@ -48,16 +46,6 @@ class _CloudSettingsPageState extends State<CloudSettingsPage> {
         header: 'Permissions',
         icon: Icons.policy_outlined,
         subPanel: PermissionsSettingsPanel(),
-      ),
-      const SettingsPanel(
-        header: 'Memory allocation',
-        icon: Icons.memory_outlined,
-        subPanel: MemorySettingsPanel(),
-      ),
-      const SettingsPanel(
-        header: 'Miscellaneous',
-        icon: Icons.settings_outlined,
-        subPanel: MiscSettingsPanel(),
       ),
     ];
 

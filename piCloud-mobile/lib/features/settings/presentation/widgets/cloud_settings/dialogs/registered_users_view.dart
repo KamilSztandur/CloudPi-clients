@@ -94,14 +94,6 @@ class _RegisteredUsersViewState extends State<RegisteredUsersView> {
   }
 
   Widget _buildTile(User user) {
-    ImageProvider<Object>? foregroundImage;
-
-    try {
-      foregroundImage = FileImage(user.profilePic!);
-    } catch (exception) {
-      foregroundImage = Image.asset('assets/profilepic.jpg').image;
-    }
-
     return ListTile(
       leading: UserProfileImage(
         username: user.username,
