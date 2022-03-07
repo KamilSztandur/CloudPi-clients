@@ -135,14 +135,14 @@ class _LoginPanelState extends State<LoginPanel> {
 
   void _blocListener(BuildContext context, LoginState state) => setState(() {
         if (state is UserIsAlreadyLoggedState) {
-          AutoRouter.of(context).replaceAll(const [HomeRoute()]);
+          AutoRouter.of(context).replaceAll([FileExplorerRoute(path: '/')]);
         }
 
         if (state is LoginInProgressLoginState) {
           loginIndicator.show(context);
         } else if (state is LoginSuccessLoginState) {
           loginIndicator.close(context);
-          AutoRouter.of(context).replaceAll(const [HomeRoute()]);
+          AutoRouter.of(context).replaceAll([FileExplorerRoute(path: '/')]);
         } else if (state is LoginFailedLoginState) {
           loginIndicator.close(context);
         }

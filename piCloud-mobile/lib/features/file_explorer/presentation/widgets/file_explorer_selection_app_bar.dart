@@ -2,6 +2,7 @@ import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/common/models/file_item.dart';
 import 'package:app/common/widgets/selection_app_bar/selection_app_bar.dart';
 import 'package:app/features/file_explorer/data/directory_manager.dart';
+import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/details_popup.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/rename_file.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
@@ -159,32 +160,7 @@ class _FileExplorerSelectionAppBarState
     return AlertDialog(
       contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
       title: Text('File $currentIndex/$length'),
-      content: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            _getDetailWidget(
-              'Title',
-              currentItem.title,
-            ),
-            _getDetailWidget(
-              'Type',
-              _formatType(currentItem.type),
-            ),
-            _getDetailWidget(
-              'Last modified',
-              _formatDate(currentItem.lastModifiedOn),
-            ),
-            if (currentItem.type != FileExplorerItemType.directory)
-              _getDetailWidget(
-                'Size',
-                currentItem.size.toString(),
-              )
-            else
-              Container(height: 0),
-          ],
-        ),
-      ),
+      content: DetailsView(item: currentItem),
       actions: [
         TextButton(
           onPressed: () {
@@ -196,25 +172,6 @@ class _FileExplorerSelectionAppBarState
           ),
         )
       ],
-    );
-  }
-
-  Widget _getDetailWidget(String label, String value) {
-    return Container(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            value,
-            style: const TextStyle(fontSize: 16),
-          ),
-        ],
-      ),
     );
   }
 
