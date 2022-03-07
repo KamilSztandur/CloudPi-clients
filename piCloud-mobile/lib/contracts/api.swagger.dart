@@ -1366,6 +1366,7 @@ class FilesystemObjectDTO {
     this.modifiedAt,
     this.version,
     this.type,
+    this.favourite,
     this.children,
   });
 
@@ -1387,6 +1388,8 @@ class FilesystemObjectDTO {
       toJson: filesystemObjectDTOTypeToJson,
       fromJson: filesystemObjectDTOTypeFromJson)
   final enums.FilesystemObjectDTOType? type;
+  @JsonKey(name: 'favourite')
+  final bool? favourite;
   @JsonKey(name: 'children', defaultValue: <FilesystemObjectDTO>[])
   final List<FilesystemObjectDTO>? children;
   static const fromJsonFactory = _$FilesystemObjectDTOFromJson;
@@ -1411,6 +1414,9 @@ class FilesystemObjectDTO {
                     .equals(other.version, version)) &&
             (identical(other.type, type) ||
                 const DeepCollectionEquality().equals(other.type, type)) &&
+            (identical(other.favourite, favourite) ||
+                const DeepCollectionEquality()
+                    .equals(other.favourite, favourite)) &&
             (identical(other.children, children) ||
                 const DeepCollectionEquality()
                     .equals(other.children, children)));
@@ -1424,6 +1430,7 @@ class FilesystemObjectDTO {
       const DeepCollectionEquality().hash(modifiedAt) ^
       const DeepCollectionEquality().hash(version) ^
       const DeepCollectionEquality().hash(type) ^
+      const DeepCollectionEquality().hash(favourite) ^
       const DeepCollectionEquality().hash(children) ^
       runtimeType.hashCode;
 }
@@ -1436,6 +1443,7 @@ extension $FilesystemObjectDTOExtension on FilesystemObjectDTO {
       DateTime? modifiedAt,
       int? version,
       enums.FilesystemObjectDTOType? type,
+      bool? favourite,
       List<FilesystemObjectDTO>? children}) {
     return FilesystemObjectDTO(
         pubId: pubId ?? this.pubId,
@@ -1444,6 +1452,7 @@ extension $FilesystemObjectDTOExtension on FilesystemObjectDTO {
         modifiedAt: modifiedAt ?? this.modifiedAt,
         version: version ?? this.version,
         type: type ?? this.type,
+        favourite: favourite ?? this.favourite,
         children: children ?? this.children);
   }
 }

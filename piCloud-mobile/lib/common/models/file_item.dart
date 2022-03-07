@@ -10,6 +10,7 @@ class FileItem {
     required this.size,
     required this.thumbnail,
     required this.id,
+    required this.isFavorite,
   });
 
   final String? id;
@@ -18,6 +19,7 @@ class FileItem {
   final FileExplorerItemType type;
   final Uint8List? thumbnail;
   final DateTime lastModifiedOn;
+  final bool? isFavorite;
 
   bool hasThumbnail() => thumbnail != null;
 }

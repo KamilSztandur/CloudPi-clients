@@ -3,5 +3,5 @@ enum Option {
   rename,
   delete,
   showDetails,
-  addToFavorites,
+  toggleFavorites,
 }

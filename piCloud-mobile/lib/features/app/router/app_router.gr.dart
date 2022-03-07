@@ -7,7 +7,7 @@
 import 'package:auto_route/auto_route.dart' as _i11;
 import 'package:flutter/material.dart' as _i12;
 
-import '../../favourites_page/presentation/pages/favourites_page.dart' as _i3;
+import '../../favorites_page/presentation/pages/favorites_page.dart' as _i3;
 import '../../file_explorer/presentation/pages/file_explorer_page.dart' as _i4;
 import '../../login/presentation/pages/login_page.dart' as _i1;
 import '../../media_reader/presentation/pages/media_reader_page.dart' as _i5;
@@ -38,9 +38,12 @@ class AppRouter extends _i11.RootStackRouter {
       return _i11.MaterialPageX<void>(
           routeData: routeData, child: const _i2.SharedPage());
     },
-    FavouritesRoute.name: (routeData) {
+    FavoritesRoute.name: (routeData) {
+      final args = routeData.argsAs<FavoritesRouteArgs>(
+          orElse: () => const FavoritesRouteArgs());
       return _i11.MaterialPageX<void>(
-          routeData: routeData, child: const _i3.FavouritesPage());
+          routeData: routeData,
+          child: _i3.FavoritesPage(key: args.key, path: args.path));
     },
     FileExplorerRoute.name: (routeData) {
       final args = routeData.argsAs<FileExplorerRouteArgs>();
@@ -100,7 +103,7 @@ class AppRouter extends _i11.RootStackRouter {
   List<_i11.RouteConfig> get routes => [
         _i11.RouteConfig(LoginRoute.name, path: '/'),
         _i11.RouteConfig(SharedRoute.name, path: '/shared-page'),
-        _i11.RouteConfig(FavouritesRoute.name, path: '/favourites-page'),
+        _i11.RouteConfig(FavoritesRoute.name, path: '/favorites-page'),
         _i11.RouteConfig(FileExplorerRoute.name, path: '/file-explorer-page'),
         _i11.RouteConfig(MediaReaderRoute.name, path: '/media-reader-page'),
         _i11.RouteConfig(UserProfileRoute.name, path: '/user-profile-page'),
@@ -127,11 +130,22 @@ class SharedRoute extends _i11.PageRouteInfo<void> {
   static const String name = 'SharedRoute';
 }
 
-/// generated route for [_i3.FavouritesPage]
-class FavouritesRoute extends _i11.PageRouteInfo<void> {
-  const FavouritesRoute() : super(name, path: '/favourites-page');
+/// generated route for [_i3.FavoritesPage]
+class FavoritesRoute extends _i11.PageRouteInfo<FavoritesRouteArgs> {
+  FavoritesRoute({_i12.Key? key, String? path})
+      : super(name,
+            path: '/favorites-page',
+            args: FavoritesRouteArgs(key: key, path: path));
 
-  static const String name = 'FavouritesRoute';
+  static const String name = 'FavoritesRoute';
+}
+
+class FavoritesRouteArgs {
+  const FavoritesRouteArgs({this.key, this.path});
+
+  final _i12.Key? key;
+
+  final String? path;
 }
 
 /// generated route for [_i4.FileExplorerPage]

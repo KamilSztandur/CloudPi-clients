@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/widgets/error_view.dart';
 import 'package:app/features/app/widgets/app_bar/preview_app_bar.dart';
+import 'package:app/features/favorites_page/data/favorites_manager.dart';
 import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/rename_file.dart';
 import 'package:app/features/loading_baner/presentation/loading_panel.dart';
@@ -56,6 +57,7 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
         onDeleteRequested: _onDeleteRequested,
         onDownloadRequested: _onDownloadRequested,
         onRenameRequested: _onRenameRequested,
+        onToggleFavoriteRequested: _onToggleFavoriteRequested,
       ),
       body: Center(
         child: BlocProvider.value(
@@ -147,6 +149,10 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
     ).show();
 
     widget.onActionFinalized();
+  }
+
+  void _onToggleFavoriteRequested() {
+    context.read<FavoritesManager>().toggleFavorite([widget.resourcePubId!]);
   }
 
   Future<void> _onDeleteRequested() async {

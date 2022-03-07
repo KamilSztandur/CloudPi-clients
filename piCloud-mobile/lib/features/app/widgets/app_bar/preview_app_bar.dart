@@ -12,6 +12,7 @@ class PreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.onDeleteRequested,
     required this.onRenameRequested,
     required this.onShareRequested,
+    required this.onToggleFavoriteRequested,
   }) : super(key: key);
 
   final String resourceName;
@@ -19,6 +20,7 @@ class PreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback onDeleteRequested;
   final VoidCallback onRenameRequested;
   final VoidCallback onShareRequested;
+  final VoidCallback onToggleFavoriteRequested;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -95,36 +97,36 @@ class PreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
           title: 'Delete',
           icon: Icons.delete_outlined,
         ),
+        const SelectionIconButtonChoice(
+          title: 'Toggle favorite',
+          icon: Icons.star_outline_outlined,
+        ),
       ];
 
   void _onHamburgerItemPressed(SelectionIconButtonChoice value) {
     switch (value.title) {
       case 'Share':
-        _onSharePressed();
+        onShareRequested();
         return;
 
       case 'Rename':
-        _onRenamePressed();
+        onRenameRequested();
         return;
 
       case 'Delete':
-        _onDeletePressed();
+        onDeleteRequested();
         return;
 
       case 'Download':
-        _onDownloadPressed();
+        onDownloadRequested();
+        return;
+
+      case 'Toggle favorite':
+        onToggleFavoriteRequested();
         return;
 
       default:
         stderr.write('User selected unrecognizable choice from dropdown menu.');
     }
   }
-
-  void _onSharePressed() => onShareRequested();
-
-  void _onRenamePressed() => onRenameRequested();
-
-  void _onDeletePressed() => onDeleteRequested();
-
-  void _onDownloadPressed() => onDownloadRequested();
 }

@@ -21,7 +21,29 @@ class FileItemView extends StatelessWidget {
           Flexible(
             flex: 27,
             fit: FlexFit.tight,
-            child: FileExplorerThumbnail(file: file),
+            child: Stack(
+              children: [
+                FileExplorerThumbnail(file: file),
+                if (file.isFavorite ?? false) ...[
+                  const Positioned(
+                    right: 2,
+                    bottom: 2,
+                    child: Icon(
+                      Icons.star,
+                      color: Colors.white,
+                    ),
+                  ),
+                  Positioned(
+                    right: 2,
+                    bottom: 2,
+                    child: Icon(
+                      Icons.star_outline_outlined,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ]
+              ],
+            ),
           ),
           Flexible(
             fit: FlexFit.tight,

@@ -12,7 +12,7 @@ class SelectionOptionView extends StatelessWidget {
     Option.rename: Icons.edit_outlined,
     Option.delete: Icons.delete_forever_outlined,
     Option.showDetails: Icons.info_outlined,
-    Option.addToFavorites: Icons.star_outline_outlined,
+    Option.toggleFavorites: Icons.star_outline_outlined,
   };
 
   static final titles = {
@@ -20,7 +20,7 @@ class SelectionOptionView extends StatelessWidget {
     Option.rename: 'Rename',
     Option.delete: 'Delete',
     Option.showDetails: 'Details',
-    Option.addToFavorites: 'Add to Favourites',
+    Option.toggleFavorites: 'Toggle favorite',
   };
 
   final Option option;
