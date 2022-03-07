@@ -1,17 +1,18 @@
 import 'dart:math';
 
-import 'package:app/features/file_explorer/data/models/file_item.dart';
-import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
+import 'package:app/common/models/file_item.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/item_date_label.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/item_thumbnail.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class FileExplorerListItem extends FileExplorerItem {
-  FileExplorerListItem({
+class FileListItemView extends StatelessWidget {
+  FileListItemView({
     Key? key,
-    required FileItem file,
-  }) : super(key: key, file: file);
+    required this.file,
+  }) : super(key: key);
+
+  final FileItem file;
 
   final colorOfAdditionalInfo = Colors.grey.shade700;
 

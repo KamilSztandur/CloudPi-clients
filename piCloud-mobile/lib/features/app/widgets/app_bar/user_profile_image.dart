@@ -1,7 +1,7 @@
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class UserProfileImage extends StatelessWidget {
   const UserProfileImage({
@@ -36,9 +36,11 @@ class UserProfileImage extends StatelessWidget {
     try {
       final api = context.read<Api>();
       final userData = await api.userUsernameDetailsGet(username: username);
-      final imageId = userData.body!.profilePicturePubId!;
-      final image = await api.filesFileFileIdGet(fileId: imageId);
-      return MemoryImage(image.bodyBytes);
+      // TODO
+      throw UnimplementedError();
+      // final imageId = userData.body!.profilePicturePubId!;
+      // final image = await api.filesFileFileIdGet(fileId: imageId);
+      // return MemoryImage(image.bodyBytes);
     } catch (exception) {
       return const AssetImage('assets/profilepic.jpg');
     }

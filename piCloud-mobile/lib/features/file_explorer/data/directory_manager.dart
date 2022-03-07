@@ -4,11 +4,11 @@ import 'dart:typed_data';
 
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
+import 'package:app/common/models/file_explorer_item_type.dart';
+import 'package:app/common/models/file_item.dart';
 import 'package:app/common/widgets/download_indicator_popup.dart';
 import 'package:app/contracts/api.swagger.dart';
 import 'package:app/contracts/client_index.dart';
-import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
-import 'package:app/features/file_explorer/data/models/file_item.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

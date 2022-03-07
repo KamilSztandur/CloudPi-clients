@@ -1,32 +1,27 @@
-import 'dart:io';
-
+import 'package:app/common/models/file_explorer_item_type.dart';
+import 'package:app/common/models/file_item.dart';
+import 'package:app/common/widgets/selection_app_bar/selection_app_bar.dart';
 import 'package:app/features/file_explorer/data/directory_manager.dart';
-import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
-import 'package:app/features/file_explorer/data/selection_icon_button_choice.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/details_popup.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/rename_file.dart';
-import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
-// ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
 import 'package:pedantic/pedantic.dart';
-// ignore: implementation_imports
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
-class SelectionAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const SelectionAppBar({
+class FileExplorerSelectionAppBar extends StatefulWidget
+    implements PreferredSizeWidget {
+  const FileExplorerSelectionAppBar({
     Key? key,
-    this.title,
-    this.selection = const Selection.empty(),
+    required this.selection,
     required this.allItems,
     required this.currentDirPath,
     required this.onActionFinalized,
   }) : super(key: key);
 
-  final Widget? title;
   final Selection selection;
-  final List<FileExplorerItem> allItems;
+  final List<FileItem> allItems;
   final String currentDirPath;
   final VoidCallback onActionFinalized;
 
@@ -34,10 +29,12 @@ class SelectionAppBar extends StatefulWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
-  _SelectionAppBarState createState() => _SelectionAppBarState();
+  _FileExplorerSelectionAppBarState createState() =>
+      _FileExplorerSelectionAppBarState();
 }
 
-class _SelectionAppBarState extends State<SelectionAppBar> {
+class _FileExplorerSelectionAppBarState
+    extends State<FileExplorerSelectionAppBar> {
   late DirectoryManager _directoryManager;
 
   @override
@@ -48,94 +45,14 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      titleSpacing: 0,
-      leading: const CloseButton(),
-      title: Text(_getTitle(), style: const TextStyle(color: Colors.white)),
-      actions: [
-        PopupMenuButton(
-          onSelected: _onHamburgerItemPressed,
-          itemBuilder: (context) => _getHamburgerMenuBody()
-              .map(
-                (choice) => PopupMenuItem<SelectionIconButtonChoice>(
-                  value: choice,
-                  child: Row(
-                    children: [
-                      Icon(choice.icon, color: Colors.black),
-                      Flexible(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: Text(choice.title!),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-              .toList(),
-        )
-      ],
+    return SelectionAppBar(
+      selectionCount: widget.selection.amount,
+      onDownload: _onDownloadPressed,
+      onRename: _onRenamePressed,
+      onDelete: _onDeletePressed,
+      onShowDetails: _onDetailsPressed,
+      onAddToFavorites: _onAddToFavouritesPressed,
     );
-  }
-
-  String _getTitle() =>
-      'Selected ${widget.selection.amount} item${widget.selection.amount > 1 ? 's.' : '.'}';
-
-  List<SelectionIconButtonChoice> _getHamburgerMenuBody() =>
-      <SelectionIconButtonChoice>[
-        const SelectionIconButtonChoice(
-          title: 'Download',
-          icon: Icons.download_outlined,
-        ),
-        const SelectionIconButtonChoice(
-          title: 'Rename',
-          icon: Icons.edit_outlined,
-        ),
-        const SelectionIconButtonChoice(
-          title: 'Delete',
-          icon: Icons.delete_forever_outlined,
-        ),
-        const SelectionIconButtonChoice(
-          title: 'Details',
-          icon: Icons.info_outlined,
-        ),
-        const SelectionIconButtonChoice(
-          title: 'Add to Favourites',
-          icon: Icons.star_outline_outlined,
-        ),
-      ];
-
-  Future<void> _onHamburgerItemPressed(SelectionIconButtonChoice value) async {
-    switch (value.title) {
-      case 'Rename':
-        await _onRenamePressed();
-        widget.onActionFinalized();
-        return;
-
-      case 'Download':
-        await _onDownloadPressed();
-        widget.onActionFinalized();
-        return;
-
-      case 'Delete':
-        await _onDeletePressed();
-        widget.onActionFinalized();
-        return;
-
-      case 'Details':
-        await _onDetailsPressed();
-        widget.onActionFinalized();
-        return;
-
-      case 'Add to Favourites':
-        await _onAddToFavouritesPressed();
-        widget.onActionFinalized();
-        return;
-
-      default:
-        stderr.write('User selected unrecognizable choice from dropdown menu.');
-        widget.onActionFinalized();
-    }
   }
 
   Future<void> _onRenamePressed() async {
@@ -159,8 +76,8 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
     for (final item in _getSelectedItems()) {
       unawaited(
         _directoryManager.downloadMediaToDevice(
-          item.file.title,
-          item.file.id!,
+          item.title,
+          item.id!,
           context: context,
           setState: setState,
         ),
@@ -203,10 +120,10 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
         TextButton(
           onPressed: () async {
             for (final item in _getSelectedItems()) {
-              if (item.file.type == FileExplorerItemType.directory) {
-                unawaited(_directoryManager.deleteDirectory(item.file.id!));
+              if (item.type == FileExplorerItemType.directory) {
+                unawaited(_directoryManager.deleteDirectory(item.id!));
               } else {
-                unawaited(_directoryManager.deleteFile(item.file.id!));
+                unawaited(_directoryManager.deleteFile(item.id!));
               }
             }
 
@@ -237,13 +154,13 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
 
   Widget _getDetailsPopup(
     int length,
-    FileExplorerItem currentItem,
+    FileItem currentItem,
     int currentIndex,
   ) {
     return AlertDialog(
       contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
       title: Text('File $currentIndex/$length'),
-      content: DetailsView(item: currentItem.file),
+      content: DetailsView(item: currentItem),
       actions: [
         TextButton(
           onPressed: () {
@@ -263,18 +180,44 @@ class _SelectionAppBarState extends State<SelectionAppBar> {
 
     var counter = 1;
     for (final item in selectedItems) {
-      final fileExtension = p.extension(item.file.title, 10);
+      final fileExtension = p.extension(item.title, 10);
       final newItemName = '$newName (${counter++})$fileExtension';
-      final result = await _directoryManager.rename(
+
+      await _directoryManager.rename(
         widget.currentDirPath,
         newItemName,
-        item.file.id!,
+        item.id!,
       );
     }
   }
 
-  List<FileExplorerItem> _getSelectedItems() {
-    final list = <FileExplorerItem>[];
+  String _formatType(FileExplorerItemType type) {
+    switch (type) {
+      case FileExplorerItemType.directory:
+        return 'Directory';
+      case FileExplorerItemType.file:
+        return 'File';
+      case FileExplorerItemType.image:
+        return 'Image';
+      case FileExplorerItemType.music:
+        return 'Music file';
+      case FileExplorerItemType.pdf:
+        return 'PDF file';
+      case FileExplorerItemType.text:
+        return 'Text file';
+      case FileExplorerItemType.video:
+        return 'Video';
+    }
+  }
+
+  String _formatDate(DateTime dateTime) {
+    final result = dateTime.toString();
+    final indexOfDot = result.indexOf('.');
+    return result.substring(0, indexOfDot);
+  }
+
+  List<FileItem> _getSelectedItems() {
+    final list = <FileItem>[];
 
     for (final index in widget.selection.selectedIndexes) {
       list.add(widget.allItems[index]);

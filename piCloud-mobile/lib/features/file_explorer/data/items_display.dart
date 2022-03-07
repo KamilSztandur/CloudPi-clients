@@ -1,4 +1,0 @@
-enum ItemsDisplay {
-  titles,
-  list,
-}

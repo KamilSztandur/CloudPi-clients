@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-// ignore: implementation_imports
 
 class DownloadIndicatorPopup {
   DownloadIndicatorPopup({
