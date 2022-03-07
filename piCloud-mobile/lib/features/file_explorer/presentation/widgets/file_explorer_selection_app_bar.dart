@@ -212,7 +212,9 @@ class FileExplorerSelectionAppBar extends StatelessWidget
   }
 
   Future<void> _renameSelectedItems(
-      BuildContext context, String newName) async {
+    BuildContext context,
+    String newName,
+  ) async {
     final selectedItems = _getSelectedItems();
 
     var counter = 1;

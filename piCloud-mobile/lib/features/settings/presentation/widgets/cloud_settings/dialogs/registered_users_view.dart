@@ -7,7 +7,7 @@ import 'package:app/features/settings/presentation/widgets/cloud_settings/dialog
 import 'package:app/features/user_wizard/data/models/user.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class RegisteredUsersView extends StatefulWidget {
   const RegisteredUsersView({

@@ -7,7 +7,7 @@ import 'package:app/features/settings/presentation/widgets/cloud_settings/users_
 import 'package:app/features/settings/presentation/widgets/setting_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class CloudSettingsPage extends StatefulWidget {
   const CloudSettingsPage({

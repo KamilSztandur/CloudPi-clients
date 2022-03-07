@@ -12,7 +12,7 @@ import 'package:app/features/user_wizard/presentation/widgets/password_input_fie
 import 'package:app/features/user_wizard/presentation/widgets/user_avatar_input.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class UserWizardPage extends StatefulWidget {
   const UserWizardPage({
@@ -183,8 +183,10 @@ class _UserWizardPageState extends State<UserWizardPage> {
   void _onCancelPressed() => AutoRouter.of(context).pop();
 
   void _onCreatePressed() {
-    final errorMessage =
-        service.getWarningMessageForUserData(user, _isThisNewUserCreation());
+    final errorMessage = service.getWarningMessageForUserData(
+      user,
+      creatingNewUser: _isThisNewUserCreation(),
+    );
 
     if (errorMessage == null) {
       if (_isThisNewUserCreation()) {

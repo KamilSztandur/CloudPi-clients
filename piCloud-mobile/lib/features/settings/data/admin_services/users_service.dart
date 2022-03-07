@@ -124,7 +124,10 @@ class UsersService {
     return response.isSuccessful;
   }
 
-  String? getWarningMessageForUserData(User user, bool creatingNewUser) {
+  String? getWarningMessageForUserData(
+    User user, {
+    required bool creatingNewUser,
+  }) {
     final allValuesWithoutPasswordFilled = user.nickname.isNotEmpty &&
         user.username.isNotEmpty &&
         user.email!.isNotEmpty;
