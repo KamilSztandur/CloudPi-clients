@@ -191,31 +191,6 @@ class _FileExplorerSelectionAppBarState
     }
   }
 
-  String _formatType(FileExplorerItemType type) {
-    switch (type) {
-      case FileExplorerItemType.directory:
-        return 'Directory';
-      case FileExplorerItemType.file:
-        return 'File';
-      case FileExplorerItemType.image:
-        return 'Image';
-      case FileExplorerItemType.music:
-        return 'Music file';
-      case FileExplorerItemType.pdf:
-        return 'PDF file';
-      case FileExplorerItemType.text:
-        return 'Text file';
-      case FileExplorerItemType.video:
-        return 'Video';
-    }
-  }
-
-  String _formatDate(DateTime dateTime) {
-    final result = dateTime.toString();
-    final indexOfDot = result.indexOf('.');
-    return result.substring(0, indexOfDot);
-  }
-
   List<FileItem> _getSelectedItems() {
     final list = <FileItem>[];
 

@@ -80,6 +80,9 @@ class _FileTypesChoiceState extends State<FileTypesChoice> {
       case FileExplorerItemType.text:
         return 'Text files';
 
+      case FileExplorerItemType.compressed:
+        return 'Archives';
+
       case FileExplorerItemType.file:
         return 'Other files';
 
