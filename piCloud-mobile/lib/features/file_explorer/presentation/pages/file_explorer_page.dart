@@ -1,5 +1,6 @@
 import 'package:app/common/widgets/error_view.dart';
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
+import 'package:app/features/app/widgets/app_bar/search_button.dart';
 import 'package:app/features/app/widgets/navigation_bar/bottom_navigation_bar.dart';
 import 'package:app/features/drawer/main_drawer.dart';
 import 'package:app/features/file_explorer/bloc/file_explorer_bloc.dart';
@@ -101,7 +102,10 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
     } else {
       return PICloudAppBar(
         title: _getTitle(),
-        actions: const [SwitchViewButton()],
+        actions: [
+          SearchButton(path: widget.path),
+          const SwitchViewButton(),
+        ],
       );
     }
   }
