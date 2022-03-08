@@ -85,6 +85,10 @@ class _DetailsViewState extends State<DetailsView> {
         return 'Text file';
       case FileExplorerItemType.video:
         return 'Video';
+      case FileExplorerItemType.compressed:
+        return 'Archive';
+      default:
+        return 'File';
     }
   }
 

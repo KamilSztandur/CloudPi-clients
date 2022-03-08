@@ -241,7 +241,8 @@ class DirectoryManager {
       } else if (result.toLowerCase().contains('audio')) {
         return 'MUSIC';
       } else if (result.toLowerCase().contains('compressed') ||
-          result.toLowerCase().contains('archive')) {
+          result.toLowerCase().contains('archive') ||
+          result.toLowerCase().contains('zip')) {
         return 'COMPRESSED';
       }
     }
@@ -280,7 +281,7 @@ class DirectoryManager {
       case FilesystemObjectDTOType.music:
         return FileExplorerItemType.music;
       case FilesystemObjectDTOType.compressed:
-        return FileExplorerItemType.file;
+        return FileExplorerItemType.compressed;
       case FilesystemObjectDTOType.pdf:
         return FileExplorerItemType.pdf;
       default:

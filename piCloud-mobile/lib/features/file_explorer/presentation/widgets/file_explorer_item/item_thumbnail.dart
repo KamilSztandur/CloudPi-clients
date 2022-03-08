@@ -35,6 +35,9 @@ class _FileExplorerThumbnailState extends State<FileExplorerThumbnail> {
       case FileExplorerItemType.pdf:
         return const AssetImage('assets/thumbnails/pdf.png');
 
+      case FileExplorerItemType.compressed:
+        return const AssetImage('assets/thumbnails/compressed.png');
+
       default:
         return const AssetImage('assets/thumbnails/file.png');
     }

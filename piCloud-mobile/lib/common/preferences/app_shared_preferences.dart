@@ -12,7 +12,7 @@ class AppSharedPreferences {
     return ViewModeSerialization.deserialize(
           _preferences.getString(_preferredViewKey),
         ) ??
-        ViewMode.list;
+        ViewMode.tile;
   }
 
   void setPreferredViewMode(ViewMode viewMode) {

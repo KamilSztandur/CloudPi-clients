@@ -5,5 +5,6 @@ enum FileExplorerItemType {
   music,
   pdf,
   text,
+  compressed,
   file,
 }

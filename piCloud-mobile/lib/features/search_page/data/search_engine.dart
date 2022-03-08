@@ -184,6 +184,11 @@ class SearchEngine {
             allowedFileTypes.add('TEXT_FILE');
           }
           break;
+        case FileExplorerItemType.compressed:
+          if (value == true) {
+            allowedFileTypes.add('COMPRESSED');
+          }
+          break;
         default:
           if (value == true) {
             allowedFileTypes.add('UNDEFINED');
@@ -218,6 +223,8 @@ class SearchEngine {
       return FileExplorerItemType.pdf;
     } else if (data.contains('TEXT_FILE')) {
       return FileExplorerItemType.text;
+    } else if (data.contains('COMPRESSED')) {
+      return FileExplorerItemType.compressed;
     } else {
       return FileExplorerItemType.file;
     }

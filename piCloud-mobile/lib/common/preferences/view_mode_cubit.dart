@@ -3,7 +3,7 @@ import 'package:app/common/preferences/app_shared_preferences.dart';
 import 'package:bloc/bloc.dart';
 
 class ViewModeCubit extends Cubit<ViewMode> {
-  ViewModeCubit(this._preferences) : super(ViewMode.list);
+  ViewModeCubit(this._preferences) : super(ViewMode.tile);
 
   final AppSharedPreferences _preferences;
 
