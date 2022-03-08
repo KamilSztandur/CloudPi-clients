@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:app/common/auth/auth_manager.dart';
-import 'package:app/contracts/client_index.dart';
 import 'package:app/features/search_page/data/models/filters_settings_model.dart';
 import 'package:app/features/search_page/data/models/search_query_model.dart';
 import 'package:app/features/search_page/data/models/search_result.dart';

@@ -98,14 +98,19 @@ class FileListItemView extends StatelessWidget {
     var label = '';
     final sizeInBytes = file.size;
 
-    if (sizeInBytes > 10 ^ 6) {
-      final sizeInMegabytes = sizeInBytes / pow(10, 6);
-      label = '${sizeInMegabytes.toStringAsFixed(3)} Mb';
-    } else if (sizeInBytes > 10 ^ 3) {
-      final sizeInKilobytes = sizeInBytes / (pow(10, 3));
-      label = '${sizeInKilobytes.toStringAsFixed(3)}Kb';
+    final megabytesThreshold = pow(10, 6);
+    final kilobytesThreshold = pow(10, 3);
+
+    if (sizeInBytes > megabytesThreshold) {
+      final sizeInMegabytes = sizeInBytes / megabytesThreshold;
+      label = '${sizeInMegabytes.toStringAsFixed(2)} Mb';
+    } else if (sizeInBytes > kilobytesThreshold) {
+      final sizeInKilobytes = sizeInBytes / kilobytesThreshold;
+      label = '${sizeInKilobytes.toStringAsFixed(2)} Kb';
+    } else if (sizeInBytes > 0) {
+      label = '${sizeInBytes.floor().toString()} bytes';
     } else {
-      label = '${sizeInBytes.toStringAsFixed(3)} b';
+      label = 'Unknown';
     }
 
     return Text(label, style: const TextStyle(color: Colors.grey));

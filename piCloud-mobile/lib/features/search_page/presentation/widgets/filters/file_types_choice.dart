@@ -90,26 +90,4 @@ class _FileTypesChoiceState extends State<FileTypesChoice> {
         return '???';
     }
   }
-
-  bool _shouldDisplayUpperArrow() {
-    final isAtEdge = checkboxesScrollController.position.atEdge;
-    final isAtBeginning = checkboxesScrollController.offset == 0;
-
-    if (isAtEdge && isAtBeginning) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
-  bool _shouldDisplayBottomArrow() {
-    final isAtEdge = checkboxesScrollController.position.atEdge;
-    final isAtBeginning = checkboxesScrollController.offset == 0;
-
-    if (isAtEdge && isAtBeginning) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 }

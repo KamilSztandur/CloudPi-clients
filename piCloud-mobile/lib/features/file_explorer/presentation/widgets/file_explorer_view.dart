@@ -12,11 +12,13 @@ class FileExplorerView extends StatelessWidget {
     required this.path,
     required this.files,
     required this.onSelectionChanged,
+    required this.onActionFinalized,
   }) : super(key: key);
 
   final String path;
   final List<FileItem> files;
   final ValueChanged<Selection> onSelectionChanged;
+  final VoidCallback onActionFinalized;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +54,7 @@ class FileExplorerView extends StatelessWidget {
           path: path,
           resourceName: resourceName,
           resourcePubId: pubId,
+          onActionFinalized: onActionFinalized,
         ),
       );
 }

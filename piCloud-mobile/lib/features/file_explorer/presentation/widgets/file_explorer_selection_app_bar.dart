@@ -58,14 +58,29 @@ class _FileExplorerSelectionAppBarState
   Future<void> _onRenamePressed() async {
     final selectedItems = _getSelectedItems();
 
-    await RenameFilePopup(
-      context: context,
-      currentPath: widget.currentDirPath,
-      amount: selectedItems.length,
-      groupNamePicked: _renameSelectedItems,
-      resourceId: '',
-      currentName: '',
-    ).showGroupRename();
+    if (selectedItems.length > 1) {
+      await RenameFilePopup(
+        context: context,
+        currentPath: widget.currentDirPath,
+        amount: selectedItems.length,
+        groupNamePicked: _renameSelectedItems,
+        resourceId: '',
+        currentName: '',
+      ).showGroupRename();
+
+      widget.onActionFinalized();
+    } else if (selectedItems.length == 1) {
+      await RenameFilePopup(
+        context: context,
+        currentPath: widget.currentDirPath,
+        amount: selectedItems.length,
+        groupNamePicked: _renameSelectedItems,
+        resourceId: selectedItems[0].id!,
+        currentName: selectedItems[0].title,
+      ).show();
+
+      widget.onActionFinalized();
+    }
   }
 
   Future<void> _onAddToFavouritesPressed() async {
@@ -83,6 +98,8 @@ class _FileExplorerSelectionAppBarState
         ),
       );
     }
+
+    widget.onActionFinalized();
   }
 
   Future<void> _onDeletePressed() async {
@@ -90,6 +107,8 @@ class _FileExplorerSelectionAppBarState
       context: context,
       builder: (context) => _getConfirmDeletePopop(),
     );
+
+    widget.onActionFinalized();
   }
 
   Future<void> _onDetailsPressed() async {

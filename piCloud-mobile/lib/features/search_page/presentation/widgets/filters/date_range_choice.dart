@@ -125,12 +125,4 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
       });
     }
   }
-
-  void _clearMaxDate() => setState(() {
-        widget.settings.maxDate = maxPossibleDate;
-      });
-
-  void _clearMinDate() => setState(() {
-        widget.settings.minDate = minPossibleDate;
-      });
 }
