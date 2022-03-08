@@ -67,6 +67,8 @@ class _FileExplorerSelectionAppBarState
         resourceId: '',
         currentName: '',
       ).showGroupRename();
+
+      widget.onActionFinalized();
     } else if (selectedItems.length == 1) {
       await RenameFilePopup(
         context: context,
@@ -76,6 +78,8 @@ class _FileExplorerSelectionAppBarState
         resourceId: selectedItems[0].id!,
         currentName: selectedItems[0].title,
       ).show();
+
+      widget.onActionFinalized();
     }
   }
 
@@ -94,6 +98,8 @@ class _FileExplorerSelectionAppBarState
         ),
       );
     }
+
+    widget.onActionFinalized();
   }
 
   Future<void> _onDeletePressed() async {
@@ -101,6 +107,8 @@ class _FileExplorerSelectionAppBarState
       context: context,
       builder: (context) => _getConfirmDeletePopop(),
     );
+
+    widget.onActionFinalized();
   }
 
   Future<void> _onDetailsPressed() async {

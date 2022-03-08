@@ -22,11 +22,12 @@ class MediaReaderPage extends StatefulWidget {
     required this.path,
     required this.resourceName,
     required this.resourcePubId,
+    required this.onActionFinalized,
   }) : super(key: key);
 
-  final String path;
-  final String resourceName;
+  final String path, resourceName;
   final String? resourcePubId;
+  final VoidCallback onActionFinalized;
 
   @override
   _MediaReaderPageState createState() => _MediaReaderPageState();
@@ -111,14 +112,18 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
         setState: setState,
       );
 
-  void _onRenameRequested() => RenameFilePopup(
-        context: context,
-        currentName: widget.resourceName,
-        currentPath: widget.path,
-        resourceId: widget.resourcePubId!,
-        amount: 1,
-        groupNamePicked: (name) {},
-      ).show();
+  Future<void> _onRenameRequested() async {
+    await RenameFilePopup(
+      context: context,
+      currentName: widget.resourceName,
+      currentPath: widget.path,
+      resourceId: widget.resourcePubId!,
+      amount: 1,
+      groupNamePicked: (name) {},
+    ).show();
+
+    widget.onActionFinalized();
+  }
 
   Future<void> _onDeleteRequested() async {
     final isSuccessful = await _directoryManager.deleteFile(
@@ -130,6 +135,7 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
       message = '${widget.resourceName} deleted.';
 
       await AutoRouter.of(context).pop();
+      widget.onActionFinalized();
     } else {
       message = 'Failed to delete ${widget.resourceName}';
     }

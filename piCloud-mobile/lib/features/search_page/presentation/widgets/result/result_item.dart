@@ -125,6 +125,7 @@ class _ResultItemState extends State<ResultItem> {
             path: await _getFileLocalizationPath(),
             resourceName: widget.item.title,
             resourcePubId: widget.item.id,
+            onActionFinalized: () {},
           ),
         ),
       );

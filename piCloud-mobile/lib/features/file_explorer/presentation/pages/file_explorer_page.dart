@@ -27,22 +27,37 @@ class FileExplorerPage extends StatefulWidget {
 
 class _FileExplorerPageState extends State<FileExplorerPage> {
   var _selection = const Selection.empty();
+  late FileExplorerBloc _bloc;
+
+  @override
+  void initState() {
+    _bloc = FileExplorerBloc(
+      path: widget.path,
+      viewModeCubit: context.read(),
+      directoryManager: context.read(),
+    )..add(const FetchDataFileExplorerEvent());
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _bloc.close();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => FileExplorerBloc(
-        path: widget.path,
-        viewModeCubit: context.read(),
-        directoryManager: context.read(),
-      )..add(const FetchDataFileExplorerEvent()),
+      create: (context) => _bloc,
       child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
         builder: (context, state) {
           return Scaffold(
             appBar: _buildAppBar(context, state),
             drawer: const MainDrawer(),
             body: RefreshIndicator(
-              onRefresh: () async => _refreshData(context),
+              onRefresh: () async => _refreshData(),
               child: _buildBody(state),
             ),
             floatingActionButton: _getAddMediaButtonIfNeeded(context),
@@ -61,6 +76,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
         onSelectionChanged: (selection) => setState(() {
           _selection = selection;
         }),
+        onActionFinalized: _refreshData,
       );
     } else if (state is FetchingDataErrorFileExplorerState) {
       return const ErrorView(
@@ -103,7 +119,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
 
   void _onSelectionActionFinalized(BuildContext context) {
     _selection = const Selection.empty();
-    _refreshData(context);
+    _refreshData();
   }
 
   Widget _getAddMediaButtonIfNeeded(BuildContext context) {
@@ -111,11 +127,11 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
         ? const SizedBox()
         : AddMediaButton(
             currentPath: widget.path,
-            onNewMediaAdded: () => _refreshData(context),
+            onNewMediaAdded: _refreshData,
           );
   }
 
-  void _refreshData(BuildContext context) {
-    context.read<FileExplorerBloc>().add(const FetchDataFileExplorerEvent());
+  void _refreshData() {
+    _bloc.add(const FetchDataFileExplorerEvent());
   }
 }
