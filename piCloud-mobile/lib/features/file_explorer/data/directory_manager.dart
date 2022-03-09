@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:android_path_provider/android_path_provider.dart';
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
 import 'package:app/common/models/file_explorer_item_type.dart';
@@ -121,16 +121,24 @@ class DirectoryManager {
       )..show();
     }
 
-    await dioClient.download(
-      requestUrl,
-      '/storage/emulated/0/Download/$name',
-      onReceiveProgress: (received, total) {
-        if (context != null) {
-          progressIndicator!.updateProgress(setState!, received / total);
-        }
-      },
-      options: dio.Options(headers: headers),
-    );
+    try {
+      await dioClient.download(
+        requestUrl,
+        '${await AndroidPathProvider.downloadsPath}$name',
+        onReceiveProgress: (received, total) {
+          if (context != null) {
+            progressIndicator!.updateProgress(setState!, received / total);
+          }
+        },
+        options: dio.Options(headers: headers),
+      );
+    } catch (exception) {
+      if (context != null) {
+        progressIndicator!.close();
+      }
+
+      rethrow;
+    }
 
     if (context != null) {
       progressIndicator!.close();

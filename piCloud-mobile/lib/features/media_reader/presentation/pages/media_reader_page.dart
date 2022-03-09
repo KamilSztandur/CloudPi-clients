@@ -15,6 +15,7 @@ import 'package:app/features/media_reader/presentation/widgets/txt_preview.dart'
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:leancode_lint/leancode_lint.dart';
 
 class MediaReaderPage extends StatefulWidget {
   const MediaReaderPage({
@@ -105,12 +106,23 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
     }
   }
 
-  void _onDownloadRequested() => _directoryManager.downloadMediaToDevice(
+  Future<void> _onDownloadRequested() async {
+    try {
+      await _directoryManager.downloadMediaToDevice(
         widget.resourceName,
         widget.resourcePubId ?? '',
         context: context,
         setState: setState,
       );
+    } catch (exception) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          content: Text('${widget.resourceName} download failed.'),
+        ),
+      );
+    }
+  }
 
   Future<void> _onRenameRequested() async {
     await RenameFilePopup(
