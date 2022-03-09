@@ -109,45 +109,66 @@ class DirectoryManager {
     BuildContext? context,
     void Function(void Function())? setState,
   }) async {
-    //DownloadIndicatorPopup? progressIndicator;
-
-    final dioClient = dio.Dio();
-
     final headers = await _getHeaders();
     final requestUrl = '${Config.apiBaseUrl}/files/file/$pubId';
-
-    /*
-    if (context != null) {
-      progressIndicator = DownloadIndicatorPopup(
-        context: context,
-        progress: 0,
-      )..show();
-    }
-    */
 
     final downloadsPath = await AndroidPathProvider.downloadsPath;
     final fullPath = '$downloadsPath/$name';
 
-    if (await Permission.storage.isDenied) {
-      await Permission.storage.request();
+    if (context != null) {
+      await _downloadWithGUIIndicator(headers, requestUrl, fullPath, context);
+    } else {
+      await _downloadWithoutGUIIndicator(headers, requestUrl, fullPath);
     }
+  }
 
-    if (await Permission.storage.isGranted) {
-      final result = await dioClient.download(
-        requestUrl,
-        fullPath,
-        /*
-          onReceiveProgress: (received, total) {
-            
-          if (context != null) {
-            progressIndicator!.updateProgress(setState!, received / total);
-          }
-          
-          },*/
-        options: dio.Options(headers: headers),
-      );
+  Future<void> _downloadWithGUIIndicator(
+    Map<String, String> headers,
+    String requestUrl,
+    String fullPath,
+    BuildContext context,
+  ) async {
+    try {
+      if (await Permission.storage.isDenied) {
+        await Permission.storage.request();
+      }
 
-      print(result.statusCode);
+      if (await Permission.storage.isGranted) {
+        final progressIndicator = DownloadIndicatorPopup(
+          context: context,
+          requestUrl: requestUrl,
+          fullPath: fullPath,
+          headers: headers,
+        );
+
+        await progressIndicator.start();
+      }
+    } catch (exception) {
+      rethrow;
+    }
+  }
+
+  Future<void> _downloadWithoutGUIIndicator(
+    Map<String, String> headers,
+    String requestUrl,
+    String fullPath,
+  ) async {
+    final dioClient = dio.Dio();
+
+    try {
+      if (await Permission.storage.isDenied) {
+        await Permission.storage.request();
+      }
+
+      if (await Permission.storage.isGranted) {
+        await dioClient.download(
+          requestUrl,
+          fullPath,
+          options: dio.Options(headers: headers),
+        );
+      }
+    } catch (exception) {
+      rethrow;
     }
   }
 
