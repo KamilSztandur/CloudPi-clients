@@ -114,6 +114,13 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
         context: context,
         setState: setState,
       );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          content: const Text('Download completed.'),
+        ),
+      );
     } catch (exception) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:android_path_provider/android_path_provider.dart';
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mime/mime.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DirectoryManager {
   const DirectoryManager(
@@ -107,41 +109,45 @@ class DirectoryManager {
     BuildContext? context,
     void Function(void Function())? setState,
   }) async {
-    DownloadIndicatorPopup? progressIndicator;
+    //DownloadIndicatorPopup? progressIndicator;
 
     final dioClient = dio.Dio();
 
     final headers = await _getHeaders();
     final requestUrl = '${Config.apiBaseUrl}/files/file/$pubId';
 
+    /*
     if (context != null) {
       progressIndicator = DownloadIndicatorPopup(
         context: context,
         progress: 0,
       )..show();
     }
+    */
 
-    try {
-      await dioClient.download(
+    final downloadsPath = await AndroidPathProvider.downloadsPath;
+    final fullPath = '$downloadsPath/$name';
+
+    if (await Permission.storage.isDenied) {
+      await Permission.storage.request();
+    }
+
+    if (await Permission.storage.isGranted) {
+      final result = await dioClient.download(
         requestUrl,
-        '${await AndroidPathProvider.downloadsPath}$name',
-        onReceiveProgress: (received, total) {
+        fullPath,
+        /*
+          onReceiveProgress: (received, total) {
+            
           if (context != null) {
             progressIndicator!.updateProgress(setState!, received / total);
           }
-        },
+          
+          },*/
         options: dio.Options(headers: headers),
       );
-    } catch (exception) {
-      if (context != null) {
-        progressIndicator!.close();
-      }
 
-      rethrow;
-    }
-
-    if (context != null) {
-      progressIndicator!.close();
+      print(result.statusCode);
     }
   }
 
