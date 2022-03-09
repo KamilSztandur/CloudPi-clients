@@ -66,12 +66,17 @@ class DownloadIndicatorPopup {
 
   Widget _buildCircleIndicator() {
     final size = MediaQuery.of(context).size.shortestSide * 0.5;
-    return SizedBox(
+
+    return Container(
       height: size,
       width: size,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10000),
+      ),
       child: CircularProgressIndicator(
-        strokeWidth: 2,
-        backgroundColor: Colors.white,
+        strokeWidth: 10,
+        backgroundColor: Colors.grey.shade400,
         value: _isProgressValid() ? _progress! / 100 : null,
       ),
     );
@@ -84,7 +89,7 @@ class DownloadIndicatorPopup {
       message,
       style: TextStyle(
         color: Theme.of(context).primaryColor,
-        fontSize: 20,
+        fontSize: _isProgressValid() ? 30 : 20,
         fontWeight: FontWeight.bold,
       ),
     );
