@@ -75,7 +75,7 @@ class DownloadIndicatorPopup {
         borderRadius: BorderRadius.circular(10000),
       ),
       child: CircularProgressIndicator(
-        strokeWidth: 10,
+        strokeWidth: 5,
         backgroundColor: Colors.grey.shade400,
         value: _isProgressValid() ? _progress! / 100 : null,
       ),
