@@ -43,6 +43,7 @@ class UserProfilePageBloc
 
       for (final role in responseData.roles!) {
         final str = role.toString();
+        // ignore: use_string_buffers
         rolesString += '${str.substring(str.indexOf('.') + 1)}, ';
       }
 

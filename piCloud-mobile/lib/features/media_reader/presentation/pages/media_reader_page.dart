@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 
 import 'package:app/common/auth/auth_manager.dart';
+import 'package:app/common/widgets/error_view.dart';
 import 'package:app/features/app/widgets/app_bar/preview_app_bar.dart';
 import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/rename_file.dart';
-import 'package:app/features/file_explorer/presentation/widgets/file_explorer_error.dart';
 import 'package:app/features/loading_baner/presentation/loading_panel.dart';
 import 'package:app/features/media_reader/bloc/media_reader_bloc.dart';
 import 'package:app/features/media_reader/data/media_reader_service.dart';
@@ -22,11 +22,12 @@ class MediaReaderPage extends StatefulWidget {
     required this.path,
     required this.resourceName,
     required this.resourcePubId,
+    required this.onActionFinalized,
   }) : super(key: key);
 
-  final String path;
-  final String resourceName;
+  final String path, resourceName;
   final String? resourcePubId;
+  final VoidCallback onActionFinalized;
 
   @override
   _MediaReaderPageState createState() => _MediaReaderPageState();
@@ -67,11 +68,11 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
                   final resourceBytes = state.resourceBytes;
                   return _buildPreviewForResourceOfType(resourceBytes);
                 } else if (state is MediaDownloadFailureState) {
-                  return const FileExplorerErrorWidget(
+                  return const ErrorView(
                     errorMessage: 'Check your internet connection.',
                   );
                 } else if (state is MediaFileDamagedState) {
-                  return const FileExplorerErrorWidget(
+                  return const ErrorView(
                     errorMessage: 'File is damaged. Contact administrator.',
                   );
                 } else {
@@ -104,21 +105,43 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
     }
   }
 
-  void _onDownloadRequested() => _directoryManager.downloadMediaToDevice(
+  Future<void> _onDownloadRequested() async {
+    try {
+      await _directoryManager.downloadMediaToDevice(
         widget.resourceName,
         widget.resourcePubId ?? '',
         context: context,
         setState: setState,
       );
 
-  void _onRenameRequested() => RenameFilePopup(
-        context: context,
-        currentName: widget.resourceName,
-        currentPath: widget.path,
-        resourceId: widget.resourcePubId!,
-        amount: 1,
-        groupNamePicked: (name) {},
-      ).show();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          content: const Text('Download completed.'),
+        ),
+      );
+    } catch (exception) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          content: Text('${widget.resourceName} download failed.'),
+        ),
+      );
+    }
+  }
+
+  Future<void> _onRenameRequested() async {
+    await RenameFilePopup(
+      context: context,
+      currentName: widget.resourceName,
+      currentPath: widget.path,
+      resourceId: widget.resourcePubId!,
+      amount: 1,
+      groupNamePicked: (name) {},
+    ).show();
+
+    widget.onActionFinalized();
+  }
 
   Future<void> _onDeleteRequested() async {
     final isSuccessful = await _directoryManager.deleteFile(
@@ -130,6 +153,7 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
       message = '${widget.resourceName} deleted.';
 
       await AutoRouter.of(context).pop();
+      widget.onActionFinalized();
     } else {
       message = 'Failed to delete ${widget.resourceName}';
     }

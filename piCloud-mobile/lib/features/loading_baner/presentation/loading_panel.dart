@@ -5,7 +5,7 @@ class LoadingPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size.shortestSide * 0.8;
+    final size = MediaQuery.of(context).size.shortestSide * 0.75;
 
     return Center(
       child: Stack(
@@ -14,27 +14,19 @@ class LoadingPanel extends StatelessWidget {
             child: SizedBox(
               height: size,
               width: size,
-              child: const CircularProgressIndicator(
-                color: Colors.black,
-                strokeWidth: 3,
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColorDark,
+                strokeWidth: 5,
               ),
             ),
           ),
           Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  'assets/loading.gif',
-                  height: 125,
-                  width: 125,
-                ),
-                const SizedBox(height: 15),
-                const Text(
-                  'Loading...',
-                  style: TextStyle(fontSize: 25),
-                ),
-              ],
+            child: Text(
+              'Please wait...',
+              style: TextStyle(
+                fontSize: 25,
+                color: Theme.of(context).primaryColorDark,
+              ),
             ),
           ),
         ],

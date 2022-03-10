@@ -1,10 +1,9 @@
 import 'package:app/features/app/router/guards/admin_guard.dart';
 import 'package:app/features/favourites_page/presentation/pages/favourites_page.dart';
 import 'package:app/features/file_explorer/presentation/pages/file_explorer_page.dart';
-import 'package:app/features/home_page/presentation/pages/home_page.dart';
-import 'package:app/features/libraries_page/presentation/pages/libraries_page.dart';
 import 'package:app/features/login/presentation/pages/login_page.dart';
 import 'package:app/features/media_reader/presentation/pages/media_reader_page.dart';
+import 'package:app/features/search_page/presentation/pages/search_page.dart';
 import 'package:app/features/settings/presentation/pages/cloud_settings_page.dart';
 import 'package:app/features/settings/presentation/pages/settings_page.dart';
 import 'package:app/features/shared_page/presentation/pages/shared_page.dart';
@@ -16,7 +15,6 @@ import 'package:auto_route/auto_route.dart';
   replaceInRouteName: 'Page,Route',
   routes: <AutoRoute>[
     AutoRoute<void>(page: LoginPage, initial: true),
-    AutoRoute<void>(page: HomePage),
     AutoRoute<void>(page: SharedPage),
     AutoRoute<void>(page: FavouritesPage),
     AutoRoute<void>(page: FileExplorerPage),
@@ -24,8 +22,11 @@ import 'package:auto_route/auto_route.dart';
       page: MediaReaderPage,
       fullscreenDialog: true,
     ),
-    AutoRoute<void>(page: LibrariesPage),
     AutoRoute<void>(page: UserProfilePage),
+    AutoRoute<void>(
+      page: SearchPage,
+      fullscreenDialog: true,
+    ),
     AutoRoute<void>(
       page: SettingsPage,
       fullscreenDialog: true,
