@@ -2,7 +2,7 @@ import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/preferences/app_shared_preferences.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:app/features/app/router/guards/admin_guard.dart';
-import 'package:app/features/app/themes/no_transitions.dart';
+import 'package:app/features/app/themes/themes_supplier.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,16 +19,28 @@ class PICloudApp extends StatefulWidget {
 
 class _PICloudAppState extends State<PICloudApp> {
   final _navigatorKey = GlobalKey<NavigatorState>();
-  late final _appRouter = AppRouter(
-    adminGuard: AdminGuard(context.read<AuthManager>()),
-  );
+  late AppRouter _appRouter;
+  late AppSharedPreferences _preferences;
+
+  @override
+  void initState() {
+    _appRouter = AppRouter(
+      adminGuard: AdminGuard(context.read<AuthManager>()),
+    );
+
+    _preferences = context.read<AppSharedPreferences>();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
       key: _navigatorKey,
       title: 'PICloud App',
-      theme: _isDarkTheme() ? _getDarkTheme() : _getLightTheme(),
+      theme: _isDarkTheme()
+          ? ThemesSupplier.getDarkTheme()
+          : ThemesSupplier.getLightTheme(),
       routerDelegate: AutoRouterDelegate(
         _appRouter,
         navigatorObservers: () => [AutoRouteObserver()],
@@ -38,26 +50,9 @@ class _PICloudAppState extends State<PICloudApp> {
     );
   }
 
+  bool _isDarkTheme() => _preferences.useDarkTheme();
+
   void switchTheme() => setState(() {
-        context.read<AppSharedPreferences>().toggleTheme();
+        _preferences.toggleTheme();
       });
-
-  bool _isDarkTheme() => context.read<AppSharedPreferences>().useDarkTheme();
-
-  ThemeData _getDarkTheme() => ThemeData(
-        brightness: Brightness.dark,
-        primaryColor: Colors.blue.shade800,
-        primaryColorLight: Colors.blue,
-        primaryColorDark: Colors.blue.shade900,
-        // ignore: deprecated_member_use
-        accentColor: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        pageTransitionsTheme: NoTransitions(),
-      );
-
-  ThemeData _getLightTheme() => ThemeData(
-        brightness: Brightness.light,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        pageTransitionsTheme: NoTransitions(),
-      );
 }
