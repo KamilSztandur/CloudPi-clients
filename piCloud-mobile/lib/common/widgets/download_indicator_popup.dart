@@ -36,7 +36,6 @@ class DownloadIndicatorPopup {
                   final percents = _getPercentProgress(received, total);
 
                   if (percents == 100) {
-                    print('zamykam');
                     close();
                   } else {
                     setState(() {

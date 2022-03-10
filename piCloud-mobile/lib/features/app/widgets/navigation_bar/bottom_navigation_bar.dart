@@ -75,7 +75,7 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
       }
     }
 
-    return -1;
+    return 0;
   }
 
   void _onItemTapped(int index) => AutoRouter.of(context).replaceAll(

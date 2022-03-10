@@ -43,7 +43,6 @@ class _DisplaySettingsState extends State<DisplaySettings> {
 
   Widget _buildThemeSwitchRow() {
     final isOn = service.isDarkModeEnabled();
-    print("Jest $isOn");
 
     final themeSwitchButton = Switch(
       onChanged: (value) async {
