@@ -89,15 +89,29 @@ class _FileExplorerSelectionAppBarState
 
   Future<void> _onDownloadPressed() async {
     for (final item in _getSelectedItems()) {
-      unawaited(
-        _directoryManager.downloadMediaToDevice(
+      try {
+        await _directoryManager.downloadMediaToDevice(
           item.title,
           item.id!,
           context: context,
           setState: setState,
-        ),
-      );
+        );
+      } catch (exception) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            content: Text('${item.title} download failed.'),
+          ),
+        );
+      }
     }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        content: const Text('Download completed.'),
+      ),
+    );
 
     widget.onActionFinalized();
   }

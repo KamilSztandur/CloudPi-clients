@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:android_path_provider/android_path_provider.dart';
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
 import 'package:app/common/models/file_explorer_item_type.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:mime/mime.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DirectoryManager {
   const DirectoryManager(
@@ -107,33 +109,66 @@ class DirectoryManager {
     BuildContext? context,
     void Function(void Function())? setState,
   }) async {
-    DownloadIndicatorPopup? progressIndicator;
-
-    final dioClient = dio.Dio();
-
     final headers = await _getHeaders();
     final requestUrl = '${Config.apiBaseUrl}/files/file/$pubId';
 
+    final downloadsPath = await AndroidPathProvider.downloadsPath;
+    final fullPath = '$downloadsPath/$name';
+
     if (context != null) {
-      progressIndicator = DownloadIndicatorPopup(
-        context: context,
-        progress: 0,
-      )..show();
+      await _downloadWithGUIIndicator(headers, requestUrl, fullPath, context);
+    } else {
+      await _downloadWithoutGUIIndicator(headers, requestUrl, fullPath);
     }
+  }
 
-    await dioClient.download(
-      requestUrl,
-      '/storage/emulated/0/Download/$name',
-      onReceiveProgress: (received, total) {
-        if (context != null) {
-          progressIndicator!.updateProgress(setState!, received / total);
-        }
-      },
-      options: dio.Options(headers: headers),
-    );
+  Future<void> _downloadWithGUIIndicator(
+    Map<String, String> headers,
+    String requestUrl,
+    String fullPath,
+    BuildContext context,
+  ) async {
+    try {
+      if (await Permission.storage.isDenied) {
+        await Permission.storage.request();
+      }
 
-    if (context != null) {
-      progressIndicator!.close();
+      if (await Permission.storage.isGranted) {
+        final progressIndicator = DownloadIndicatorPopup(
+          context: context,
+          requestUrl: requestUrl,
+          fullPath: fullPath,
+          headers: headers,
+        );
+
+        await progressIndicator.start();
+      }
+    } catch (exception) {
+      rethrow;
+    }
+  }
+
+  Future<void> _downloadWithoutGUIIndicator(
+    Map<String, String> headers,
+    String requestUrl,
+    String fullPath,
+  ) async {
+    final dioClient = dio.Dio();
+
+    try {
+      if (await Permission.storage.isDenied) {
+        await Permission.storage.request();
+      }
+
+      if (await Permission.storage.isGranted) {
+        await dioClient.download(
+          requestUrl,
+          fullPath,
+          options: dio.Options(headers: headers),
+        );
+      }
+    } catch (exception) {
+      rethrow;
     }
   }
 
