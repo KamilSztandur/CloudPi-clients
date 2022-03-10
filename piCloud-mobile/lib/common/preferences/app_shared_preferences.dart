@@ -11,6 +11,13 @@ class AppSharedPreferences {
 
   final SharedPreferences _preferences;
 
+  Future<void> init() async {
+    if (_isUninitialized()) {
+      await setDefaultTheme();
+      await setPreferredViewMode(ViewMode.tile);
+    }
+  }
+
   ViewMode getPreferredViewMode() {
     return ViewModeSerialization.deserialize(
           _preferences.getString(_preferredViewKey),
@@ -25,17 +32,18 @@ class AppSharedPreferences {
         !useDarkTheme(),
       );
 
-  void setPreferredViewMode(ViewMode viewMode) {
-    _preferences.setString(_preferredViewKey, viewMode.serialize());
+  Future<void> setPreferredViewMode(ViewMode viewMode) async =>
+      _preferences.setString(_preferredViewKey, viewMode.serialize());
+
+  Future<void> setDefaultTheme() async {
+    final systemBrightness =
+        SchedulerBinding.instance!.window.platformBrightness;
+    final isDarkMode = systemBrightness == Brightness.dark;
+
+    await _preferences.setBool(_preferredThemeKey, isDarkMode);
   }
 
-  Future<void> setDefaultThemeIfNeeded() async {
-    if (!_preferences.containsKey(_preferredThemeKey)) {
-      final systemBrightness =
-          SchedulerBinding.instance!.window.platformBrightness;
-      final isDarkMode = systemBrightness == Brightness.dark;
-
-      await _preferences.setBool(_preferredThemeKey, isDarkMode);
-    }
-  }
+  bool _isUninitialized() =>
+      !_preferences.containsKey(_preferredThemeKey) ||
+      !_preferences.containsKey(_preferredViewKey);
 }
