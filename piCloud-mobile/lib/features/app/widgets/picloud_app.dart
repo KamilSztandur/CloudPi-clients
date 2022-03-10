@@ -42,7 +42,7 @@ class _PICloudAppState extends State<PICloudApp> {
         context.read<AppSharedPreferences>().toggleTheme();
       });
 
-  bool _isDarkTheme() => !context.read<AppSharedPreferences>().useDarkTheme();
+  bool _isDarkTheme() => context.read<AppSharedPreferences>().useDarkTheme();
 
   ThemeData _getDarkTheme() => ThemeData(
         brightness: Brightness.dark,
