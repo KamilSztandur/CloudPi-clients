@@ -45,6 +45,9 @@ class _DisplaySettingsState extends State<DisplaySettings> {
     final isOn = service.isDarkModeEnabled();
 
     final themeSwitchButton = Switch(
+      activeColor: Theme.of(context).brightness == Brightness.dark
+          ? Theme.of(context).primaryColorLight
+          : Theme.of(context).primaryColorDark,
       onChanged: (value) async {
         setState(() {
           PICloudApp.of(context)!.switchTheme();
