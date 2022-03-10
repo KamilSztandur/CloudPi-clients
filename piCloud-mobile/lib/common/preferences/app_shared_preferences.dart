@@ -12,8 +12,11 @@ class AppSharedPreferences {
   final SharedPreferences _preferences;
 
   Future<void> init() async {
-    if (_isUninitialized()) {
+    if (!_preferences.containsKey(_preferredThemeKey)) {
       await setDefaultTheme();
+    }
+
+    if (!_preferences.containsKey(_preferredViewKey)) {
       await setPreferredViewMode(ViewMode.tile);
     }
   }
@@ -42,8 +45,4 @@ class AppSharedPreferences {
 
     await _preferences.setBool(_preferredThemeKey, isDarkMode);
   }
-
-  bool _isUninitialized() =>
-      !_preferences.containsKey(_preferredThemeKey) ||
-      !_preferences.containsKey(_preferredViewKey);
 }
