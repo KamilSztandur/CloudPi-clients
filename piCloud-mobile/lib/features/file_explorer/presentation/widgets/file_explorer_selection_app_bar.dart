@@ -100,7 +100,10 @@ class _FileExplorerSelectionAppBarState
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             backgroundColor: Theme.of(context).primaryColor,
-            content: Text('${item.title} download failed.'),
+            content: Text(
+              '${item.title} download failed.',
+              style: const TextStyle(color: Colors.white),
+            ),
           ),
         );
       }
@@ -109,7 +112,10 @@ class _FileExplorerSelectionAppBarState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: Theme.of(context).primaryColor,
-        content: const Text('Download completed.'),
+        content: const Text(
+          'Download completed.',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     );
 

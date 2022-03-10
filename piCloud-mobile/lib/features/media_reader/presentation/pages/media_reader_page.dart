@@ -117,14 +117,20 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Theme.of(context).primaryColor,
-          content: const Text('Download completed.'),
+          content: const Text(
+            'Download completed.',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       );
     } catch (exception) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           backgroundColor: Theme.of(context).primaryColor,
-          content: Text('${widget.resourceName} download failed.'),
+          content: Text(
+            '${widget.resourceName} download failed.',
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
       );
     }
@@ -161,7 +167,10 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: Theme.of(context).primaryColor,
-        content: Text(message),
+        content: Text(
+          message,
+          style: const TextStyle(color: Colors.white),
+        ),
       ),
     );
   }
