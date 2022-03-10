@@ -51,12 +51,11 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
       child: BottomNavigationBar(
         currentIndex: _getCurrentlySelectedItem(),
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedIconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-        unselectedIconTheme: const IconThemeData(color: Colors.black),
+        unselectedIconTheme: IconThemeData(
+          color: Theme.of(context).iconTheme.color,
+        ),
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
         selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.black,
         showUnselectedLabels: true,
         onTap: _onItemTapped,
         items: items,
@@ -74,6 +73,8 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
         return i;
       }
     }
+
+    AutoRouter.of(context).stack.clear();
 
     return 0;
   }
