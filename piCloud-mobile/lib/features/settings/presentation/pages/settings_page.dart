@@ -1,5 +1,6 @@
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
 import 'package:app/features/settings/presentation/widgets/setting_panel.dart';
+import 'package:app/features/settings/presentation/widgets/settings/display_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -35,30 +36,10 @@ class _SettingsPageState extends State<SettingsPage> {
 
   List<Widget> _getPanels() {
     final panels = <Widget>[
-      SettingsPanel(
-        header: 'Account',
-        icon: MdiIcons.accountOutline,
-        subPanel: Container(),
-      ),
-      SettingsPanel(
-        header: 'Notifications',
-        icon: MdiIcons.bellOutline,
-        subPanel: Container(),
-      ),
-      SettingsPanel(
+      const SettingsPanel(
         header: 'Display',
         icon: MdiIcons.brush,
-        subPanel: Container(),
-      ),
-      SettingsPanel(
-        header: 'Data transfer',
-        icon: MdiIcons.cloudDownloadOutline,
-        subPanel: Container(),
-      ),
-      SettingsPanel(
-        header: 'Help',
-        icon: MdiIcons.helpCircleOutline,
-        subPanel: Container(),
+        subPanel: DisplaySettings(),
       ),
     ];
 
