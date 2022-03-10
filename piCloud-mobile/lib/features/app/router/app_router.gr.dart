@@ -61,8 +61,10 @@ class AppRouter extends _i11.RootStackRouter {
           fullscreenDialog: true);
     },
     UserProfileRoute.name: (routeData) {
+      final args = routeData.argsAs<UserProfileRouteArgs>();
       return _i11.MaterialPageX<void>(
-          routeData: routeData, child: const _i6.UserProfilePage());
+          routeData: routeData,
+          child: _i6.UserProfilePage(key: args.key, username: args.username));
     },
     SearchRoute.name: (routeData) {
       final args = routeData.argsAs<SearchRouteArgs>(
@@ -190,10 +192,21 @@ class MediaReaderRouteArgs {
 }
 
 /// generated route for [_i6.UserProfilePage]
-class UserProfileRoute extends _i11.PageRouteInfo<void> {
-  const UserProfileRoute() : super(name, path: '/user-profile-page');
+class UserProfileRoute extends _i11.PageRouteInfo<UserProfileRouteArgs> {
+  UserProfileRoute({_i12.Key? key, required String username})
+      : super(name,
+            path: '/user-profile-page',
+            args: UserProfileRouteArgs(key: key, username: username));
 
   static const String name = 'UserProfileRoute';
+}
+
+class UserProfileRouteArgs {
+  const UserProfileRouteArgs({this.key, required this.username});
+
+  final _i12.Key? key;
+
+  final String username;
 }
 
 /// generated route for [_i7.SearchPage]

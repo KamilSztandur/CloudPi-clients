@@ -1,9 +1,13 @@
+import 'package:app/common/auth/auth_manager.dart';
+import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
+import 'package:app/features/app/widgets/app_bar/user_profile_image.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
 import 'package:app/features/settings/presentation/widgets/cloud_settings/dialogs/submit_user_delete.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 class RegisteredUsersView extends StatefulWidget {
   const RegisteredUsersView({
@@ -15,7 +19,13 @@ class RegisteredUsersView extends StatefulWidget {
 }
 
 class _RegisteredUsersViewState extends State<RegisteredUsersView> {
-  final UsersService service = UsersService();
+  late UsersService service;
+
+  @override
+  void initState() {
+    service = UsersService(context.read<Api>(), context.read<AuthManager>());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +95,9 @@ class _RegisteredUsersViewState extends State<RegisteredUsersView> {
 
   Widget _buildTile(User user) {
     return ListTile(
-      leading: CircleAvatar(
-        foregroundImage: Image.asset('assets/profilepic.jpg').image,
+      leading: UserProfileImage(
+        username: user.username,
+        size: 40,
       ),
       title: Text(user.nickname),
       subtitle: Text(_getAccountTypeSubtlitle(user.accountType)),
@@ -169,7 +180,7 @@ class _RegisteredUsersViewState extends State<RegisteredUsersView> {
       );
 
   void _onInfoPressed(User user) {
-    //TODO
+    AutoRouter.of(context).navigate(UserProfileRoute(username: user.username));
   }
 
   Widget _loadingIndicator() {

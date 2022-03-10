@@ -15,7 +15,6 @@ import 'package:app/features/media_reader/presentation/widgets/txt_preview.dart'
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:leancode_lint/leancode_lint.dart';
 
 class MediaReaderPage extends StatefulWidget {
   const MediaReaderPage({

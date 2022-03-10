@@ -41,6 +41,8 @@ class MainDrawer extends StatelessWidget {
   }
 
   Future<Widget> _getDrawerHeader(AuthManager authManager) async {
+    final username = await authManager.getUsernameOfLoggedUser();
+
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -52,13 +54,18 @@ class MainDrawer extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const SizedBox(
+              SizedBox(
                 height: 70,
                 width: 74,
-                child: UserProfileImage(size: 60),
+                child: UserProfileImage(
+                  size: 60,
+                  username: username!,
+                ),
               ),
               Text(
-                await authManager.getUsernameOfLoggedUser() ?? '',
+                username,
+                maxLines: 1,
+                overflow: TextOverflow.fade,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 28,
@@ -119,8 +126,13 @@ class MainDrawer extends StatelessWidget {
     );
   }
 
-  void _onUserProfileTapped(BuildContext context) =>
-      AutoRouter.of(context).navigate(const UserProfileRoute());
+  void _onUserProfileTapped(BuildContext context) {
+    final authManager = context.read<AuthManager>();
+    authManager.getUsernameOfLoggedUser().then<void>(
+          (value) => AutoRouter.of(context)
+              .navigate(UserProfileRoute(username: value!)),
+        );
+  }
 
   void _onSettingsTapped(BuildContext context) =>
       AutoRouter.of(context).navigate(const SettingsRoute());

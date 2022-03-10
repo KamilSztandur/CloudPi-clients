@@ -1,7 +1,11 @@
+import 'package:app/common/auth/auth_manager.dart';
+import 'package:app/contracts/api.swagger.dart';
+import 'package:app/contracts/client_index.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 class ManageAdministratorsView extends StatefulWidget {
   const ManageAdministratorsView({
@@ -14,8 +18,14 @@ class ManageAdministratorsView extends StatefulWidget {
 }
 
 class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
-  final UsersService _service = UsersService();
-  Map<String, bool>? _permissionsDictionary;
+  late UsersService service;
+  Map<User, bool>? _permissionsDictionary;
+
+  @override
+  void initState() {
+    service = UsersService(context.read<Api>(), context.read<AuthManager>());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,12 +100,12 @@ class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
             return _buildListHeader();
           }
 
-          final username = _permissionsDictionary!.keys.elementAt(index);
-          final isChecked = _permissionsDictionary![username];
+          final user = _permissionsDictionary!.keys.elementAt(index);
+          final isChecked = _permissionsDictionary![user];
 
           return ListTile(
-            title: Text(username),
-            trailing: _buildCheckBox(username, isChecked),
+            title: Text('${user.username} (${user.nickname})'),
+            trailing: _buildCheckBox(user, isChecked),
           );
         },
       ),
@@ -105,7 +115,7 @@ class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
   Widget _buildListHeader() {
     return const ListTile(
       title: Text(
-        'Username',
+        'Username (nickname)',
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 17.5,
@@ -121,11 +131,11 @@ class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
     );
   }
 
-  Widget _buildCheckBox(String username, bool? value) {
+  Widget _buildCheckBox(User user, bool? value) {
     return Checkbox(
       onChanged: (value) => setState(() {
-        final currentValue = _permissionsDictionary![username] ?? false;
-        _permissionsDictionary![username] = !currentValue;
+        final currentValue = _permissionsDictionary![user] ?? false;
+        _permissionsDictionary![user] = !currentValue;
       }),
       value: value,
     );
@@ -146,22 +156,45 @@ class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
   void _onCancelPressed() => AutoRouter.of(context).pop();
 
   void _onSubmitPressed() {
-    //TODO
+    final api = context.read<Api>();
+
+    _permissionsDictionary!.forEach((key, value) async {
+      if (value && !_isAdmin(key)) {
+        await api.rolesPost(
+          body: PostRoleRequest(
+            username: key.username,
+            roles: <PostRoleRequestRoles>[
+              PostRoleRequestRoles.admin,
+            ],
+          ),
+        );
+      } else if (!value && _isAdmin(key)) {
+        await api.rolesDelete(
+          body: DeleteRoleRequest(
+            username: key.username,
+            roles: <DeleteRoleRequestRoles>[
+              DeleteRoleRequestRoles.admin,
+            ],
+          ),
+        );
+      }
+    });
+
+    AutoRouter.of(context).pop();
   }
 
   bool _isAdmin(User user) => user.accountType == AccountType.admin;
 
-  Future<Map<String, bool>> _initializeAdminsDictionary() async {
+  Future<Map<User, bool>> _initializeAdminsDictionary() async {
     if (_permissionsDictionary == null) {
-      _permissionsDictionary = <String, bool>{};
+      _permissionsDictionary = <User, bool>{};
 
-      final users = await _service.getAllRegisteredUsers();
+      final users = await service.getAllRegisteredUsers();
 
       for (final user in users) {
-        final username = user.nickname;
         final isAdmin = _isAdmin(user);
 
-        _permissionsDictionary![username] = isAdmin;
+        _permissionsDictionary![user] = isAdmin;
       }
     }
 

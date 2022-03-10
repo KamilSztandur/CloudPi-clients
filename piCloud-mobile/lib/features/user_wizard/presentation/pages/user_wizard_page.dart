@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:app/common/auth/auth_manager.dart';
+import 'package:app/contracts/client_index.dart';
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
 import 'package:app/features/settings/data/admin_services/users_service.dart';
+import 'package:app/features/user_wizard/data/models/image_wrapper.dart';
 import 'package:app/features/user_wizard/data/models/user.dart';
 import 'package:app/features/user_wizard/presentation/widgets/input_field.dart';
 import 'package:app/features/user_wizard/presentation/widgets/memory_allocation_input.dart';
@@ -7,6 +12,7 @@ import 'package:app/features/user_wizard/presentation/widgets/password_input_fie
 import 'package:app/features/user_wizard/presentation/widgets/user_avatar_input.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/src/provider.dart';
 
 class UserWizardPage extends StatefulWidget {
   const UserWizardPage({
@@ -22,13 +28,13 @@ class UserWizardPage extends StatefulWidget {
 
 class _UserWizardPageState extends State<UserWizardPage> {
   final ScrollController _scrollController = ScrollController();
-  final UsersService service = UsersService();
+  late UsersService service;
   late User user;
 
   @override
   void initState() {
     _initializeDefaultUserData();
-
+    service = UsersService(context.read<Api>(), context.read<AuthManager>());
     super.initState();
   }
 
@@ -36,7 +42,7 @@ class _UserWizardPageState extends State<UserWizardPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PICloudAppBar(
-        title: widget.user == null ? 'Create new user' : 'Edit user',
+        title: _isThisNewUserCreation() ? 'Create new user' : 'Edit user',
       ),
       body: SingleChildScrollView(
         controller: _scrollController,
@@ -54,13 +60,27 @@ class _UserWizardPageState extends State<UserWizardPage> {
                     hintText: 'johnsmith',
                     onChanged: _onUsernameChanged,
                     initialValue: user.username,
+                    isEnabled: _isThisNewUserCreation(),
                   ),
                 ),
                 Container(
                   height: 75,
                   padding: const EdgeInsets.only(right: 20),
-                  child: UserAvatarInput(
-                    imagePicked: _onUserAvatarChanged,
+                  child: FutureBuilder(
+                    future: service.getCurrentProfilePic(user.username),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        final wrappedImage = snapshot.data! as ImageWrapper;
+                        return UserAvatarInput(
+                          imagePicked: _onUserAvatarChanged,
+                          oldImage: _isThisNewUserCreation()
+                              ? null
+                              : wrappedImage.image,
+                        );
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    },
                   ),
                 ),
               ],
@@ -71,13 +91,15 @@ class _UserWizardPageState extends State<UserWizardPage> {
               hintText: 'John Smith',
               onChanged: _onNicknameChanged,
               initialValue: user.nickname,
+              isEnabled: true,
             ),
             const SizedBox(height: 10),
             InputFieldPassword(
-              headerText: 'Password',
-              hintTexti: 'At least 8 Charecter',
+              headerText: _isThisNewUserCreation()
+                  ? 'Password'
+                  : 'New Password (or empty)',
+              hintTexti: 'At least 8 characters',
               onPasswordChanged: _onPasswordChanged,
-              initialValue: user.password,
             ),
             const SizedBox(height: 10),
             InputField(
@@ -85,6 +107,7 @@ class _UserWizardPageState extends State<UserWizardPage> {
               hintText: 'john@smith.eu',
               onChanged: _onEmailChanged,
               initialValue: user.email,
+              isEnabled: true,
             ),
             const SizedBox(height: 10),
             MemoryAllocationInput(
@@ -111,9 +134,9 @@ class _UserWizardPageState extends State<UserWizardPage> {
         width: double.infinity,
         child: ElevatedButton(
           onPressed: _onCreatePressed,
-          child: const Text(
-            'Create',
-            style: TextStyle(
+          child: Text(
+            widget.user == null ? 'Create' : 'Save changes',
+            style: const TextStyle(
               fontSize: 22.5,
               color: Colors.white,
             ),
@@ -152,7 +175,7 @@ class _UserWizardPageState extends State<UserWizardPage> {
 
   void _onEmailChanged(String value) => user.email = value;
 
-  void _onUserAvatarChanged(Image value) => user.profilePic = value;
+  void _onUserAvatarChanged(File value) => user.profilePic = value;
 
   void _onMemoryAllocationChanged(double value) =>
       user.allocatedMemoryInMb = value;
@@ -160,7 +183,8 @@ class _UserWizardPageState extends State<UserWizardPage> {
   void _onCancelPressed() => AutoRouter.of(context).pop();
 
   void _onCreatePressed() {
-    final errorMessage = service.getWarningMessageForUserData(user);
+    final errorMessage =
+        service.getWarningMessageForUserData(user, _isThisNewUserCreation());
 
     if (errorMessage == null) {
       if (_isThisNewUserCreation()) {
@@ -168,9 +192,14 @@ class _UserWizardPageState extends State<UserWizardPage> {
       } else {
         service.editUser(user);
       }
+
+      AutoRouter.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
+        SnackBar(
+          content: Text(errorMessage),
+          backgroundColor: Theme.of(context).primaryColor,
+        ),
       );
     }
   }

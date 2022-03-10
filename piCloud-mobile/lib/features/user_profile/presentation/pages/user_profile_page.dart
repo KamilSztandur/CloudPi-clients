@@ -4,17 +4,21 @@ import 'package:app/features/user_profile/presentation/widgets/profile_page_cont
 import 'package:flutter/material.dart';
 
 class UserProfilePage extends StatelessWidget {
-  const UserProfilePage({Key? key}) : super(key: key);
+  const UserProfilePage({Key? key, required this.username}) : super(key: key);
+
+  final String username;
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: PICloudAppBar(
+    return Scaffold(
+      appBar: const PICloudAppBar(
         title: 'User Profile',
         actions: [],
       ),
-      drawer: MainDrawer(),
-      body: ProfilePageContent(),
+      drawer: const MainDrawer(),
+      body: ProfilePageContent(
+        username: username,
+      ),
     );
   }
 }
