@@ -40,7 +40,9 @@ class _MemoryAlocationState extends State<MemoryAllocationInput> {
           child: Text(
             widget.headerText,
             style: TextStyle(
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).primaryColorLight
+                  : Theme.of(context).primaryColorDark,
               fontSize: 17.5,
               fontWeight: FontWeight.w500,
             ),
@@ -51,7 +53,9 @@ class _MemoryAlocationState extends State<MemoryAllocationInput> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             border: Border.all(
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).primaryColorLight
+                  : Theme.of(context).primaryColorDark,
             ),
           ),
           child: Padding(
@@ -62,7 +66,9 @@ class _MemoryAlocationState extends State<MemoryAllocationInput> {
                 Text(
                   '${currentValue.ceil()} Mb',
                   style: TextStyle(
-                    color: Theme.of(context).primaryColorDark,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Theme.of(context).primaryColorLight
+                        : Theme.of(context).primaryColorDark,
                     fontSize: 17.5,
                     fontWeight: FontWeight.w500,
                   ),

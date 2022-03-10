@@ -41,7 +41,7 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
+            color: Colors.black.withOpacity(0.15),
             spreadRadius: 5,
             blurRadius: 7,
             offset: const Offset(0, -1),
@@ -55,7 +55,7 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
           color: Theme.of(context).iconTheme.color,
         ),
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-        selectedItemColor: Colors.blue,
+        selectedItemColor: Theme.of(context).primaryColor,
         showUnselectedLabels: true,
         onTap: _onItemTapped,
         items: items,
@@ -64,17 +64,14 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
   }
 
   int _getCurrentlySelectedItem() {
-    final currentRoute =
-        AutoRouter.of(context).current.route.toRoute().routeName;
+    final currentRoute = AutoRouter.of(context).current.route.toRoute();
 
     final n = items.length;
     for (var i = 0; i < n; i++) {
-      if (items[i].route.routeName == currentRoute) {
+      if (items[i].route.routeName == currentRoute.routeName) {
         return i;
       }
     }
-
-    AutoRouter.of(context).stack.clear();
 
     return 0;
   }

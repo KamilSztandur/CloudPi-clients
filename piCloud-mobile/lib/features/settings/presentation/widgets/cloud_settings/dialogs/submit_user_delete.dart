@@ -100,7 +100,10 @@ class _DeleteUserViewState extends State<DeleteUserView> {
         style: OutlinedButton.styleFrom(
           primary: Colors.black.withOpacity(0.65),
         ),
-        child: const Text('Cancel'),
+        child: Text(
+          'Cancel',
+          style: TextStyle(color: Theme.of(context).textTheme.bodyText1!.color),
+        ),
       ),
       ElevatedButton(
         onPressed: _onDeletePressed,

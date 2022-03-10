@@ -57,7 +57,9 @@ class CreateDirectoryPopup {
         'Create new directory',
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: Theme.of(context).primaryColorDark,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).primaryColorLight
+              : Theme.of(context).primaryColorDark,
           fontWeight: FontWeight.bold,
         ),
       );
@@ -69,7 +71,9 @@ class CreateDirectoryPopup {
           Text(
             'Name',
             style: TextStyle(
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).primaryColorLight
+                  : Theme.of(context).primaryColorDark,
               fontSize: 15,
             ),
           ),

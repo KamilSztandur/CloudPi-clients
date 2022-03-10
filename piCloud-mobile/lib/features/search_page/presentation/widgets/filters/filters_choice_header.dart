@@ -16,7 +16,9 @@ class FiltersChoiceHeader extends StatelessWidget {
         title,
         textAlign: TextAlign.left,
         style: TextStyle(
-          color: Theme.of(context).primaryColorDark,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).primaryColorLight
+              : Theme.of(context).primaryColorDark,
           fontSize: 15,
         ),
       ),

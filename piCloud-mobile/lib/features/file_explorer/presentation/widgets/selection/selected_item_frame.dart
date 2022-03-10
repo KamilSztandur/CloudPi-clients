@@ -54,10 +54,12 @@ class _SelectedFileIcon extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         shape: BoxShape.circle,
         border: Border.all(
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).primaryColorLight
+              : Theme.of(context).primaryColorDark,
           width: 1.5,
         ),
       ),
@@ -70,7 +72,9 @@ class _SelectedFileIcon extends StatelessWidget {
                 fit: BoxFit.fill,
                 child: Icon(
                   Icons.check,
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Theme.of(context).primaryColorLight
+                      : Theme.of(context).primaryColorDark,
                 ),
               ),
             ),

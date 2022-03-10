@@ -17,7 +17,7 @@ class FileExplorerItemDateLabel extends StatelessWidget {
       _getDateLabelText(),
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
-      style: TextStyle(color: Colors.grey.shade700),
+      style: TextStyle(color: Theme.of(context).hintColor),
     );
   }
 

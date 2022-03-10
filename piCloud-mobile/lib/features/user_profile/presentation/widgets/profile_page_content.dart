@@ -71,10 +71,12 @@ class _ProfilePageContentState extends State<ProfilePageContent> {
         ),
         Container(
           height: 30,
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: Colors.black26,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Theme.of(context).primaryColorLight
+                    : Theme.of(context).primaryColorDark,
               ),
             ),
           ),

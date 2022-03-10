@@ -62,7 +62,12 @@ class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
               0.65,
             ),
           ),
-          child: const Text('Cancel'),
+          child: Text(
+            'Cancel',
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyText1!.color,
+            ),
+          ),
         ),
       ],
     );

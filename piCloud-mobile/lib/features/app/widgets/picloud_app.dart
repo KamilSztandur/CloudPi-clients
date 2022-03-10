@@ -46,7 +46,9 @@ class _PICloudAppState extends State<PICloudApp> {
 
   ThemeData _getDarkTheme() => ThemeData(
         brightness: Brightness.dark,
-        primaryColor: Colors.blue.shade900,
+        primaryColor: Colors.blue.shade800,
+        primaryColorLight: Colors.blue,
+        primaryColorDark: Colors.blue.shade900,
         // ignore: deprecated_member_use
         accentColor: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,

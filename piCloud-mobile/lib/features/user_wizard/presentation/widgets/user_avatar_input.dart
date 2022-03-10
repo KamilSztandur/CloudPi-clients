@@ -38,7 +38,9 @@ class _UserAvatarInputState extends State<UserAvatarInput> {
         child: Container(
           padding: const EdgeInsets.all(0.5),
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Theme.of(context).primaryColorLight
+                : Theme.of(context).primaryColorDark,
             shape: BoxShape.circle,
           ),
           child: CircleAvatar(

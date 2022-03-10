@@ -29,17 +29,17 @@ class PreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
       titleSpacing: 0,
       title: Text(
         resourceName,
-        style: const TextStyle(color: Colors.black87),
+        style: TextStyle(color: Theme.of(context).textTheme.bodyText1!.color),
       ),
       leading: _buildLeading(context),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       shadowColor: Colors.transparent,
       actions: [
         PopupMenuButton(
           onSelected: _onHamburgerItemPressed,
-          icon: const Icon(
+          icon: Icon(
             Icons.more_vert_rounded,
-            color: Colors.black87,
+            color: Theme.of(context).iconTheme.color,
           ),
           itemBuilder: (context) => _getHamburgerMenuBody()
               .map(
@@ -47,13 +47,15 @@ class PreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
                   value: choice,
                   child: Row(
                     children: [
-                      Icon(choice.icon, color: Colors.black87),
+                      Icon(
+                        choice.icon,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
                       Flexible(
                         child: Padding(
                           padding: const EdgeInsets.only(left: 8),
                           child: Text(
                             choice.title!,
-                            style: const TextStyle(color: Colors.black87),
                           ),
                         ),
                       ),
@@ -71,7 +73,7 @@ class PreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
     return IconButton(
       onPressed: AutoRouter.of(context).pop,
       icon: const Icon(Icons.arrow_back),
-      color: Colors.black87,
+      color: Theme.of(context).iconTheme.color,
     );
   }
 

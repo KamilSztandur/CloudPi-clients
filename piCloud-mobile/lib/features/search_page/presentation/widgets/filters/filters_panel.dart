@@ -55,7 +55,7 @@ class _FiltersPanelState extends State<FiltersPanel> {
         'Edit search filters',
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: Theme.of(context).primaryColorDark,
+          color: _getMainColor(),
         ),
       );
 
@@ -103,7 +103,7 @@ class _FiltersPanelState extends State<FiltersPanel> {
     final frame = Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: Theme.of(context).primaryColorDark,
+          color: _getMainColor(),
         ),
         borderRadius: const BorderRadius.all(Radius.circular(5)),
       ),
@@ -123,4 +123,8 @@ class _FiltersPanelState extends State<FiltersPanel> {
   }
 
   void _close() => AutoRouter.of(context).pop();
+
+  Color _getMainColor() => Theme.of(context).brightness == Brightness.dark
+      ? Theme.of(context).primaryColorLight
+      : Theme.of(context).primaryColorDark;
 }

@@ -68,7 +68,9 @@ class _UserSettingsPanelState extends State<UserSettingsPanel> {
                 return Text(
                   '$amount',
                   style: TextStyle(
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Theme.of(context).primaryColorLight
+                        : Theme.of(context).primaryColorDark,
                     fontSize: 17.5,
                   ),
                 );

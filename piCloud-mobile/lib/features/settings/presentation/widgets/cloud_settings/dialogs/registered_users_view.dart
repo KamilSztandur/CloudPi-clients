@@ -49,9 +49,7 @@ class _RegisteredUsersViewState extends State<RegisteredUsersView> {
         ElevatedButton(
           onPressed: AutoRouter.of(context).pop,
           style: ElevatedButton.styleFrom(
-            primary: Colors.black.withOpacity(
-              0.65,
-            ),
+            primary: Theme.of(context).primaryColor,
           ),
           child: const Text('Close'),
         ),
