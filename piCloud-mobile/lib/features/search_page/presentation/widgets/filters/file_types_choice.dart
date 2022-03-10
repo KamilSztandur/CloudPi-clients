@@ -45,8 +45,8 @@ class _FileTypesChoiceState extends State<FileTypesChoice> {
               }),
               activeColor: Theme.of(context).brightness == Brightness.dark
                   ? Colors.blueGrey
-                  : Colors.white,
-              hoverColor: Colors.white,
+                  : Colors.black,
+              hoverColor: Colors.black,
             );
 
             return Row(

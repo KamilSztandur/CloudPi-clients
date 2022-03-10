@@ -15,7 +15,7 @@ class LoadingPanel extends StatelessWidget {
               height: size,
               width: size,
               child: CircularProgressIndicator(
-                color: Theme.of(context).primaryColorDark,
+                color: _getMainColor(context),
                 strokeWidth: 5,
               ),
             ),
@@ -25,7 +25,7 @@ class LoadingPanel extends StatelessWidget {
               'Please wait...',
               style: TextStyle(
                 fontSize: 25,
-                color: Theme.of(context).primaryColorDark,
+                color: _getMainColor(context),
               ),
             ),
           ),
@@ -33,4 +33,9 @@ class LoadingPanel extends StatelessWidget {
       ),
     );
   }
+
+  Color _getMainColor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark
+          ? Theme.of(context).primaryColorLight
+          : Theme.of(context).primaryColorDark;
 }
