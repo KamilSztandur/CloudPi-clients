@@ -50,10 +50,12 @@ class UsernameInputField extends StatelessWidget {
             child: TextField(
               controller: _controller,
               onChanged: onChanged,
+              style: const TextStyle(color: Colors.black87),
               onSubmitted: (value) => onSubmitted(),
               decoration: const InputDecoration(
                 hintText: 'Username',
                 border: InputBorder.none,
+                hintStyle: TextStyle(color: Colors.grey),
               ),
             ),
           ),

@@ -33,7 +33,9 @@ class InputField extends StatelessWidget {
           child: Text(
             headerText,
             style: TextStyle(
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).primaryColorLight
+                  : Theme.of(context).primaryColorDark,
               fontSize: 17.5,
               fontWeight: FontWeight.w500,
             ),
@@ -44,7 +46,9 @@ class InputField extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             border: Border.all(
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).primaryColorLight
+                  : Theme.of(context).primaryColorDark,
             ),
           ),
           child: Padding(

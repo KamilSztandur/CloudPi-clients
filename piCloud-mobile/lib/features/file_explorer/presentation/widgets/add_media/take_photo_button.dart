@@ -17,7 +17,7 @@ class TakePhotoButton extends SpeedDialChild {
             size: 35,
           ),
           foregroundColor: Colors.white,
-          backgroundColor: Colors.blue,
+          backgroundColor: Theme.of(context).primaryColor,
           labelWidget: const Padding(
             padding: EdgeInsets.all(10),
             child: Text(

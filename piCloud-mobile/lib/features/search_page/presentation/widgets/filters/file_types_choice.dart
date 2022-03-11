@@ -43,8 +43,10 @@ class _FileTypesChoiceState extends State<FileTypesChoice> {
               onChanged: (newValue) => setState(() {
                 widget.settings.allowedFileTypes![type] = newValue ?? false;
               }),
-              activeColor: Colors.black,
-              hoverColor: Colors.white,
+              activeColor: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.blueGrey
+                  : Colors.black,
+              hoverColor: Colors.black,
             );
 
             return Row(

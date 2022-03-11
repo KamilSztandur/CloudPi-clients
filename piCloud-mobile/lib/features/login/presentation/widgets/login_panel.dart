@@ -65,6 +65,7 @@ class _LoginPanelState extends State<LoginPanel> {
 
   Widget _buildLoginPanel(LoginState state) {
     return AlertDialog(
+      backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(
           Radius.circular(20),

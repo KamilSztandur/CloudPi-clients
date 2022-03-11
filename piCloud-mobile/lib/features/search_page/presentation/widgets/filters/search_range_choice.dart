@@ -31,11 +31,10 @@ class _SearchRangeChoiceState extends State<SearchRangeChoice> {
         isExpanded: true,
         underline: Container(),
         icon: const Icon(Icons.expand_more),
-        iconEnabledColor: Colors.black,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 15,
-          color: Colors.black,
           overflow: TextOverflow.ellipsis,
+          color: Theme.of(context).textTheme.bodyText1!.color,
         ),
         items: SearchRange.values.map<DropdownMenuItem<SearchRange>>(
           (value) {

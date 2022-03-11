@@ -40,9 +40,9 @@ class _AddMediaButtonState extends State<AddMediaButton> {
     return SpeedDial(
       icon: Icons.add,
       activeIcon: Icons.close,
-      backgroundColor: Colors.blue,
+      backgroundColor: Theme.of(context).primaryColor,
       foregroundColor: Colors.white,
-      activeBackgroundColor: Colors.blueGrey,
+      activeBackgroundColor: Colors.grey,
       activeForegroundColor: Colors.white,
       childrenButtonSize: 75,
       curve: Curves.bounceIn,

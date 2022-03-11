@@ -50,7 +50,6 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
         child: Text(
           _getMinDayText(),
           textAlign: TextAlign.left,
-          style: const TextStyle(color: Colors.black),
         ),
       );
 
@@ -59,7 +58,6 @@ class _DateRangeChoiceState extends State<DateRangeChoice> {
         child: Text(
           _getMaxDayText(),
           textAlign: TextAlign.right,
-          style: const TextStyle(color: Colors.black),
         ),
       );
 

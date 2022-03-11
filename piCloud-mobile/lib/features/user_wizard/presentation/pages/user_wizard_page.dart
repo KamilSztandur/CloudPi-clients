@@ -197,7 +197,10 @@ class _UserWizardPageState extends State<UserWizardPage> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(errorMessage),
+          content: Text(
+            errorMessage,
+            style: const TextStyle(color: Colors.white),
+          ),
           backgroundColor: Theme.of(context).primaryColor,
         ),
       );

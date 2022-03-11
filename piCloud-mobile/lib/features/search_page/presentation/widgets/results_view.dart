@@ -68,10 +68,10 @@ class _ResultsViewState extends State<ResultsView> {
         padding: EdgeInsets.all(size * 0.15),
         height: size,
         width: size,
-        child: const FittedBox(
+        child: FittedBox(
           child: Icon(
             Icons.search,
-            color: Colors.white,
+            color: Theme.of(context).scaffoldBackgroundColor,
           ),
         ),
       ),
@@ -82,10 +82,10 @@ class _ResultsViewState extends State<ResultsView> {
         padding: const EdgeInsets.all(10),
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).scaffoldBackgroundColor,
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.4),
+              color: Colors.black.withOpacity(0.2),
               spreadRadius: 5,
               blurRadius: 3,
               offset: const Offset(0, 0.3),
@@ -100,7 +100,9 @@ class _ResultsViewState extends State<ResultsView> {
             text: 'Searching in\n',
             style: TextStyle(
               fontSize: 15,
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).primaryColorLight
+                  : Theme.of(context).primaryColorDark,
               fontWeight: FontWeight.bold,
             ),
             children: <TextSpan>[
@@ -108,7 +110,9 @@ class _ResultsViewState extends State<ResultsView> {
                 text: widget.path,
                 style: TextStyle(
                   fontSize: 15,
-                  color: Theme.of(context).primaryColorDark,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Theme.of(context).primaryColorLight
+                      : Theme.of(context).primaryColorDark,
                   fontWeight: FontWeight.normal,
                 ),
               ),
@@ -121,10 +125,10 @@ class _ResultsViewState extends State<ResultsView> {
         padding: const EdgeInsets.all(10),
         width: double.infinity,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).scaffoldBackgroundColor,
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.4),
+              color: Colors.black.withOpacity(0.2),
               spreadRadius: 5,
               blurRadius: 3,
               offset: const Offset(0, 0.3),
@@ -139,14 +143,18 @@ class _ResultsViewState extends State<ResultsView> {
             text: 'Search results for\n',
             style: TextStyle(
               fontSize: 15,
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).primaryColorLight
+                  : Theme.of(context).primaryColorDark,
             ),
             children: <TextSpan>[
               TextSpan(
                 text: (widget.searchState.props[0] as SearchQueryModel).name,
                 style: TextStyle(
                   fontSize: 25,
-                  color: Theme.of(context).primaryColorDark,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Theme.of(context).primaryColorLight
+                      : Theme.of(context).primaryColorDark,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -168,16 +176,16 @@ class _ResultsViewState extends State<ResultsView> {
             maxLines: 2,
             text: TextSpan(
               text: 'No results for \n',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 25,
-                color: Theme.of(context).primaryColorDark,
+                color: Colors.grey,
               ),
               children: <TextSpan>[
                 TextSpan(
                   text: (widget.searchState.props[0] as SearchQueryModel).name,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 35,
-                    color: Theme.of(context).primaryColorDark,
+                    color: Colors.grey,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -185,6 +193,7 @@ class _ResultsViewState extends State<ResultsView> {
             ),
           ),
         ),
+        const SizedBox(height: 20),
         Center(
           child: Container(
             decoration: BoxDecoration(
@@ -194,10 +203,10 @@ class _ResultsViewState extends State<ResultsView> {
             padding: EdgeInsets.all(size * 0.15),
             height: size,
             width: size,
-            child: const FittedBox(
+            child: FittedBox(
               child: Icon(
                 Icons.sentiment_dissatisfied_outlined,
-                color: Colors.white,
+                color: Theme.of(context).scaffoldBackgroundColor,
               ),
             ),
           ),
@@ -222,6 +231,7 @@ class _ResultsViewState extends State<ResultsView> {
             ),
           ),
         ),
+        const SizedBox(height: 20),
         Center(
           child: Container(
             decoration: BoxDecoration(
@@ -231,10 +241,10 @@ class _ResultsViewState extends State<ResultsView> {
             padding: EdgeInsets.all(size * 0.15),
             height: size,
             width: size,
-            child: const FittedBox(
+            child: FittedBox(
               child: Icon(
                 Icons.error_outline_outlined,
-                color: Colors.white,
+                color: Theme.of(context).scaffoldBackgroundColor,
               ),
             ),
           ),

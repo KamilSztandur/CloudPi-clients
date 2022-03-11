@@ -110,7 +110,9 @@ class RenameFilePopup {
         'Rename $currentName',
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: Theme.of(context).primaryColorDark,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).primaryColorLight
+              : Theme.of(context).primaryColorDark,
           fontWeight: FontWeight.bold,
         ),
       );
@@ -122,7 +124,9 @@ class RenameFilePopup {
           Text(
             'Name',
             style: TextStyle(
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).primaryColorLight
+                  : Theme.of(context).primaryColorDark,
               fontSize: 15,
             ),
           ),
@@ -257,7 +261,10 @@ class RenameFilePopup {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: Theme.of(context).primaryColor,
-        content: Text(message),
+        content: Text(
+          message,
+          style: const TextStyle(color: Colors.white),
+        ),
       ),
     );
   }

@@ -29,7 +29,7 @@ class SelectionOptionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icons[option], color: Colors.black),
+        Icon(icons[option], color: Theme.of(context).iconTheme.color),
         Flexible(
           child: Padding(
             padding: const EdgeInsets.only(left: 8),

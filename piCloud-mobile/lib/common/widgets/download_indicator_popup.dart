@@ -36,7 +36,6 @@ class DownloadIndicatorPopup {
                   final percents = _getPercentProgress(received, total);
 
                   if (percents == 100) {
-                    print('zamykam');
                     close();
                   } else {
                     setState(() {
@@ -71,12 +70,14 @@ class DownloadIndicatorPopup {
       height: size,
       width: size,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(10000),
       ),
       child: CircularProgressIndicator(
         strokeWidth: 5,
-        backgroundColor: Colors.grey.shade400,
+        backgroundColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.black
+            : Colors.grey.shade400,
         value: _isProgressValid() ? _progress! / 100 : null,
       ),
     );

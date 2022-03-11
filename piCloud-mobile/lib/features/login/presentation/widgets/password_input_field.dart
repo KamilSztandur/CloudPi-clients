@@ -53,7 +53,9 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
               obscureText: _visible,
               onChanged: _onChanged,
               onSubmitted: (value) => widget.onSubmitted(),
+              style: const TextStyle(color: Colors.black87),
               decoration: InputDecoration(
+                hintStyle: const TextStyle(color: Colors.grey),
                 hintText: 'Password',
                 border: InputBorder.none,
                 suffixIcon: IconButton(

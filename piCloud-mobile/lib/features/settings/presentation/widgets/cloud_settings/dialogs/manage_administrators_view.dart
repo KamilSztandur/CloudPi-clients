@@ -49,9 +49,7 @@ class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
         ElevatedButton(
           onPressed: _onSubmitPressed,
           style: ElevatedButton.styleFrom(
-            primary: Colors.blue.withOpacity(
-              0.65,
-            ),
+            primary: Theme.of(context).primaryColor.withOpacity(0.65),
           ),
           child: const Text('Submit'),
         ),
@@ -62,7 +60,12 @@ class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
               0.65,
             ),
           ),
-          child: const Text('Cancel'),
+          child: Text(
+            'Cancel',
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyText1!.color,
+            ),
+          ),
         ),
       ],
     );

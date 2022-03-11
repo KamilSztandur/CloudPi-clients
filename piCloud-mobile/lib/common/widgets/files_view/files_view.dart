@@ -61,9 +61,12 @@ class _FilesViewState extends State<FilesView> {
     }
 
     return files.isNotEmpty
-        ? Scrollbar(
+        ? RawScrollbar(
             thickness: 7.5,
             isAlwaysShown: true,
+            thumbColor: Theme.of(context).brightness == Brightness.dark
+                ? Theme.of(context).primaryColorDark
+                : Theme.of(context).primaryColorLight,
             radius: const Radius.circular(5),
             controller: _scrollController,
             child: DragSelectGridView(

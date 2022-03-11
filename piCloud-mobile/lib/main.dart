@@ -23,6 +23,9 @@ Future<void> main() async {
 
   final sharedPreferences = await SharedPreferences.getInstance();
 
+  final appSharedPreferences = AppSharedPreferences(sharedPreferences);
+  await appSharedPreferences.init();
+
   runApp(
     MultiProvider(
       providers: [
@@ -36,7 +39,7 @@ Future<void> main() async {
           ),
         ),
         Provider(create: (context) => Api.create(context.read())),
-        Provider(create: (context) => AppSharedPreferences(context.read())),
+        Provider(create: (context) => appSharedPreferences),
         Provider(
           create: (context) => DirectoryManager(
             context.read<Api>(),

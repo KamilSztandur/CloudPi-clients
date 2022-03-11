@@ -36,13 +36,16 @@ class _NoPreviewAvailableState extends State<NoPreviewAvailable> {
               color: Colors.grey,
             ),
             const SizedBox(height: 10),
-            Text(
-              widget.resourceName,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Text(
+                widget.resourceName,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
             ElevatedButton(

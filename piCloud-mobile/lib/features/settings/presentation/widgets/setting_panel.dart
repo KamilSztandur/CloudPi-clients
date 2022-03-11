@@ -65,7 +65,6 @@ class _Header extends StatelessWidget {
           Icon(
             icon,
             size: 32.5,
-            color: Colors.black,
           ),
           const SizedBox(width: 20),
           Text(

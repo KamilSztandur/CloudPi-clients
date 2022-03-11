@@ -36,7 +36,9 @@ class _InputFieldPasswordState extends State<InputFieldPassword> {
           child: Text(
             widget.headerText,
             style: TextStyle(
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).primaryColorLight
+                  : Theme.of(context).primaryColorDark,
               fontSize: 17.5,
               fontWeight: FontWeight.w500,
             ),
@@ -47,7 +49,9 @@ class _InputFieldPasswordState extends State<InputFieldPassword> {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             border: Border.all(
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).primaryColorLight
+                  : Theme.of(context).primaryColorDark,
             ),
           ),
           child: Padding(
@@ -62,7 +66,9 @@ class _InputFieldPasswordState extends State<InputFieldPassword> {
                 suffixIcon: IconButton(
                   icon: Icon(
                     _visible ? Icons.visibility : Icons.visibility_off,
-                    color: Theme.of(context).primaryColorDark,
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Theme.of(context).primaryColorLight
+                        : Theme.of(context).primaryColorDark,
                   ),
                   onPressed: () {
                     final text = _controller.text;

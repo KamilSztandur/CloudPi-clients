@@ -113,7 +113,12 @@ class FileListItemView extends StatelessWidget {
       label = 'Unknown';
     }
 
-    return Text(label, style: const TextStyle(color: Colors.grey));
+    return Text(
+      label,
+      style: const TextStyle(
+        color: Colors.grey,
+      ),
+    );
   }
 
   String _getProperTimeFormat(DateTime dateTime) {
