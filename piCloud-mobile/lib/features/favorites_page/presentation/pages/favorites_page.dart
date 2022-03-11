@@ -1,13 +1,11 @@
 import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/common/widgets/error_view.dart';
 import 'package:app/common/widgets/files_view/files_view.dart';
-import 'package:app/common/widgets/selection_app_bar/selection_app_bar.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:app/features/app/widgets/app_bar/appbar.dart';
 import 'package:app/features/app/widgets/navigation_bar/bottom_navigation_bar.dart';
 import 'package:app/features/drawer/main_drawer.dart';
 import 'package:app/features/favorites_page/bloc/favorites_cubit.dart';
-import 'package:app/features/favorites_page/data/favorites_manager.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_selection_app_bar.dart';
 import 'package:app/features/file_explorer/presentation/widgets/switch_view_button.dart';
 import 'package:app/features/loading_baner/presentation/loading_panel.dart';
