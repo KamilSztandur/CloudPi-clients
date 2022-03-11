@@ -5,6 +5,7 @@ import 'package:app/common/preferences/app_shared_preferences.dart';
 import 'package:app/common/preferences/view_mode_cubit.dart';
 import 'package:app/contracts/api.swagger.dart';
 import 'package:app/features/app/widgets/picloud_app.dart';
+import 'package:app/features/favorites_page/data/favorites_manager.dart';
 import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/media_reader/data/media_reader_service.dart';
 import 'package:app/features/search_page/data/search_engine.dart';
@@ -49,6 +50,12 @@ Future<void> main() async {
         Provider(
           create: (context) => SearchEngine(
             context.read<AuthManager>(),
+          ),
+        ),
+        Provider(
+          create: (context) => FavoritesManager(
+            context.read(),
+            context.read(),
           ),
         ),
         Provider(

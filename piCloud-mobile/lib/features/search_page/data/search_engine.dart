@@ -83,6 +83,7 @@ class SearchEngine {
         size: result.size,
         id: result.id,
         thumbnail: result.thumbnail,
+        isFavorite: null,
       );
 
   Future<List<SearchResult>> _readSearchResultsList(

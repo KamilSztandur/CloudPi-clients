@@ -214,6 +214,7 @@ class DirectoryManager {
           type: type,
           size: size,
           thumbnail: thumbnail,
+          isFavorite: dto.favourite ?? false,
         ),
       );
     }

@@ -298,6 +298,7 @@ FilesystemObjectDTO _$FilesystemObjectDTOFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['modifiedAt'] as String),
       version: json['version'] as int?,
       type: filesystemObjectDTOTypeFromJson(json['type'] as String?),
+      favourite: json['favourite'] as bool?,
       children: (json['children'] as List<dynamic>?)
               ?.map((e) =>
                   FilesystemObjectDTO.fromJson(e as Map<String, dynamic>))
@@ -314,6 +315,7 @@ Map<String, dynamic> _$FilesystemObjectDTOToJson(
       'modifiedAt': instance.modifiedAt?.toIso8601String(),
       'version': instance.version,
       'type': filesystemObjectDTOTypeToJson(instance.type),
+      'favourite': instance.favourite,
       'children': instance.children?.map((e) => e.toJson()).toList(),
     };
 

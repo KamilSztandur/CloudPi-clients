@@ -10,7 +10,7 @@ class SelectionAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onRename,
     this.onDelete,
     this.onShowDetails,
-    this.onAddToFavorites,
+    this.onToggleFavorites,
   }) : super(key: key);
 
   final int selectionCount;
@@ -18,7 +18,7 @@ class SelectionAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onRename;
   final VoidCallback? onDelete;
   final VoidCallback? onShowDetails;
-  final VoidCallback? onAddToFavorites;
+  final VoidCallback? onToggleFavorites;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -49,7 +49,7 @@ class SelectionAppBar extends StatelessWidget implements PreferredSizeWidget {
         if (onRename != null) Option.rename,
         if (onDelete != null) Option.delete,
         if (onShowDetails != null) Option.showDetails,
-        if (onAddToFavorites != null) Option.addToFavorites,
+        if (onToggleFavorites != null) Option.toggleFavorites,
       ]
           .map(
             (option) => PopupMenuItem(
@@ -73,8 +73,8 @@ class SelectionAppBar extends StatelessWidget implements PreferredSizeWidget {
       case Option.showDetails:
         onShowDetails?.call();
         break;
-      case Option.addToFavorites:
-        onAddToFavorites?.call();
+      case Option.toggleFavorites:
+        onToggleFavorites?.call();
         break;
     }
   }

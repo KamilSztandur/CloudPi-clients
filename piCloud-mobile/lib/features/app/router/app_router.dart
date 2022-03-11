@@ -1,5 +1,5 @@
 import 'package:app/features/app/router/guards/admin_guard.dart';
-import 'package:app/features/favourites_page/presentation/pages/favourites_page.dart';
+import 'package:app/features/favorites_page/presentation/pages/favorites_page.dart';
 import 'package:app/features/file_explorer/presentation/pages/file_explorer_page.dart';
 import 'package:app/features/login/presentation/pages/login_page.dart';
 import 'package:app/features/media_reader/presentation/pages/media_reader_page.dart';
@@ -16,7 +16,7 @@ import 'package:auto_route/auto_route.dart';
   routes: <AutoRoute>[
     AutoRoute<void>(page: LoginPage, initial: true),
     AutoRoute<void>(page: SharedPage),
-    AutoRoute<void>(page: FavouritesPage),
+    AutoRoute<void>(page: FavoritesPage),
     AutoRoute<void>(page: FileExplorerPage),
     AutoRoute<void>(
       page: MediaReaderPage,

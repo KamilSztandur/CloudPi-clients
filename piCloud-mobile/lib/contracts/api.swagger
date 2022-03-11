@@ -3155,6 +3155,9 @@
               "UNDEFINED"
             ]
           },
+          "favourite": {
+            "type": "boolean"
+          },
           "children": {
             "type": "array",
             "items": {

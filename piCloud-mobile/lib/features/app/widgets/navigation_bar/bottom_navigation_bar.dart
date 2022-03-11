@@ -21,12 +21,12 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
     PICloudBottomNavigationBarItem(
       icon: const Icon(Icons.folder_shared_outlined),
       label: 'Shared',
-      route: const SharedRoute(),
+      route: SharedRoute(),
     ),
     PICloudBottomNavigationBarItem(
       icon: const Icon(Icons.star_outline),
-      label: 'Favourites',
-      route: const FavouritesRoute(),
+      label: 'Favorites',
+      route: FavoritesRoute(),
     ),
     PICloudBottomNavigationBarItem(
       icon: const Icon(Icons.search_outlined),

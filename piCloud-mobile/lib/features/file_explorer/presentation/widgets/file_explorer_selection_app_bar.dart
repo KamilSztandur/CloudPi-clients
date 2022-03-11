@@ -1,6 +1,7 @@
 import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/common/models/file_item.dart';
 import 'package:app/common/widgets/selection_app_bar/selection_app_bar.dart';
+import 'package:app/features/favorites_page/data/favorites_manager.dart';
 import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/details_popup.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/rename_file.dart';
@@ -10,7 +11,7 @@ import 'package:path/path.dart' as p;
 import 'package:pedantic/pedantic.dart';
 import 'package:provider/provider.dart';
 
-class FileExplorerSelectionAppBar extends StatefulWidget
+class FileExplorerSelectionAppBar extends StatelessWidget
     implements PreferredSizeWidget {
   const FileExplorerSelectionAppBar({
     Key? key,
@@ -29,73 +30,61 @@ class FileExplorerSelectionAppBar extends StatefulWidget
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
-  _FileExplorerSelectionAppBarState createState() =>
-      _FileExplorerSelectionAppBarState();
-}
-
-class _FileExplorerSelectionAppBarState
-    extends State<FileExplorerSelectionAppBar> {
-  late DirectoryManager _directoryManager;
-
-  @override
-  void initState() {
-    _directoryManager = context.read<DirectoryManager>();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SelectionAppBar(
-      selectionCount: widget.selection.amount,
-      onDownload: _onDownloadPressed,
-      onRename: _onRenamePressed,
-      onDelete: _onDeletePressed,
-      onShowDetails: _onDetailsPressed,
-      onAddToFavorites: _onAddToFavouritesPressed,
+      selectionCount: selection.amount,
+      onDownload: () => _onDownloadPressed(context),
+      onRename: () => _onRenamePressed(context),
+      onDelete: () => _onDeletePressed(context),
+      onShowDetails: () => _onDetailsPressed(context),
+      onToggleFavorites: () => _onAddToFavouritesPressed(context),
     );
   }
 
-  Future<void> _onRenamePressed() async {
+  Future<void> _onRenamePressed(BuildContext context) async {
     final selectedItems = _getSelectedItems();
 
     if (selectedItems.length > 1) {
       await RenameFilePopup(
         context: context,
-        currentPath: widget.currentDirPath,
+        currentPath: currentDirPath,
         amount: selectedItems.length,
-        groupNamePicked: _renameSelectedItems,
+        groupNamePicked: (name) => _renameSelectedItems(context, name),
         resourceId: '',
         currentName: '',
       ).showGroupRename();
 
-      widget.onActionFinalized();
+      onActionFinalized();
     } else if (selectedItems.length == 1) {
       await RenameFilePopup(
         context: context,
-        currentPath: widget.currentDirPath,
+        currentPath: currentDirPath,
         amount: selectedItems.length,
-        groupNamePicked: _renameSelectedItems,
+        groupNamePicked: (name) => _renameSelectedItems(context, name),
         resourceId: selectedItems[0].id!,
         currentName: selectedItems[0].title,
       ).show();
 
-      widget.onActionFinalized();
+      onActionFinalized();
     }
   }
 
-  Future<void> _onAddToFavouritesPressed() async {
-    //TODO
+  Future<void> _onAddToFavouritesPressed(BuildContext context) async {
+    await context.read<FavoritesManager>().toggleFavorite(
+          _getSelectedItems().map((item) => item.id!),
+        );
+
+    onActionFinalized();
   }
 
-  Future<void> _onDownloadPressed() async {
+  Future<void> _onDownloadPressed(BuildContext context) async {
     for (final item in _getSelectedItems()) {
       try {
-        await _directoryManager.downloadMediaToDevice(
-          item.title,
-          item.id!,
-          context: context,
-          setState: setState,
-        );
+        await context.read<DirectoryManager>().downloadMediaToDevice(
+              item.title,
+              item.id!,
+              context: context,
+            );
       } catch (exception) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -119,19 +108,19 @@ class _FileExplorerSelectionAppBarState
       ),
     );
 
-    widget.onActionFinalized();
+    onActionFinalized();
   }
 
-  Future<void> _onDeletePressed() async {
+  Future<void> _onDeletePressed(BuildContext context) async {
     await showDialog<void>(
       context: context,
-      builder: (context) => _getConfirmDeletePopop(),
+      builder: _getConfirmDeletePopop,
     );
 
-    widget.onActionFinalized();
+    onActionFinalized();
   }
 
-  Future<void> _onDetailsPressed() async {
+  Future<void> _onDetailsPressed(BuildContext context) async {
     final selectedItems = _getSelectedItems();
     var i = 0;
 
@@ -140,12 +129,19 @@ class _FileExplorerSelectionAppBarState
 
       await showDialog<void>(
         context: context,
-        builder: (context) => _getDetailsPopup(selectedItems.length, item, i),
+        builder: (context) => _getDetailsPopup(
+          context,
+          selectedItems.length,
+          item,
+          i,
+        ),
       );
     }
   }
 
-  Widget _getConfirmDeletePopop() {
+  Widget _getConfirmDeletePopop(BuildContext context) {
+    final directoryManager = context.read<DirectoryManager>();
+
     return AlertDialog(
       title: const Text('Deleting...'),
       contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 4),
@@ -160,9 +156,9 @@ class _FileExplorerSelectionAppBarState
           onPressed: () async {
             for (final item in _getSelectedItems()) {
               if (item.type == FileExplorerItemType.directory) {
-                unawaited(_directoryManager.deleteDirectory(item.id!));
+                unawaited(directoryManager.deleteDirectory(item.id!));
               } else {
-                unawaited(_directoryManager.deleteFile(item.id!));
+                unawaited(directoryManager.deleteFile(item.id!));
               }
             }
 
@@ -192,6 +188,7 @@ class _FileExplorerSelectionAppBarState
   }
 
   Widget _getDetailsPopup(
+    BuildContext context,
     int length,
     FileItem currentItem,
     int currentIndex,
@@ -214,7 +211,8 @@ class _FileExplorerSelectionAppBarState
     );
   }
 
-  Future<void> _renameSelectedItems(String newName) async {
+  Future<void> _renameSelectedItems(
+      BuildContext context, String newName) async {
     final selectedItems = _getSelectedItems();
 
     var counter = 1;
@@ -222,19 +220,19 @@ class _FileExplorerSelectionAppBarState
       final fileExtension = p.extension(item.title, 10);
       final newItemName = '$newName (${counter++})$fileExtension';
 
-      await _directoryManager.rename(
-        widget.currentDirPath,
-        newItemName,
-        item.id!,
-      );
+      await context.read<DirectoryManager>().rename(
+            currentDirPath,
+            newItemName,
+            item.id!,
+          );
     }
   }
 
   List<FileItem> _getSelectedItems() {
     final list = <FileItem>[];
 
-    for (final index in widget.selection.selectedIndexes) {
-      list.add(widget.allItems[index]);
+    for (final index in selection.selectedIndexes) {
+      list.add(allItems[index]);
     }
 
     return list;
