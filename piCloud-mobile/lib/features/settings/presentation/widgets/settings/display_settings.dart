@@ -1,6 +1,8 @@
 import 'package:app/common/preferences/app_shared_preferences.dart';
+import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:app/features/app/widgets/picloud_app.dart';
 import 'package:app/features/settings/data/user_services/display_service.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 // ignore: implementation_imports
 import 'package:provider/src/provider.dart';
@@ -52,6 +54,8 @@ class _DisplaySettingsState extends State<DisplaySettings> {
         setState(() {
           PICloudApp.of(context)!.switchTheme();
         });
+
+        await _reload(); // Hotfix for false leading implying.
       },
       value: isOn,
     );
@@ -73,5 +77,10 @@ class _DisplaySettingsState extends State<DisplaySettings> {
         ],
       ),
     );
+  }
+
+  Future<void> _reload() async {
+    final router = AutoRouter.of(context);
+    await router.replaceAll([FileExplorerRoute(path: '/')]);
   }
 }

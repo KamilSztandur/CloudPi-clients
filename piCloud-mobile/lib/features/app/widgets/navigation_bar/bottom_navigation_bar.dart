@@ -66,11 +66,11 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
   int _getCurrentlySelectedItem() {
     final n = items.length;
 
-    for (final route in AutoRouter.of(context).stack) {
+    for (final route in AutoRouter.of(context).stack.reversed) {
       final name = route.routeData.name;
 
       for (var i = 0; i < n; i++) {
-        if (name.contains(items[i].route.routeName)) {
+        if (items[i].route.routeName == name) {
           return i;
         }
       }
