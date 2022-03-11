@@ -136,6 +136,7 @@ class _ManageAdministratorsViewState extends State<ManageAdministratorsView> {
 
   Widget _buildCheckBox(User user, bool? value) {
     return Checkbox(
+      activeColor: Theme.of(context).primaryColor,
       onChanged: (value) => setState(() {
         final currentValue = _permissionsDictionary![user] ?? false;
         _permissionsDictionary![user] = !currentValue;
