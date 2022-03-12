@@ -98,7 +98,7 @@ class _UserWizardPageState extends State<UserWizardPage> {
               headerText: _isThisNewUserCreation()
                   ? 'Password'
                   : 'New Password (or empty)',
-              hintTexti: 'At least 8 characters',
+              hintText: 'At least 8 characters',
               onPasswordChanged: _onPasswordChanged,
             ),
             const SizedBox(height: 10),

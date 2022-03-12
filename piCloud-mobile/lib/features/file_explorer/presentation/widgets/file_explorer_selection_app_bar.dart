@@ -1,8 +1,7 @@
-import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/common/models/file_item.dart';
 import 'package:app/common/widgets/selection_app_bar/selection_app_bar.dart';
 import 'package:app/features/favorites_page/data/favorites_manager.dart';
-import 'package:app/features/file_explorer/data/directory_manager.dart';
+import 'package:app/features/file_explorer/bloc/file_explorer_cubit.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/details_popup.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/rename_file.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
@@ -61,7 +60,7 @@ class FileExplorerSelectionAppBar extends StatelessWidget
         currentPath: currentDirPath,
         amount: selectedItems.length,
         groupNamePicked: (name) => _renameSelectedItems(context, name),
-        resourceId: selectedItems[0].id!,
+        resourceId: selectedItems[0].id,
         currentName: selectedItems[0].title,
       ).show();
 
@@ -71,7 +70,7 @@ class FileExplorerSelectionAppBar extends StatelessWidget
 
   Future<void> _onAddToFavouritesPressed(BuildContext context) async {
     await context.read<FavoritesManager>().toggleFavorite(
-          _getSelectedItems().map((item) => item.id!),
+          _getSelectedItems().map((item) => item.id),
         );
 
     onActionFinalized();
@@ -80,9 +79,9 @@ class FileExplorerSelectionAppBar extends StatelessWidget
   Future<void> _onDownloadPressed(BuildContext context) async {
     for (final item in _getSelectedItems()) {
       try {
-        await context.read<DirectoryManager>().downloadMediaToDevice(
+        await context.read<FileExplorerCubit>().downloadFile(
               item.title,
-              item.id!,
+              item.id,
               context: context,
             );
       } catch (exception) {
@@ -140,7 +139,7 @@ class FileExplorerSelectionAppBar extends StatelessWidget
   }
 
   Widget _getConfirmDeletePopop(BuildContext context) {
-    final directoryManager = context.read<DirectoryManager>();
+    final cubit = context.read<FileExplorerCubit>();
 
     return AlertDialog(
       title: const Text('Deleting...'),
@@ -155,11 +154,7 @@ class FileExplorerSelectionAppBar extends StatelessWidget
         TextButton(
           onPressed: () async {
             for (final item in _getSelectedItems()) {
-              if (item.type == FileExplorerItemType.directory) {
-                unawaited(directoryManager.deleteDirectory(item.id!));
-              } else {
-                unawaited(directoryManager.deleteFile(item.id!));
-              }
+              unawaited(cubit.deleteFile(item.id));
             }
 
             Navigator.pop(context);
@@ -222,10 +217,10 @@ class FileExplorerSelectionAppBar extends StatelessWidget
       final fileExtension = p.extension(item.title, 10);
       final newItemName = '$newName (${counter++})$fileExtension';
 
-      await context.read<DirectoryManager>().rename(
+      await context.read<FileExplorerCubit>().renameFile(
             currentDirPath,
             newItemName,
-            item.id!,
+            item.id,
           );
     }
   }

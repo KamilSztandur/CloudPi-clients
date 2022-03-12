@@ -6,12 +6,12 @@ class InputFieldPassword extends StatefulWidget {
   const InputFieldPassword({
     Key? key,
     required this.headerText,
-    required this.hintTexti,
+    required this.hintText,
     required this.onPasswordChanged,
   }) : super(key: key);
 
   final String headerText;
-  final String hintTexti;
+  final String hintText;
   final Function(String) onPasswordChanged;
 
   @override
@@ -61,7 +61,7 @@ class _InputFieldPasswordState extends State<InputFieldPassword> {
               obscureText: _visible,
               onChanged: _onChanged,
               decoration: InputDecoration(
-                hintText: widget.hintTexti,
+                hintText: widget.hintText,
                 border: InputBorder.none,
                 suffixIcon: IconButton(
                   icon: Icon(

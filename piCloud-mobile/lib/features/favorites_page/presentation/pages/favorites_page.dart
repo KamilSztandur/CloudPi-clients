@@ -37,7 +37,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
         path: widget.path,
         viewModeCubit: context.read(),
         favoritesManager: context.read(),
-        directoryManager: context.read(),
+        getDirectoryItemsUseCase: context.read(),
       )..fetch(),
       child: BlocBuilder<FavoritesCubit, FavoritesState>(
         builder: (context, state) {
@@ -112,7 +112,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
   void _previewMedia(
     BuildContext context,
     String resourceName,
-    String? pubId,
+    String pubId,
   ) =>
       AutoRouter.of(context).push(
         MediaReaderRoute(

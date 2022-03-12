@@ -18,8 +18,6 @@ class MediaReaderBloc extends Bloc<MediaReaderEvent, MediaReaderState> {
   Stream<MediaReaderState> mapEventToState(MediaReaderEvent event) async* {
     if (event is RequestMediaDownloadEvent) {
       yield* _getFromURI(event);
-    } else if (event is DetectedDamagedFileEvent) {
-      yield* _detectedDamagedMedia(event);
     }
   }
 
@@ -34,11 +32,5 @@ class MediaReaderBloc extends Bloc<MediaReaderEvent, MediaReaderState> {
     } catch (exception) {
       yield MediaDownloadFailureState(errorMessage: exception.toString());
     }
-  }
-
-  Stream<MediaReaderState> _detectedDamagedMedia(
-    DetectedDamagedFileEvent event,
-  ) async* {
-    yield const MediaFileDamagedState();
   }
 }

@@ -3,12 +3,19 @@ import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
 import 'package:app/common/preferences/app_shared_preferences.dart';
 import 'package:app/common/preferences/view_mode_cubit.dart';
+import 'package:app/common/use_cases/delete_file_use_case.dart';
+import 'package:app/common/use_cases/download_file_use_case.dart';
+import 'package:app/common/use_cases/get_directory_items_use_case.dart';
+import 'package:app/common/use_cases/get_image_preview_use_case.dart';
+import 'package:app/common/use_cases/rename_file_use_case.dart';
 import 'package:app/contracts/api.swagger.dart';
 import 'package:app/features/app/widgets/picloud_app.dart';
 import 'package:app/features/favorites_page/data/favorites_manager.dart';
-import 'package:app/features/file_explorer/data/directory_manager.dart';
+import 'package:app/features/file_explorer/user_cases/create_new_directory_use_case.dart';
+import 'package:app/features/file_explorer/user_cases/upload_file_use_case.dart';
 import 'package:app/features/media_reader/data/media_reader_service.dart';
 import 'package:app/features/search_page/data/search_engine.dart';
+import 'package:app/features/shared_page/data/shared_manager.dart';
 import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,12 +48,29 @@ Future<void> main() async {
         ),
         Provider(create: (context) => Api.create(context.read())),
         Provider(create: (context) => appSharedPreferences),
+        Provider(create: (context) => GetImagePreviewUseCase(context.read())),
         Provider(
-          create: (context) => DirectoryManager(
-            context.read<Api>(),
-            context.read<AuthManager>(),
+          create: (context) => GetDirectoryItemsUseCase(
+            context.read(),
+            context.read(),
+            context.read(),
           ),
         ),
+        Provider(create: (context) => DownloadFileUseCase(context.read())),
+        Provider(create: (context) => UploadFileUseCase(context.read())),
+        Provider(
+          create: (context) => CreateNewDirectoryUseCase(
+            context.read(),
+            context.read(),
+          ),
+        ),
+        Provider(
+          create: (context) => RenameFileUseCase(
+            context.read(),
+            context.read(),
+          ),
+        ),
+        Provider(create: (context) => DeleteFileUseCase(context.read())),
         Provider(
           create: (context) => SearchEngine(
             context.read<AuthManager>(),
@@ -54,6 +78,12 @@ Future<void> main() async {
         ),
         Provider(
           create: (context) => FavoritesManager(
+            context.read(),
+            context.read(),
+          ),
+        ),
+        Provider(
+          create: (context) => SharedManager(
             context.read(),
             context.read(),
           ),

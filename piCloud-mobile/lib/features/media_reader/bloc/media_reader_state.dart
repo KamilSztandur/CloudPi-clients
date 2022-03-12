@@ -46,10 +46,3 @@ class MediaDownloadFailureState extends MediaReaderState {
   @override
   List<Object> get props => [errorMessage];
 }
-
-class MediaFileDamagedState extends MediaReaderState {
-  const MediaFileDamagedState();
-
-  @override
-  List<Object> get props => [];
-}

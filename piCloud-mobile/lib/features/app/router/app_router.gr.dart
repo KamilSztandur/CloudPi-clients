@@ -35,8 +35,11 @@ class AppRouter extends _i11.RootStackRouter {
           routeData: routeData, child: const _i1.LoginPage());
     },
     SharedRoute.name: (routeData) {
+      final args = routeData.argsAs<SharedRouteArgs>(
+          orElse: () => const SharedRouteArgs());
       return _i11.MaterialPageX<void>(
-          routeData: routeData, child: const _i2.SharedPage());
+          routeData: routeData,
+          child: _i2.SharedPage(key: args.key, path: args.path));
     },
     FavoritesRoute.name: (routeData) {
       final args = routeData.argsAs<FavoritesRouteArgs>(
@@ -124,10 +127,20 @@ class LoginRoute extends _i11.PageRouteInfo<void> {
 }
 
 /// generated route for [_i2.SharedPage]
-class SharedRoute extends _i11.PageRouteInfo<void> {
-  const SharedRoute() : super(name, path: '/shared-page');
+class SharedRoute extends _i11.PageRouteInfo<SharedRouteArgs> {
+  SharedRoute({_i12.Key? key, String? path})
+      : super(name,
+            path: '/shared-page', args: SharedRouteArgs(key: key, path: path));
 
   static const String name = 'SharedRoute';
+}
+
+class SharedRouteArgs {
+  const SharedRouteArgs({this.key, this.path});
+
+  final _i12.Key? key;
+
+  final String? path;
 }
 
 /// generated route for [_i3.FavoritesPage]
@@ -172,7 +185,7 @@ class MediaReaderRoute extends _i11.PageRouteInfo<MediaReaderRouteArgs> {
       {_i12.Key? key,
       required String path,
       required String resourceName,
-      required String? resourcePubId,
+      required String resourcePubId,
       required void Function() onActionFinalized})
       : super(name,
             path: '/media-reader-page',
@@ -200,7 +213,7 @@ class MediaReaderRouteArgs {
 
   final String resourceName;
 
-  final String? resourcePubId;
+  final String resourcePubId;
 
   final void Function() onActionFinalized;
 }

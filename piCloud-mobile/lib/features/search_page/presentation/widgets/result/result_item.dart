@@ -127,7 +127,7 @@ class _ResultItemState extends State<ResultItem> {
           MediaReaderRoute(
             path: await _getFileLocalizationPath(),
             resourceName: widget.item.title,
-            resourcePubId: widget.item.id,
+            resourcePubId: widget.item.id!,
             onActionFinalized: () {},
           ),
         ),

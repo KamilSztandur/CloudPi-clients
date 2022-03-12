@@ -1,8 +1,8 @@
 import 'package:app/common/models/file_item.dart';
 import 'package:app/common/models/view_mode.dart';
 import 'package:app/common/preferences/view_mode_cubit.dart';
+import 'package:app/common/use_cases/get_directory_items_use_case.dart';
 import 'package:app/features/favorites_page/data/favorites_manager.dart';
-import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -13,17 +13,17 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     String? path,
     required ViewModeCubit viewModeCubit,
     required FavoritesManager favoritesManager,
-    required DirectoryManager directoryManager,
+    required GetDirectoryItemsUseCase getDirectoryItemsUseCase,
   })  : _path = path,
         _viewModeCubit = viewModeCubit,
         _favoritesManager = favoritesManager,
-        _directoryManager = directoryManager,
+        _getDirectoryItemsUseCase = getDirectoryItemsUseCase,
         super(const FavoritesInitialState());
 
   final String? _path;
   final ViewModeCubit _viewModeCubit;
   final FavoritesManager _favoritesManager;
-  final DirectoryManager _directoryManager;
+  final GetDirectoryItemsUseCase _getDirectoryItemsUseCase;
 
   Future<void> fetch() async {
     final path = _path;
@@ -36,7 +36,7 @@ class FavoritesCubit extends Cubit<FavoritesState> {
       if (path == null) {
         files = await _favoritesManager.getCurrentDirectoryItems() ?? [];
       } else {
-        files = await _directoryManager.getCurrentDirectoryItems(path) ?? [];
+        files = await _getDirectoryItemsUseCase.invoke(path) ?? [];
       }
 
       if (_viewModeCubit.state == ViewMode.list) {

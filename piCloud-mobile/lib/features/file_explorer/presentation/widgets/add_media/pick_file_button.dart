@@ -1,11 +1,10 @@
 import 'dart:io';
 
-import 'package:app/features/file_explorer/data/directory_manager.dart';
+import 'package:app/features/file_explorer/bloc/file_explorer_cubit.dart';
 import 'package:app/features/file_explorer/data/new_media_wizard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-// ignore: implementation_imports
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class PickFileButton extends SpeedDialChild {
   PickFileButton({
@@ -31,7 +30,7 @@ class PickFileButton extends SpeedDialChild {
             ),
           ),
           onTap: () async => onFilePicked(
-            await NewMediaWizard(context.read<DirectoryManager>()).pickFiles(),
+            await NewMediaWizard(context.read<FileExplorerCubit>()).pickFiles(),
           ),
         );
 

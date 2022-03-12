@@ -1,9 +1,8 @@
-import 'package:app/features/file_explorer/data/directory_manager.dart';
+import 'package:app/features/file_explorer/bloc/file_explorer_cubit.dart';
 import 'package:app/features/file_explorer/data/new_media_wizard.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-// ignore: implementation_imports
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
 class RenameFilePopup {
   RenameFilePopup({
@@ -22,13 +21,10 @@ class RenameFilePopup {
   final Function(String) groupNamePicked;
 
   final TextEditingController _controller = TextEditingController();
-  late DirectoryManager _directoryManager;
   String? _warningMessage;
 
-  Future<void> show() async {
-    _directoryManager = context.read<DirectoryManager>();
-
-    await showDialog<void>(
+  Future<void> show() {
+    return showDialog<void>(
       context: context,
       builder: (context) {
         return StatefulBuilder(
@@ -62,10 +58,8 @@ class RenameFilePopup {
     );
   }
 
-  Future<void> showGroupRename() async {
-    _directoryManager = context.read<DirectoryManager>();
-
-    await showDialog<void>(
+  Future<void> showGroupRename() {
+    return showDialog<void>(
       context: context,
       builder: (context) {
         return StatefulBuilder(
@@ -198,7 +192,7 @@ class RenameFilePopup {
   Future<void> _onGroupRenamePressed(
     void Function(void Function()) setState,
   ) async {
-    final wizard = NewMediaWizard(context.read<DirectoryManager>());
+    final wizard = NewMediaWizard(context.read<FileExplorerCubit>());
     final newName = _controller.text;
 
     if (wizard.isFilenameLegal(newName)) {
@@ -222,7 +216,7 @@ class RenameFilePopup {
   }
 
   Future<void> _onRenamePressed(void Function(void Function()) setState) async {
-    final wizard = NewMediaWizard(context.read<DirectoryManager>());
+    final wizard = NewMediaWizard(context.read<FileExplorerCubit>());
     final newName = _controller.text;
 
     if (wizard.isFilenameLegal(newName)) {
@@ -243,11 +237,11 @@ class RenameFilePopup {
       );
     }
 
-    final isSuccessful = await _directoryManager.rename(
-      currentPath,
-      newName,
-      resourceId,
-    );
+    final isSuccessful = await context.read<FileExplorerCubit>().renameFile(
+          currentPath,
+          newName,
+          resourceId,
+        );
 
     var message = '';
     if (isSuccessful) {

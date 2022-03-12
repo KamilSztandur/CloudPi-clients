@@ -1,4 +1,4 @@
-import 'package:app/features/file_explorer/data/directory_manager.dart';
+import 'package:app/features/file_explorer/bloc/file_explorer_cubit.dart';
 import 'package:app/features/file_explorer/data/new_media_wizard.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
@@ -132,7 +132,7 @@ class CreateDirectoryPopup {
       );
 
   Future<void> _onCreatePressed(void Function(void Function()) setState) async {
-    final wizard = NewMediaWizard(context.read<DirectoryManager>());
+    final wizard = NewMediaWizard(context.read<FileExplorerCubit>());
     final name = _controller.text;
 
     if (wizard.isDirectoryNameLegal(name)) {

@@ -13,7 +13,7 @@ class FileItem {
     required this.isFavorite,
   });
 
-  final String? id;
+  final String id;
   final String title;
   final double size;
   final FileExplorerItemType type;

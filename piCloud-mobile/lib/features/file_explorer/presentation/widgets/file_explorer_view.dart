@@ -47,7 +47,7 @@ class FileExplorerView extends StatelessWidget {
   void _previewMedia(
     BuildContext context,
     String resourceName,
-    String? pubId,
+    String pubId,
   ) =>
       AutoRouter.of(context).push(
         MediaReaderRoute(

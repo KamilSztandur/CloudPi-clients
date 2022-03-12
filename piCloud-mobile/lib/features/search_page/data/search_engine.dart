@@ -81,7 +81,7 @@ class SearchEngine {
         lastModifiedOn: result.lastModifiedOn,
         type: result.type,
         size: result.size,
-        id: result.id,
+        id: result.id!,
         thumbnail: result.thumbnail,
         isFavorite: null,
       );

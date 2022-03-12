@@ -3,7 +3,7 @@ import 'package:app/features/app/widgets/app_bar/appbar.dart';
 import 'package:app/features/app/widgets/app_bar/search_button.dart';
 import 'package:app/features/app/widgets/navigation_bar/bottom_navigation_bar.dart';
 import 'package:app/features/drawer/main_drawer.dart';
-import 'package:app/features/file_explorer/bloc/file_explorer_bloc.dart';
+import 'package:app/features/file_explorer/bloc/file_explorer_cubit.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/add_media_floating_button.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_selection_app_bar.dart';
 import 'package:app/features/file_explorer/presentation/widgets/file_explorer_view.dart';
@@ -28,38 +28,28 @@ class FileExplorerPage extends StatefulWidget {
 
 class _FileExplorerPageState extends State<FileExplorerPage> {
   var _selection = const Selection.empty();
-  late FileExplorerBloc _bloc;
-
-  @override
-  void initState() {
-    _bloc = FileExplorerBloc(
-      path: widget.path,
-      viewModeCubit: context.read(),
-      directoryManager: context.read(),
-    )..add(const FetchDataFileExplorerEvent());
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _bloc.close();
-
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => _bloc,
-      child: BlocBuilder<FileExplorerBloc, FileExplorerState>(
+      create: (context) => FileExplorerCubit(
+        widget.path,
+        context.read(),
+        context.read(),
+        context.read(),
+        context.read(),
+        context.read(),
+        context.read(),
+        context.read(),
+      )..fetch(),
+      child: BlocBuilder<FileExplorerCubit, FileExplorerState>(
         builder: (context, state) {
           return Scaffold(
             appBar: _buildAppBar(context, state),
             drawer: const MainDrawer(),
             body: RefreshIndicator(
-              onRefresh: () async => _refreshData(),
-              child: _buildBody(state),
+              onRefresh: context.read<FileExplorerCubit>().fetch,
+              child: _buildBody(context, state),
             ),
             floatingActionButton: _getAddMediaButtonIfNeeded(context),
             bottomNavigationBar: const PICloudBottomNavigationBar(),
@@ -69,7 +59,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
     );
   }
 
-  Widget _buildBody(FileExplorerState state) {
+  Widget _buildBody(BuildContext context, FileExplorerState state) {
     if (state is FetchedDataFileExplorerState) {
       return FileExplorerView(
         path: widget.path,
@@ -77,7 +67,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
         onSelectionChanged: (selection) => setState(() {
           _selection = selection;
         }),
-        onActionFinalized: _refreshData,
+        onActionFinalized: context.read<FileExplorerCubit>().fetch,
       );
     } else if (state is FetchingDataErrorFileExplorerState) {
       return const ErrorView(
@@ -123,7 +113,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
 
   void _onSelectionActionFinalized(BuildContext context) {
     _selection = const Selection.empty();
-    _refreshData();
+    context.read<FileExplorerCubit>().fetch();
   }
 
   Widget _getAddMediaButtonIfNeeded(BuildContext context) {
@@ -131,11 +121,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
         ? const SizedBox()
         : AddMediaButton(
             currentPath: widget.path,
-            onNewMediaAdded: _refreshData,
+            onNewMediaAdded: context.read<FileExplorerCubit>().fetch,
           );
-  }
-
-  void _refreshData() {
-    _bloc.add(const FetchDataFileExplorerEvent());
   }
 }

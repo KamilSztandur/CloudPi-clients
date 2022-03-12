@@ -4,7 +4,7 @@ import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/widgets/error_view.dart';
 import 'package:app/features/app/widgets/app_bar/preview_app_bar.dart';
 import 'package:app/features/favorites_page/data/favorites_manager.dart';
-import 'package:app/features/file_explorer/data/directory_manager.dart';
+import 'package:app/features/file_explorer/bloc/file_explorer_cubit.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/rename_file.dart';
 import 'package:app/features/loading_baner/presentation/loading_panel.dart';
 import 'package:app/features/media_reader/bloc/media_reader_bloc.dart';
@@ -27,7 +27,7 @@ class MediaReaderPage extends StatefulWidget {
   }) : super(key: key);
 
   final String path, resourceName;
-  final String? resourcePubId;
+  final String resourcePubId;
   final VoidCallback onActionFinalized;
 
   @override
@@ -37,12 +37,10 @@ class MediaReaderPage extends StatefulWidget {
 class _MediaReaderPageState extends State<MediaReaderPage> {
   late MediaReaderBloc _bloc;
   late MediaReaderService _service;
-  late DirectoryManager _directoryManager;
 
   @override
   void initState() {
     _service = MediaReaderService(context.read<AuthManager>());
-    _directoryManager = context.read<DirectoryManager>();
     _initializeBloc();
 
     super.initState();
@@ -62,26 +60,19 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
       body: Center(
         child: BlocProvider.value(
           value: _bloc,
-          child: BlocListener<MediaReaderBloc, MediaReaderState>(
-            listener: _mediaReaderBlocListener,
-            child: BlocBuilder<MediaReaderBloc, MediaReaderState>(
-              builder: (context, state) {
-                if (state is MediaDownloadSuccessState) {
-                  final resourceBytes = state.resourceBytes;
-                  return _buildPreviewForResourceOfType(resourceBytes);
-                } else if (state is MediaDownloadFailureState) {
-                  return const ErrorView(
-                    errorMessage: 'Check your internet connection.',
-                  );
-                } else if (state is MediaFileDamagedState) {
-                  return const ErrorView(
-                    errorMessage: 'File is damaged. Contact administrator.',
-                  );
-                } else {
-                  return const LoadingPanel();
-                }
-              },
-            ),
+          child: BlocBuilder<MediaReaderBloc, MediaReaderState>(
+            builder: (context, state) {
+              if (state is MediaDownloadSuccessState) {
+                final resourceBytes = state.resourceBytes;
+                return _buildPreviewForResourceOfType(resourceBytes);
+              } else if (state is MediaDownloadFailureState) {
+                return const ErrorView(
+                  errorMessage: 'Check your internet connection.',
+                );
+              } else {
+                return const LoadingPanel();
+              }
+            },
           ),
         ),
       ),
@@ -109,12 +100,11 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
 
   Future<void> _onDownloadRequested() async {
     try {
-      await _directoryManager.downloadMediaToDevice(
-        widget.resourceName,
-        widget.resourcePubId ?? '',
-        context: context,
-        setState: setState,
-      );
+      await context.read<FileExplorerCubit>().downloadFile(
+            widget.resourceName,
+            widget.resourcePubId,
+            context: context,
+          );
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -143,7 +133,7 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
       context: context,
       currentName: widget.resourceName,
       currentPath: widget.path,
-      resourceId: widget.resourcePubId!,
+      resourceId: widget.resourcePubId,
       amount: 1,
       groupNamePicked: (name) {},
     ).show();
@@ -152,13 +142,13 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
   }
 
   void _onToggleFavoriteRequested() {
-    context.read<FavoritesManager>().toggleFavorite([widget.resourcePubId!]);
+    context.read<FavoritesManager>().toggleFavorite([widget.resourcePubId]);
   }
 
   Future<void> _onDeleteRequested() async {
-    final isSuccessful = await _directoryManager.deleteFile(
-      widget.resourcePubId!,
-    );
+    final isSuccessful = await context.read<FileExplorerCubit>().deleteFile(
+          widget.resourcePubId,
+        );
 
     var message = '';
     if (isSuccessful) {
@@ -185,22 +175,11 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
     //TODO
   }
 
-  void _mediaReaderBlocListener(BuildContext ctx, MediaReaderState state) =>
-      setState(() {});
-
   void _initializeBloc() {
-    _bloc = MediaReaderBloc(
-      _service,
-    );
+    _bloc = MediaReaderBloc(_service);
 
-    if (widget.resourcePubId != null) {
-      _bloc.add(
-        RequestMediaDownloadEvent(resourcePubId: widget.resourcePubId!),
-      );
-    } else {
-      _bloc.add(
-        const DetectedDamagedFileEvent(),
-      );
-    }
+    _bloc.add(
+      RequestMediaDownloadEvent(resourcePubId: widget.resourcePubId),
+    );
   }
 }

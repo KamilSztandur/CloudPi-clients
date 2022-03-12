@@ -1,4 +1,4 @@
-part of 'file_explorer_bloc.dart';
+part of 'file_explorer_cubit.dart';
 
 abstract class FileExplorerState extends Equatable {
   const FileExplorerState();
@@ -8,11 +8,15 @@ abstract class FileExplorerState extends Equatable {
 }
 
 class FileExplorerInitialState extends FileExplorerState {
+  const FileExplorerInitialState();
+
   @override
   List<Object> get props => [];
 }
 
 class FetchingDataFileExplorerState extends FileExplorerState {
+  const FetchingDataFileExplorerState();
+
   @override
   List<Object> get props => [];
 }

@@ -17,10 +17,3 @@ class RequestMediaDownloadEvent extends MediaReaderEvent {
   @override
   List<Object> get props => [resourcePubId];
 }
-
-class DetectedDamagedFileEvent extends MediaReaderEvent {
-  const DetectedDamagedFileEvent();
-
-  @override
-  List<Object> get props => [];
-}

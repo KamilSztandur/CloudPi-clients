@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:app/features/file_explorer/data/directory_manager.dart';
+import 'package:app/features/file_explorer/bloc/file_explorer_cubit.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/create_directory_button.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/pick_file_button.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/photo_taken_status.dart';
@@ -8,10 +8,9 @@ import 'package:app/features/file_explorer/presentation/widgets/add_media/take_p
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:leancode_lint/leancode_lint.dart';
-// ignore: implementation_imports
-import 'package:provider/src/provider.dart';
+import 'package:provider/provider.dart';
 
-class AddMediaButton extends StatefulWidget {
+class AddMediaButton extends StatelessWidget {
   const AddMediaButton({
     Key? key,
     required this.currentPath,
@@ -20,20 +19,6 @@ class AddMediaButton extends StatefulWidget {
 
   final String currentPath;
   final VoidCallback onNewMediaAdded;
-
-  @override
-  _AddMediaButtonState createState() => _AddMediaButtonState();
-}
-
-class _AddMediaButtonState extends State<AddMediaButton> {
-  late DirectoryManager directoryManager;
-
-  @override
-  void initState() {
-    directoryManager = context.read<DirectoryManager>();
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,21 +37,30 @@ class _AddMediaButtonState extends State<AddMediaButton> {
       shape: const CircleBorder(),
       children: [
         CreateDirectoryButton(
-          onSubmitted: _createDirectory,
+          onSubmitted: (name) => _createDirectory(context, name),
           context: context,
-          path: widget.currentPath,
+          path: currentPath,
         ),
-        PickFileButton(onFilePicked: _uploadFile, context: context),
-        TakePhotoButton(onPhotoTaken: _uploadPhoto, context: context),
+        PickFileButton(
+          onFilePicked: (files) => _uploadFile(context, files),
+          context: context,
+        ),
+        TakePhotoButton(
+          onPhotoTaken: (files) => _uploadPhoto(context, files),
+          context: context,
+        ),
       ],
     );
   }
 
-  Future<void> _createDirectory(String directoryName) async {
-    final result = await directoryManager.createNewDirectory(
-      widget.currentPath,
-      directoryName,
-    );
+  Future<void> _createDirectory(
+    BuildContext context,
+    String directoryName,
+  ) async {
+    final result = await context.read<FileExplorerCubit>().createDirectory(
+          currentPath,
+          directoryName,
+        );
 
     ScaffoldMessenger.of(context).showSnackBar(
       _NotificationSnackbar(
@@ -78,20 +72,21 @@ class _AddMediaButtonState extends State<AddMediaButton> {
     );
 
     if (result) {
-      widget.onNewMediaAdded();
+      onNewMediaAdded();
     }
   }
 
-  Future<void> _uploadFile(List<File> files) async {
+  Future<void> _uploadFile(BuildContext context, List<File> files) async {
     if (files.isNotEmpty) {
-      // ignore: unawaited_futures
-      showDialog<void>(
-        context: context,
-        builder: (context) => const Center(
-          child: SizedBox(
-            height: 100,
-            width: 100,
-            child: CircularProgressIndicator(),
+      unawaited(
+        showDialog<void>(
+          context: context,
+          builder: (context) => const Center(
+            child: SizedBox(
+              height: 100,
+              width: 100,
+              child: CircularProgressIndicator(),
+            ),
           ),
         ),
       );
@@ -100,16 +95,16 @@ class _AddMediaButtonState extends State<AddMediaButton> {
         var counter = 0;
 
         for (final file in files) {
-          final result = await directoryManager.uploadFile(
-            widget.currentPath,
-            file,
-          );
+          final result = await context.read<FileExplorerCubit>().uploadFile(
+                currentPath,
+                file,
+              );
 
           if (result) {
             counter++;
           }
         }
-        widget.onNewMediaAdded();
+        onNewMediaAdded();
         ScaffoldMessenger.of(context).showSnackBar(
           _NotificationSnackbar(
             context: context,
@@ -129,7 +124,7 @@ class _AddMediaButtonState extends State<AddMediaButton> {
     }
   }
 
-  Future<void> _uploadPhoto(File file) async {
+  Future<void> _uploadPhoto(BuildContext context, File file) async {
     unawaited(
       showDialog<void>(
         context: context,
@@ -145,7 +140,8 @@ class _AddMediaButtonState extends State<AddMediaButton> {
 
     var isSuccess = false;
     try {
-      isSuccess = await directoryManager.uploadPhoto(widget.currentPath, file);
+      isSuccess =
+          await context.read<FileExplorerCubit>().uploadFile(currentPath, file);
     } catch (exception) {
       ScaffoldMessenger.of(context).showSnackBar(
         _NotificationSnackbar(
@@ -158,7 +154,7 @@ class _AddMediaButtonState extends State<AddMediaButton> {
     }
 
     if (isSuccess) {
-      widget.onNewMediaAdded();
+      onNewMediaAdded();
       PhotoTakenPopup(context: context, imageFile: file).show();
     }
   }
