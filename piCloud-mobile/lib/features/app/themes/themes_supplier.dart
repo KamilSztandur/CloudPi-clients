@@ -1,13 +1,14 @@
+import 'package:app/features/app/themes/main_app_color.dart';
 import 'package:app/features/app/themes/no_transitions.dart';
 import 'package:flutter/material.dart';
 
 class ThemesSupplier {
   static ThemeData getDarkTheme() => ThemeData(
-        primaryColor: Colors.pink.shade800,
-        primaryColorLight: Colors.pink,
-        primaryColorDark: Colors.pink.shade900,
+        primaryColor: MainAppColor().shade600,
+        primaryColorLight: MainAppColor(),
+        primaryColorDark: MainAppColor().shade700,
         colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.pink,
+          primarySwatch: MainAppColor(),
           brightness: Brightness.dark,
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -15,11 +16,11 @@ class ThemesSupplier {
       );
 
   static ThemeData getLightTheme() => ThemeData(
-        primaryColor: Colors.pinkAccent.shade200,
-        primaryColorLight: Colors.pinkAccent,
-        primaryColorDark: Colors.pinkAccent.shade700,
+        primaryColor: MainAppColor().shade500,
+        primaryColorLight: MainAppColor(),
+        primaryColorDark: MainAppColor().shade600,
         colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.pink,
+          primarySwatch: MainAppColor(),
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
         pageTransitionsTheme: NoTransitions(),
