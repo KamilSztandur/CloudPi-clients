@@ -11,9 +11,11 @@ class DeleteUserView extends StatefulWidget {
   const DeleteUserView({
     Key? key,
     required this.user,
+    required this.onConfirm,
   }) : super(key: key);
 
   final User user;
+  final VoidCallback onConfirm;
 
   @override
   _DeleteUserViewState createState() => _DeleteUserViewState();
@@ -115,6 +117,7 @@ class _DeleteUserViewState extends State<DeleteUserView> {
 
   Future<void> _onDeletePressed() async {
     await service.deleteUser(widget.user.username);
+    widget.onConfirm();
     await AutoRouter.of(context).pop();
   }
 

@@ -94,7 +94,8 @@ class AppRouter extends _i11.RootStackRouter {
           orElse: () => const UserWizardRouteArgs());
       return _i11.MaterialPageX<void>(
           routeData: routeData,
-          child: _i10.UserWizardPage(key: args.key, user: args.user),
+          child: _i10.UserWizardPage(
+              key: args.key, user: args.user, onAddUser: args.onAddUser),
           fullscreenDialog: true);
     }
   };
@@ -257,18 +258,21 @@ class CloudSettingsRoute extends _i11.PageRouteInfo<void> {
 
 /// generated route for [_i10.UserWizardPage]
 class UserWizardRoute extends _i11.PageRouteInfo<UserWizardRouteArgs> {
-  UserWizardRoute({_i12.Key? key, _i14.User? user})
+  UserWizardRoute({_i12.Key? key, _i14.User? user, void Function()? onAddUser})
       : super(name,
             path: '/user-wizard-page',
-            args: UserWizardRouteArgs(key: key, user: user));
+            args: UserWizardRouteArgs(
+                key: key, user: user, onAddUser: onAddUser));
 
   static const String name = 'UserWizardRoute';
 }
 
 class UserWizardRouteArgs {
-  const UserWizardRouteArgs({this.key, this.user});
+  const UserWizardRouteArgs({this.key, this.user, this.onAddUser});
 
   final _i12.Key? key;
 
   final _i14.User? user;
+
+  final void Function()? onAddUser;
 }

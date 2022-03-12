@@ -18,9 +18,11 @@ class UserWizardPage extends StatefulWidget {
   const UserWizardPage({
     Key? key,
     this.user,
+    this.onAddUser,
   }) : super(key: key);
 
   final User? user;
+  final VoidCallback? onAddUser;
 
   @override
   _UserWizardPageState createState() => _UserWizardPageState();
@@ -182,7 +184,7 @@ class _UserWizardPageState extends State<UserWizardPage> {
 
   void _onCancelPressed() => AutoRouter.of(context).pop();
 
-  void _onCreatePressed() {
+  Future<void> _onCreatePressed() async {
     final errorMessage = service.getWarningMessageForUserData(
       user,
       creatingNewUser: _isThisNewUserCreation(),
@@ -190,12 +192,17 @@ class _UserWizardPageState extends State<UserWizardPage> {
 
     if (errorMessage == null) {
       if (_isThisNewUserCreation()) {
-        service.addUser(user);
+        await service.addUser(user);
+        final action = widget.onAddUser;
+
+        if (action != null) {
+          action();
+        }
       } else {
-        service.editUser(user);
+        await service.editUser(user);
       }
 
-      AutoRouter.of(context).pop();
+      await AutoRouter.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

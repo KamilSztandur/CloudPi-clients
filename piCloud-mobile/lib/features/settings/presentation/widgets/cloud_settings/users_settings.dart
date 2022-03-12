@@ -113,10 +113,18 @@ class _UserSettingsPanelState extends State<UserSettingsPanel> {
 
   void _viewAllUsers() => _showUsers(context);
 
-  void _addNewUser() => AutoRouter.of(context).navigate(UserWizardRoute());
+  void _addNewUser() => AutoRouter.of(context).navigate(
+        UserWizardRoute(
+          onAddUser: _refresh,
+        ),
+      );
 
   void _showUsers(BuildContext context) => showDialog<void>(
         context: context,
-        builder: (context) => const RegisteredUsersView(),
+        builder: (context) => RegisteredUsersView(
+          onDelete: _refresh,
+        ),
       );
+
+  void _refresh() => setState(() {});
 }

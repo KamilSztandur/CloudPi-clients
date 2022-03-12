@@ -12,7 +12,10 @@ import 'package:provider/provider.dart';
 class RegisteredUsersView extends StatefulWidget {
   const RegisteredUsersView({
     Key? key,
+    required this.onDelete,
   }) : super(key: key);
+
+  final VoidCallback onDelete;
 
   @override
   _RegisteredUsersViewState createState() => _RegisteredUsersViewState();
@@ -173,7 +176,10 @@ class _RegisteredUsersViewState extends State<RegisteredUsersView> {
         Duration.zero,
         () => showDialog<void>(
           context: context,
-          builder: (context) => DeleteUserView(user: user),
+          builder: (context) => DeleteUserView(
+            user: user,
+            onConfirm: widget.onDelete,
+          ),
         ),
       );
 
