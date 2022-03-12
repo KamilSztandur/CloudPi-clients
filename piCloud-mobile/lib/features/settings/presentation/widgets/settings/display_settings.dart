@@ -54,8 +54,6 @@ class _DisplaySettingsState extends State<DisplaySettings> {
         setState(() {
           PICloudApp.of(context)!.switchTheme();
         });
-
-        await _reload(); // Hotfix for false leading implying.
       },
       value: isOn,
     );
@@ -77,10 +75,5 @@ class _DisplaySettingsState extends State<DisplaySettings> {
         ],
       ),
     );
-  }
-
-  Future<void> _reload() async {
-    final router = AutoRouter.of(context);
-    await router.replaceAll([FileExplorerRoute(path: '/')]);
   }
 }
