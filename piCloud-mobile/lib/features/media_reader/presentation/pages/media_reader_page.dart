@@ -1,11 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:app/common/auth/auth_manager.dart';
+import 'package:app/common/models/file_item.dart';
 import 'package:app/common/models/file_permission.dart';
 import 'package:app/common/widgets/error_view.dart';
 import 'package:app/features/app/widgets/app_bar/preview_app_bar.dart';
 import 'package:app/features/favorites_page/data/favorites_manager.dart';
 import 'package:app/features/file_explorer/data/directory_manager.dart';
+import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/details_popup.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/rename_file.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/show_share_popup.dart';
 import 'package:app/features/loading_baner/presentation/loading_panel.dart';
@@ -24,18 +26,17 @@ class MediaReaderPage extends StatefulWidget {
   const MediaReaderPage({
     Key? key,
     required this.path,
-    required this.resourceName,
-    required this.resourcePubId,
+    required this.item,
     required this.permissions,
     required this.shared,
-    required this.onActionFinalized,
+    this.onActionFinalized,
   }) : super(key: key);
 
-  final String path, resourceName;
-  final String? resourcePubId;
+  final String path;
+  final FileItem item;
   final Set<FilePermission> permissions;
   final bool shared;
-  final VoidCallback onActionFinalized;
+  final VoidCallback? onActionFinalized;
 
   @override
   _MediaReaderPageState createState() => _MediaReaderPageState();
@@ -61,11 +62,12 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
 
     return Scaffold(
       appBar: PreviewAppBar(
-        resourceName: widget.resourceName,
+        resourceName: widget.item.title,
+        onDetailsRequested: _onDetailsRequested,
+        onDownloadRequested: _onDownloadRequested,
         onShareRequested:
             !widget.shared ? () => _onShareRequested(context) : null,
         onDeleteRequested: canModify ? _onDeleteRequested : null,
-        onDownloadRequested: _onDownloadRequested,
         onRenameRequested: canModify ? _onRenameRequested : null,
         onToggleFavoriteRequested:
             !widget.shared ? _onToggleFavoriteRequested : null,
@@ -100,7 +102,7 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
   }
 
   Widget _buildPreviewForResourceOfType(Uint8List resourceBytes) {
-    final type = _service.defineMediaType(widget.resourceName);
+    final type = _service.defineMediaType(widget.item.title);
 
     switch (type) {
       case MediaReaderSupportedTypes.image:
@@ -112,7 +114,7 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
       default:
         return NoPreviewAvailable(
           path: widget.path,
-          resourceName: widget.resourceName,
+          resourceName: widget.item.title,
           onDownloadRequested: _onDownloadRequested,
         );
     }
@@ -121,8 +123,8 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
   Future<void> _onDownloadRequested() async {
     try {
       await _directoryManager.downloadMediaToDevice(
-        widget.resourceName,
-        widget.resourcePubId ?? '',
+        widget.item.title,
+        widget.item.id ?? '',
         context: context,
         setState: setState,
       );
@@ -141,7 +143,7 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
         SnackBar(
           backgroundColor: Theme.of(context).primaryColor,
           content: Text(
-            '${widget.resourceName} download failed.',
+            '${widget.item.title} download failed.',
             style: const TextStyle(color: Colors.white),
           ),
         ),
@@ -152,33 +154,51 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
   Future<void> _onRenameRequested() async {
     await RenameFilePopup(
       context: context,
-      currentName: widget.resourceName,
+      currentName: widget.item.title,
       currentPath: widget.path,
-      resourceId: widget.resourcePubId!,
+      resourceId: widget.item.id!,
       amount: 1,
       groupNamePicked: (name) {},
     ).show();
 
-    widget.onActionFinalized();
+    widget.onActionFinalized?.call();
   }
 
   void _onToggleFavoriteRequested() {
-    context.read<FavoritesManager>().toggleFavorite([widget.resourcePubId!]);
+    context.read<FavoritesManager>().toggleFavorite([widget.item.id!]);
   }
+
+  Future<void> _onDetailsRequested() async => showDialog<void>(
+        context: context,
+        builder: (context) => AlertDialog(
+          contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+          title: Text(widget.item.title),
+          content: DetailsView(
+            item: widget.item,
+            path: widget.path,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Ok', style: TextStyle(fontSize: 20)),
+            )
+          ],
+        ),
+      );
 
   Future<void> _onDeleteRequested() async {
     final isSuccessful = await _directoryManager.deleteFile(
-      widget.resourcePubId!,
+      widget.item.id!,
     );
 
     var message = '';
     if (isSuccessful) {
-      message = '${widget.resourceName} deleted.';
+      message = '${widget.item.title} deleted.';
 
       await AutoRouter.of(context).pop();
-      widget.onActionFinalized();
+      widget.onActionFinalized?.call();
     } else {
-      message = 'Failed to delete ${widget.resourceName}';
+      message = 'Failed to delete ${widget.item.title}';
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -198,7 +218,7 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
     if (sharePopupResult != null) {
       final username = sharePopupResult.username;
       final result = await context.read<SharedManager>().shareFiles(
-        pubIds: [widget.resourcePubId!],
+        pubIds: [widget.item.id!],
         userName: sharePopupResult.username,
         allowModification: sharePopupResult.allowModification,
       );
@@ -225,9 +245,9 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
       _service,
     );
 
-    if (widget.resourcePubId != null) {
+    if (widget.item.id != null) {
       _bloc.add(
-        RequestMediaDownloadEvent(resourcePubId: widget.resourcePubId!),
+        RequestMediaDownloadEvent(resourcePubId: widget.item.id!),
       );
     } else {
       _bloc.add(

@@ -7,7 +7,8 @@
 import 'package:auto_route/auto_route.dart' as _i11;
 import 'package:flutter/material.dart' as _i12;
 
-import '../../../common/models/file_permission.dart' as _i14;
+import '../../../common/models/file_item.dart' as _i14;
+import '../../../common/models/file_permission.dart' as _i15;
 import '../../favorites_page/presentation/pages/favorites_page.dart' as _i3;
 import '../../file_explorer/presentation/pages/file_explorer_page.dart' as _i4;
 import '../../login/presentation/pages/login_page.dart' as _i1;
@@ -17,7 +18,7 @@ import '../../settings/presentation/pages/cloud_settings_page.dart' as _i9;
 import '../../settings/presentation/pages/settings_page.dart' as _i8;
 import '../../shared_page/presentation/pages/shared_page.dart' as _i2;
 import '../../user_profile/presentation/pages/user_profile_page.dart' as _i6;
-import '../../user_wizard/data/models/user.dart' as _i15;
+import '../../user_wizard/data/models/user.dart' as _i16;
 import '../../user_wizard/presentation/pages/user_wizard_page.dart' as _i10;
 import 'guards/admin_guard.dart' as _i13;
 
@@ -63,8 +64,7 @@ class AppRouter extends _i11.RootStackRouter {
           child: _i5.MediaReaderPage(
               key: args.key,
               path: args.path,
-              resourceName: args.resourceName,
-              resourcePubId: args.resourcePubId,
+              item: args.item,
               permissions: args.permissions,
               shared: args.shared,
               onActionFinalized: args.onActionFinalized),
@@ -192,18 +192,16 @@ class MediaReaderRoute extends _i11.PageRouteInfo<MediaReaderRouteArgs> {
   MediaReaderRoute(
       {_i12.Key? key,
       required String path,
-      required String resourceName,
-      required String? resourcePubId,
-      required Set<_i14.FilePermission> permissions,
+      required _i14.FileItem item,
+      required Set<_i15.FilePermission> permissions,
       required bool shared,
-      required void Function() onActionFinalized})
+      void Function()? onActionFinalized})
       : super(name,
             path: '/media-reader-page',
             args: MediaReaderRouteArgs(
                 key: key,
                 path: path,
-                resourceName: resourceName,
-                resourcePubId: resourcePubId,
+                item: item,
                 permissions: permissions,
                 shared: shared,
                 onActionFinalized: onActionFinalized));
@@ -215,25 +213,22 @@ class MediaReaderRouteArgs {
   const MediaReaderRouteArgs(
       {this.key,
       required this.path,
-      required this.resourceName,
-      required this.resourcePubId,
+      required this.item,
       required this.permissions,
       required this.shared,
-      required this.onActionFinalized});
+      this.onActionFinalized});
 
   final _i12.Key? key;
 
   final String path;
 
-  final String resourceName;
+  final _i14.FileItem item;
 
-  final String? resourcePubId;
-
-  final Set<_i14.FilePermission> permissions;
+  final Set<_i15.FilePermission> permissions;
 
   final bool shared;
 
-  final void Function() onActionFinalized;
+  final void Function()? onActionFinalized;
 }
 
 /// generated route for [_i6.UserProfilePage]
@@ -288,7 +283,7 @@ class CloudSettingsRoute extends _i11.PageRouteInfo<void> {
 
 /// generated route for [_i10.UserWizardPage]
 class UserWizardRoute extends _i11.PageRouteInfo<UserWizardRouteArgs> {
-  UserWizardRoute({_i12.Key? key, _i15.User? user, void Function()? onAddUser})
+  UserWizardRoute({_i12.Key? key, _i16.User? user, void Function()? onAddUser})
       : super(name,
             path: '/user-wizard-page',
             args: UserWizardRouteArgs(
@@ -302,7 +297,7 @@ class UserWizardRouteArgs {
 
   final _i12.Key? key;
 
-  final _i15.User? user;
+  final _i16.User? user;
 
   final void Function()? onAddUser;
 }

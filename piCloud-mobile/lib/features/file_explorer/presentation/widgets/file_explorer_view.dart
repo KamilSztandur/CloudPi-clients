@@ -32,13 +32,7 @@ class FileExplorerView extends StatelessWidget {
         if (file.type == FileExplorerItemType.directory) {
           _moveToNextDirectory(context, file.title);
         } else {
-          _previewMedia(
-            context,
-            file.title,
-            file.id,
-            file.permissions,
-            shared,
-          );
+          _previewMedia(context, file, shared);
         }
       },
     );
@@ -49,19 +43,12 @@ class FileExplorerView extends StatelessWidget {
         FileExplorerRoute(path: '$path$directoryName/'),
       );
 
-  void _previewMedia(
-    BuildContext context,
-    String resourceName,
-    String? pubId,
-    Set<FilePermission> permissions,
-    bool shared,
-  ) =>
+  void _previewMedia(BuildContext context, FileItem item, bool shared) =>
       AutoRouter.of(context).push(
         MediaReaderRoute(
           path: path,
-          resourceName: resourceName,
-          resourcePubId: pubId,
-          permissions: permissions,
+          item: item,
+          permissions: item.permissions,
           shared: shared,
           onActionFinalized: onActionFinalized,
         ),

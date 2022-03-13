@@ -8,6 +8,7 @@ class PreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
   const PreviewAppBar({
     Key? key,
     required this.resourceName,
+    required this.onDetailsRequested,
     required this.onDownloadRequested,
     required this.onDeleteRequested,
     required this.onRenameRequested,
@@ -16,11 +17,12 @@ class PreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
   }) : super(key: key);
 
   final String resourceName;
-  final VoidCallback? onDownloadRequested;
-  final VoidCallback? onDeleteRequested;
-  final VoidCallback? onRenameRequested;
-  final VoidCallback? onShareRequested;
-  final VoidCallback? onToggleFavoriteRequested;
+  final VoidCallback? onDownloadRequested,
+      onDetailsRequested,
+      onDeleteRequested,
+      onRenameRequested,
+      onShareRequested,
+      onToggleFavoriteRequested;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -81,6 +83,11 @@ class PreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   List<SelectionIconButtonChoice> _getHamburgerMenuBody() =>
       <SelectionIconButtonChoice>[
+        if (onDetailsRequested != null)
+          const SelectionIconButtonChoice(
+            title: 'Details',
+            icon: Icons.info_outline,
+          ),
         if (onDownloadRequested != null)
           const SelectionIconButtonChoice(
             title: 'Download',
@@ -110,6 +117,10 @@ class PreviewAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   void _onHamburgerItemPressed(SelectionIconButtonChoice value) {
     switch (value.title) {
+      case 'Details':
+        onDetailsRequested?.call();
+        return;
+
       case 'Share':
         onShareRequested?.call();
         return;

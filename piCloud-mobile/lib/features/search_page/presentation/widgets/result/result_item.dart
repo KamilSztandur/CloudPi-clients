@@ -127,11 +127,9 @@ class _ResultItemState extends State<ResultItem> {
         AutoRouter.of(context).push(
           MediaReaderRoute(
             path: await _getFileLocalizationPath(),
-            resourceName: widget.item.title,
-            resourcePubId: widget.item.id,
+            item: searchEngine.parseSearchResultIntoFileItem(widget.item),
             permissions: FilePermission.values.toSet(),
             shared: false,
-            onActionFinalized: () {},
           ),
         ),
       );

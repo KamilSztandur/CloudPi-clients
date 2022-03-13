@@ -1,4 +1,5 @@
 import 'package:app/common/models/file_explorer_item_type.dart';
+import 'package:app/common/models/file_item.dart';
 import 'package:app/common/models/file_permission.dart';
 import 'package:app/common/widgets/error_view.dart';
 import 'package:app/common/widgets/files_view/files_view.dart';
@@ -67,12 +68,7 @@ class _SharedPageState extends State<SharedPage> {
           if (file.type == FileExplorerItemType.directory) {
             _moveToNextDirectory(context, file.title);
           } else {
-            _previewMedia(
-              context,
-              file.title,
-              file.id,
-              file.permissions,
-            );
+            _previewMedia(context, file);
           }
         },
       );
@@ -112,20 +108,13 @@ class _SharedPageState extends State<SharedPage> {
         SharedRoute(path: '${widget.path ?? '/'}$directoryName/'),
       );
 
-  void _previewMedia(
-    BuildContext context,
-    String resourceName,
-    String? pubId,
-    Set<FilePermission> permissions,
-  ) =>
+  void _previewMedia(BuildContext context, FileItem item) =>
       AutoRouter.of(context).push(
         MediaReaderRoute(
           path: widget.path ?? '/', // TODO
-          resourceName: resourceName,
-          resourcePubId: pubId,
-          permissions: permissions,
+          item: item,
+          permissions: item.permissions,
           shared: true,
-          onActionFinalized: () {}, // TODO
         ),
       );
 
