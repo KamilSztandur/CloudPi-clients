@@ -207,6 +207,8 @@ class DirectoryManager {
           ? await _getImagePreview(dto)
           : null;
 
+      print('$title $type');
+
       fileExplorerItems.add(
         FileItem(
           id: id,
@@ -266,6 +268,7 @@ class DirectoryManager {
 
   String _getFileTypeBasedOnFile(File file) {
     final result = lookupMimeType(_getFilenameFromPath(file.path));
+    print(result);
 
     if (result != null) {
       if (result.toLowerCase().contains('image')) {
@@ -313,7 +316,7 @@ class DirectoryManager {
       case FilesystemObjectDTOType.image:
         return FileExplorerItemType.image;
       case FilesystemObjectDTOType.video:
-        return FileExplorerItemType.directory;
+        return FileExplorerItemType.video;
       case FilesystemObjectDTOType.textFile:
         return FileExplorerItemType.text;
       case FilesystemObjectDTOType.music:
