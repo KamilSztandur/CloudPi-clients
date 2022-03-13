@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:app/common/models/file_explorer_item_type.dart';
+import 'package:app/common/models/file_permission.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/details_popup.dart';
 import 'package:app/features/search_page/data/models/search_result.dart';
@@ -128,6 +129,8 @@ class _ResultItemState extends State<ResultItem> {
             path: await _getFileLocalizationPath(),
             resourceName: widget.item.title,
             resourcePubId: widget.item.id,
+            permissions: FilePermission.values.toSet(),
+            shared: false,
             onActionFinalized: () {},
           ),
         ),

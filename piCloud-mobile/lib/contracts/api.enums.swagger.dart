@@ -123,6 +123,54 @@ const $UserDetailsDTORolesMap = {
   UserDetailsDTORoles.swaggerGeneratedUnknown: ''
 };
 
+enum SharedFileInfoDTOType {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('DIRECTORY')
+  directory,
+  @JsonValue('IMAGE')
+  image,
+  @JsonValue('VIDEO')
+  video,
+  @JsonValue('TEXT_FILE')
+  textFile,
+  @JsonValue('PDF')
+  pdf,
+  @JsonValue('MUSIC')
+  music,
+  @JsonValue('COMPRESSED')
+  compressed,
+  @JsonValue('UNDEFINED')
+  undefined
+}
+
+const $SharedFileInfoDTOTypeMap = {
+  SharedFileInfoDTOType.directory: 'DIRECTORY',
+  SharedFileInfoDTOType.image: 'IMAGE',
+  SharedFileInfoDTOType.video: 'VIDEO',
+  SharedFileInfoDTOType.textFile: 'TEXT_FILE',
+  SharedFileInfoDTOType.pdf: 'PDF',
+  SharedFileInfoDTOType.music: 'MUSIC',
+  SharedFileInfoDTOType.compressed: 'COMPRESSED',
+  SharedFileInfoDTOType.undefined: 'UNDEFINED',
+  SharedFileInfoDTOType.swaggerGeneratedUnknown: ''
+};
+
+enum SharedFileInfoDTOPermissions {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('READ')
+  read,
+  @JsonValue('MODIFY')
+  modify
+}
+
+const $SharedFileInfoDTOPermissionsMap = {
+  SharedFileInfoDTOPermissions.read: 'READ',
+  SharedFileInfoDTOPermissions.modify: 'MODIFY',
+  SharedFileInfoDTOPermissions.swaggerGeneratedUnknown: ''
+};
+
 enum FilesystemObjectDTOType {
   @JsonValue('swaggerGeneratedUnknown')
   swaggerGeneratedUnknown,
@@ -154,6 +202,21 @@ const $FilesystemObjectDTOTypeMap = {
   FilesystemObjectDTOType.compressed: 'COMPRESSED',
   FilesystemObjectDTOType.undefined: 'UNDEFINED',
   FilesystemObjectDTOType.swaggerGeneratedUnknown: ''
+};
+
+enum FilesystemObjectDTOPermissions {
+  @JsonValue('swaggerGeneratedUnknown')
+  swaggerGeneratedUnknown,
+  @JsonValue('READ')
+  read,
+  @JsonValue('MODIFY')
+  modify
+}
+
+const $FilesystemObjectDTOPermissionsMap = {
+  FilesystemObjectDTOPermissions.read: 'READ',
+  FilesystemObjectDTOPermissions.modify: 'MODIFY',
+  FilesystemObjectDTOPermissions.swaggerGeneratedUnknown: ''
 };
 
 enum PermissionDTOPermissions {

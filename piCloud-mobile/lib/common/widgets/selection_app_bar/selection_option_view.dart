@@ -9,6 +9,7 @@ class SelectionOptionView extends StatelessWidget {
 
   static final icons = {
     Option.download: Icons.download_outlined,
+    Option.share: Icons.share,
     Option.rename: Icons.edit_outlined,
     Option.delete: Icons.delete_forever_outlined,
     Option.showDetails: Icons.info_outlined,
@@ -17,6 +18,7 @@ class SelectionOptionView extends StatelessWidget {
 
   static final titles = {
     Option.download: 'Download',
+    Option.share: 'Share',
     Option.rename: 'Rename',
     Option.delete: 'Delete',
     Option.showDetails: 'Details',

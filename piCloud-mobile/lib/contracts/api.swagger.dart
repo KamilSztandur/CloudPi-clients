@@ -209,7 +209,8 @@ abstract class Api extends ChopperService {
 
   ///Returns list of files that was shared to user
   @Get(path: '/filesystem/files-shared-to-user')
-  Future<chopper.Response<List<FileInfoDTO>>> filesystemFilesSharedToUserGet();
+  Future<chopper.Response<List<SharedFileInfoDTO>>>
+      filesystemFilesSharedToUserGet();
 
   ///<h2><font color="#911">Method not implemented</font> [priority: medium]</h2>
   ///Returns list of files that user shared
@@ -320,6 +321,7 @@ final Map<Type, Object Function(Map<String, dynamic>)> ApiJsonDecoderMappings =
   UserDetailsDTO: UserDetailsDTO.fromJsonFactory,
   UserIdDTO: UserIdDTO.fromJsonFactory,
   FilesystemInfoDTO: FilesystemInfoDTO.fromJsonFactory,
+  SharedFileInfoDTO: SharedFileInfoDTO.fromJsonFactory,
   FileStructureDTO: FileStructureDTO.fromJsonFactory,
   FilesystemObjectDTO: FilesystemObjectDTO.fromJsonFactory,
   FilePermissionsDTO: FilePermissionsDTO.fromJsonFactory,
@@ -1317,6 +1319,126 @@ extension $FilesystemInfoDTOExtension on FilesystemInfoDTO {
 }
 
 @JsonSerializable(explicitToJson: true)
+class SharedFileInfoDTO {
+  SharedFileInfoDTO({
+    this.pubId,
+    this.name,
+    this.path,
+    this.hasThumbnail,
+    this.type,
+    this.size,
+    this.modifiedAt,
+    this.createdAt,
+    this.isFavourite,
+    this.permissions,
+  });
+
+  factory SharedFileInfoDTO.fromJson(Map<String, dynamic> json) =>
+      _$SharedFileInfoDTOFromJson(json);
+
+  @JsonKey(name: 'pubId')
+  final String? pubId;
+  @JsonKey(name: 'name')
+  final String? name;
+  @JsonKey(name: 'path')
+  final String? path;
+  @JsonKey(name: 'hasThumbnail')
+  final bool? hasThumbnail;
+  @JsonKey(
+      name: 'type',
+      toJson: sharedFileInfoDTOTypeToJson,
+      fromJson: sharedFileInfoDTOTypeFromJson)
+  final enums.SharedFileInfoDTOType? type;
+  @JsonKey(name: 'size')
+  final int? size;
+  @JsonKey(name: 'modifiedAt')
+  final DateTime? modifiedAt;
+  @JsonKey(name: 'createdAt')
+  final DateTime? createdAt;
+  @JsonKey(name: 'isFavourite')
+  final bool? isFavourite;
+  @JsonKey(
+      name: 'permissions',
+      toJson: sharedFileInfoDTOPermissionsListToJson,
+      fromJson: sharedFileInfoDTOPermissionsListFromJson)
+  final List<enums.SharedFileInfoDTOPermissions>? permissions;
+  static const fromJsonFactory = _$SharedFileInfoDTOFromJson;
+  static const toJsonFactory = _$SharedFileInfoDTOToJson;
+  Map<String, dynamic> toJson() => _$SharedFileInfoDTOToJson(this);
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is SharedFileInfoDTO &&
+            (identical(other.pubId, pubId) ||
+                const DeepCollectionEquality().equals(other.pubId, pubId)) &&
+            (identical(other.name, name) ||
+                const DeepCollectionEquality().equals(other.name, name)) &&
+            (identical(other.path, path) ||
+                const DeepCollectionEquality().equals(other.path, path)) &&
+            (identical(other.hasThumbnail, hasThumbnail) ||
+                const DeepCollectionEquality()
+                    .equals(other.hasThumbnail, hasThumbnail)) &&
+            (identical(other.type, type) ||
+                const DeepCollectionEquality().equals(other.type, type)) &&
+            (identical(other.size, size) ||
+                const DeepCollectionEquality().equals(other.size, size)) &&
+            (identical(other.modifiedAt, modifiedAt) ||
+                const DeepCollectionEquality()
+                    .equals(other.modifiedAt, modifiedAt)) &&
+            (identical(other.createdAt, createdAt) ||
+                const DeepCollectionEquality()
+                    .equals(other.createdAt, createdAt)) &&
+            (identical(other.isFavourite, isFavourite) ||
+                const DeepCollectionEquality()
+                    .equals(other.isFavourite, isFavourite)) &&
+            (identical(other.permissions, permissions) ||
+                const DeepCollectionEquality()
+                    .equals(other.permissions, permissions)));
+  }
+
+  @override
+  int get hashCode =>
+      const DeepCollectionEquality().hash(pubId) ^
+      const DeepCollectionEquality().hash(name) ^
+      const DeepCollectionEquality().hash(path) ^
+      const DeepCollectionEquality().hash(hasThumbnail) ^
+      const DeepCollectionEquality().hash(type) ^
+      const DeepCollectionEquality().hash(size) ^
+      const DeepCollectionEquality().hash(modifiedAt) ^
+      const DeepCollectionEquality().hash(createdAt) ^
+      const DeepCollectionEquality().hash(isFavourite) ^
+      const DeepCollectionEquality().hash(permissions) ^
+      runtimeType.hashCode;
+}
+
+extension $SharedFileInfoDTOExtension on SharedFileInfoDTO {
+  SharedFileInfoDTO copyWith(
+      {String? pubId,
+      String? name,
+      String? path,
+      bool? hasThumbnail,
+      enums.SharedFileInfoDTOType? type,
+      int? size,
+      DateTime? modifiedAt,
+      DateTime? createdAt,
+      bool? isFavourite,
+      List<enums.SharedFileInfoDTOPermissions>? permissions}) {
+    return SharedFileInfoDTO(
+        pubId: pubId ?? this.pubId,
+        name: name ?? this.name,
+        path: path ?? this.path,
+        hasThumbnail: hasThumbnail ?? this.hasThumbnail,
+        type: type ?? this.type,
+        size: size ?? this.size,
+        modifiedAt: modifiedAt ?? this.modifiedAt,
+        createdAt: createdAt ?? this.createdAt,
+        isFavourite: isFavourite ?? this.isFavourite,
+        permissions: permissions ?? this.permissions);
+  }
+}
+
+@JsonSerializable(explicitToJson: true)
 class FileStructureDTO {
   FileStructureDTO({
     this.path,
@@ -1367,6 +1489,7 @@ class FilesystemObjectDTO {
     this.version,
     this.type,
     this.favourite,
+    this.permissions,
     this.children,
   });
 
@@ -1390,6 +1513,11 @@ class FilesystemObjectDTO {
   final enums.FilesystemObjectDTOType? type;
   @JsonKey(name: 'favourite')
   final bool? favourite;
+  @JsonKey(
+      name: 'permissions',
+      toJson: filesystemObjectDTOPermissionsListToJson,
+      fromJson: filesystemObjectDTOPermissionsListFromJson)
+  final List<enums.FilesystemObjectDTOPermissions>? permissions;
   @JsonKey(name: 'children', defaultValue: <FilesystemObjectDTO>[])
   final List<FilesystemObjectDTO>? children;
   static const fromJsonFactory = _$FilesystemObjectDTOFromJson;
@@ -1417,6 +1545,9 @@ class FilesystemObjectDTO {
             (identical(other.favourite, favourite) ||
                 const DeepCollectionEquality()
                     .equals(other.favourite, favourite)) &&
+            (identical(other.permissions, permissions) ||
+                const DeepCollectionEquality()
+                    .equals(other.permissions, permissions)) &&
             (identical(other.children, children) ||
                 const DeepCollectionEquality()
                     .equals(other.children, children)));
@@ -1431,6 +1562,7 @@ class FilesystemObjectDTO {
       const DeepCollectionEquality().hash(version) ^
       const DeepCollectionEquality().hash(type) ^
       const DeepCollectionEquality().hash(favourite) ^
+      const DeepCollectionEquality().hash(permissions) ^
       const DeepCollectionEquality().hash(children) ^
       runtimeType.hashCode;
 }
@@ -1444,6 +1576,7 @@ extension $FilesystemObjectDTOExtension on FilesystemObjectDTO {
       int? version,
       enums.FilesystemObjectDTOType? type,
       bool? favourite,
+      List<enums.FilesystemObjectDTOPermissions>? permissions,
       List<FilesystemObjectDTO>? children}) {
     return FilesystemObjectDTO(
         pubId: pubId ?? this.pubId,
@@ -1453,6 +1586,7 @@ extension $FilesystemObjectDTOExtension on FilesystemObjectDTO {
         version: version ?? this.version,
         type: type ?? this.type,
         favourite: favourite ?? this.favourite,
+        permissions: permissions ?? this.permissions,
         children: children ?? this.children);
   }
 }
@@ -2056,6 +2190,93 @@ List<enums.UserDetailsDTORoles> userDetailsDTORolesListFromJson(
       .toList();
 }
 
+String? sharedFileInfoDTOTypeToJson(
+    enums.SharedFileInfoDTOType? sharedFileInfoDTOType) {
+  return enums.$SharedFileInfoDTOTypeMap[sharedFileInfoDTOType];
+}
+
+enums.SharedFileInfoDTOType sharedFileInfoDTOTypeFromJson(
+    String? sharedFileInfoDTOType) {
+  if (sharedFileInfoDTOType == null) {
+    return enums.SharedFileInfoDTOType.swaggerGeneratedUnknown;
+  }
+
+  return enums.$SharedFileInfoDTOTypeMap.entries
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() ==
+              sharedFileInfoDTOType.toLowerCase(),
+          orElse: () => const MapEntry(
+              enums.SharedFileInfoDTOType.swaggerGeneratedUnknown, ''))
+      .key;
+}
+
+List<String> sharedFileInfoDTOTypeListToJson(
+    List<enums.SharedFileInfoDTOType>? sharedFileInfoDTOType) {
+  if (sharedFileInfoDTOType == null) {
+    return [];
+  }
+
+  return sharedFileInfoDTOType
+      .map((e) => enums.$SharedFileInfoDTOTypeMap[e]!)
+      .toList();
+}
+
+List<enums.SharedFileInfoDTOType> sharedFileInfoDTOTypeListFromJson(
+    List? sharedFileInfoDTOType) {
+  if (sharedFileInfoDTOType == null) {
+    return [];
+  }
+
+  return sharedFileInfoDTOType
+      .map((e) => sharedFileInfoDTOTypeFromJson(e.toString()))
+      .toList();
+}
+
+String? sharedFileInfoDTOPermissionsToJson(
+    enums.SharedFileInfoDTOPermissions? sharedFileInfoDTOPermissions) {
+  return enums.$SharedFileInfoDTOPermissionsMap[sharedFileInfoDTOPermissions];
+}
+
+enums.SharedFileInfoDTOPermissions sharedFileInfoDTOPermissionsFromJson(
+    String? sharedFileInfoDTOPermissions) {
+  if (sharedFileInfoDTOPermissions == null) {
+    return enums.SharedFileInfoDTOPermissions.swaggerGeneratedUnknown;
+  }
+
+  return enums.$SharedFileInfoDTOPermissionsMap.entries
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() ==
+              sharedFileInfoDTOPermissions.toLowerCase(),
+          orElse: () => const MapEntry(
+              enums.SharedFileInfoDTOPermissions.swaggerGeneratedUnknown, ''))
+      .key;
+}
+
+List<String> sharedFileInfoDTOPermissionsListToJson(
+    List<enums.SharedFileInfoDTOPermissions>? sharedFileInfoDTOPermissions) {
+  if (sharedFileInfoDTOPermissions == null) {
+    return [];
+  }
+
+  return sharedFileInfoDTOPermissions
+      .map((e) => enums.$SharedFileInfoDTOPermissionsMap[e]!)
+      .toList();
+}
+
+List<enums.SharedFileInfoDTOPermissions>
+    sharedFileInfoDTOPermissionsListFromJson(
+        List? sharedFileInfoDTOPermissions) {
+  if (sharedFileInfoDTOPermissions == null) {
+    return [];
+  }
+
+  return sharedFileInfoDTOPermissions
+      .map((e) => sharedFileInfoDTOPermissionsFromJson(e.toString()))
+      .toList();
+}
+
 String? filesystemObjectDTOTypeToJson(
     enums.FilesystemObjectDTOType? filesystemObjectDTOType) {
   return enums.$FilesystemObjectDTOTypeMap[filesystemObjectDTOType];
@@ -2096,6 +2317,52 @@ List<enums.FilesystemObjectDTOType> filesystemObjectDTOTypeListFromJson(
 
   return filesystemObjectDTOType
       .map((e) => filesystemObjectDTOTypeFromJson(e.toString()))
+      .toList();
+}
+
+String? filesystemObjectDTOPermissionsToJson(
+    enums.FilesystemObjectDTOPermissions? filesystemObjectDTOPermissions) {
+  return enums
+      .$FilesystemObjectDTOPermissionsMap[filesystemObjectDTOPermissions];
+}
+
+enums.FilesystemObjectDTOPermissions filesystemObjectDTOPermissionsFromJson(
+    String? filesystemObjectDTOPermissions) {
+  if (filesystemObjectDTOPermissions == null) {
+    return enums.FilesystemObjectDTOPermissions.swaggerGeneratedUnknown;
+  }
+
+  return enums.$FilesystemObjectDTOPermissionsMap.entries
+      .firstWhere(
+          (element) =>
+              element.value.toLowerCase() ==
+              filesystemObjectDTOPermissions.toLowerCase(),
+          orElse: () => const MapEntry(
+              enums.FilesystemObjectDTOPermissions.swaggerGeneratedUnknown, ''))
+      .key;
+}
+
+List<String> filesystemObjectDTOPermissionsListToJson(
+    List<enums.FilesystemObjectDTOPermissions>?
+        filesystemObjectDTOPermissions) {
+  if (filesystemObjectDTOPermissions == null) {
+    return [];
+  }
+
+  return filesystemObjectDTOPermissions
+      .map((e) => enums.$FilesystemObjectDTOPermissionsMap[e]!)
+      .toList();
+}
+
+List<enums.FilesystemObjectDTOPermissions>
+    filesystemObjectDTOPermissionsListFromJson(
+        List? filesystemObjectDTOPermissions) {
+  if (filesystemObjectDTOPermissions == null) {
+    return [];
+  }
+
+  return filesystemObjectDTOPermissions
+      .map((e) => filesystemObjectDTOPermissionsFromJson(e.toString()))
       .toList();
 }
 

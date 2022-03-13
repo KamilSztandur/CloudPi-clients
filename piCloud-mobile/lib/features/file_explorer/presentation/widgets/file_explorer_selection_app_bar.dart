@@ -1,10 +1,13 @@
 import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/common/models/file_item.dart';
+import 'package:app/common/models/file_permission.dart';
 import 'package:app/common/widgets/selection_app_bar/selection_app_bar.dart';
 import 'package:app/features/favorites_page/data/favorites_manager.dart';
 import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/details_popup.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/rename_file.dart';
+import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/show_share_popup.dart';
+import 'package:app/features/shared_page/data/shared_manager.dart';
 import 'package:drag_select_grid_view/drag_select_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart' as p;
@@ -13,17 +16,20 @@ import 'package:provider/provider.dart';
 
 class FileExplorerSelectionAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  const FileExplorerSelectionAppBar({
+  FileExplorerSelectionAppBar({
     Key? key,
-    required this.selection,
-    required this.allItems,
+    required Selection selection,
+    required List<FileItem> allItems,
     required this.currentDirPath,
+    this.shared = false,
     required this.onActionFinalized,
-  }) : super(key: key);
+  }) : super(key: key) {
+    selectedItems = _getSelectedItems(selection, allItems);
+  }
 
-  final Selection selection;
-  final List<FileItem> allItems;
+  late final List<FileItem> selectedItems;
   final String currentDirPath;
+  final bool shared;
   final VoidCallback onActionFinalized;
 
   @override
@@ -31,19 +37,22 @@ class FileExplorerSelectionAppBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final canModify = !selectedItems
+        .any((item) => !item.permissions.contains(FilePermission.modify));
+
     return SelectionAppBar(
-      selectionCount: selection.amount,
+      selectionCount: selectedItems.length,
       onDownload: () => _onDownloadPressed(context),
-      onRename: () => _onRenamePressed(context),
-      onDelete: () => _onDeletePressed(context),
+      onShare: !shared ? () => _onSharePressed(context) : null,
+      onRename: canModify ? () => _onRenamePressed(context) : null,
+      onDelete: canModify ? () => _onDeletePressed(context) : null,
       onShowDetails: () => _onDetailsPressed(context),
-      onToggleFavorites: () => _onAddToFavouritesPressed(context),
+      onToggleFavorites:
+          !shared ? () => _onAddToFavouritesPressed(context) : null,
     );
   }
 
   Future<void> _onRenamePressed(BuildContext context) async {
-    final selectedItems = _getSelectedItems();
-
     if (selectedItems.length > 1) {
       await RenameFilePopup(
         context: context,
@@ -71,14 +80,14 @@ class FileExplorerSelectionAppBar extends StatelessWidget
 
   Future<void> _onAddToFavouritesPressed(BuildContext context) async {
     await context.read<FavoritesManager>().toggleFavorite(
-          _getSelectedItems().map((item) => item.id!),
+          selectedItems.map((item) => item.id!),
         );
 
     onActionFinalized();
   }
 
   Future<void> _onDownloadPressed(BuildContext context) async {
-    for (final item in _getSelectedItems()) {
+    for (final item in selectedItems) {
       try {
         await context.read<DirectoryManager>().downloadMediaToDevice(
               item.title,
@@ -111,6 +120,30 @@ class FileExplorerSelectionAppBar extends StatelessWidget
     onActionFinalized();
   }
 
+  Future<void> _onSharePressed(BuildContext context) async {
+    final sharePopupResult = await showSharePopup(context);
+
+    if (sharePopupResult != null) {
+      final result = await context.read<SharedManager>().shareFiles(
+            pubIds: selectedItems.map((item) => item.id!).toList(),
+            userName: sharePopupResult.username,
+            allowModification: sharePopupResult.allowModification,
+          );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          content: Text(
+            result ? 'Shared successfully' : 'Failed to share',
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      );
+    }
+
+    onActionFinalized();
+  }
+
   Future<void> _onDeletePressed(BuildContext context) async {
     await showDialog<void>(
       context: context,
@@ -121,7 +154,6 @@ class FileExplorerSelectionAppBar extends StatelessWidget
   }
 
   Future<void> _onDetailsPressed(BuildContext context) async {
-    final selectedItems = _getSelectedItems();
     var i = 0;
 
     for (final item in selectedItems) {
@@ -154,7 +186,7 @@ class FileExplorerSelectionAppBar extends StatelessWidget
       actions: [
         TextButton(
           onPressed: () async {
-            for (final item in _getSelectedItems()) {
+            for (final item in selectedItems) {
               if (item.type == FileExplorerItemType.directory) {
                 unawaited(directoryManager.deleteDirectory(item.id!));
               } else {
@@ -215,8 +247,6 @@ class FileExplorerSelectionAppBar extends StatelessWidget
     BuildContext context,
     String newName,
   ) async {
-    final selectedItems = _getSelectedItems();
-
     var counter = 1;
     for (final item in selectedItems) {
       final fileExtension = p.extension(item.title, 10);
@@ -230,13 +260,8 @@ class FileExplorerSelectionAppBar extends StatelessWidget
     }
   }
 
-  List<FileItem> _getSelectedItems() {
-    final list = <FileItem>[];
-
-    for (final index in selection.selectedIndexes) {
-      list.add(allItems[index]);
-    }
-
-    return list;
+  List<FileItem> _getSelectedItems(
+      Selection selection, List<FileItem> allItems) {
+    return selection.selectedIndexes.map((index) => allItems[index]).toList();
   }
 }
