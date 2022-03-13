@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:android_path_provider/android_path_provider.dart';
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
+import 'package:app/common/extensions/filesystem_object_dto_permissions.dart';
 import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/common/models/file_item.dart';
 import 'package:app/common/widgets/download_indicator_popup.dart';
@@ -215,6 +216,7 @@ class DirectoryManager {
           size: size,
           thumbnail: thumbnail,
           isFavorite: dto.favourite ?? false,
+          permissions: dto.permissions!.toFilePermissionSet(),
         ),
       );
     }

@@ -1,0 +1,4 @@
+enum FilePermission {
+  read,
+  modify,
+}

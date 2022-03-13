@@ -1,4 +1,5 @@
 import 'package:app/common/models/file_explorer_item_type.dart';
+import 'package:app/common/models/file_permission.dart';
 import 'package:app/common/widgets/error_view.dart';
 import 'package:app/common/widgets/files_view/files_view.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
@@ -119,6 +120,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
           path: widget.path ?? '/', // TODO
           resourceName: resourceName,
           resourcePubId: pubId,
+          permissions: FilePermission.values.toSet(),
+          shared: false,
           onActionFinalized: () {}, // TODO
         ),
       );

@@ -1863,7 +1863,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/FileInfoDTO"
+                    "$ref": "#/components/schemas/SharedFileInfoDTO"
                   }
                 }
               }
@@ -3109,6 +3109,62 @@
           }
         }
       },
+      "SharedFileInfoDTO": {
+        "type": "object",
+        "properties": {
+          "pubId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "hasThumbnail": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "DIRECTORY",
+              "IMAGE",
+              "VIDEO",
+              "TEXT_FILE",
+              "PDF",
+              "MUSIC",
+              "COMPRESSED",
+              "UNDEFINED"
+            ]
+          },
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "modifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isFavourite": {
+            "type": "boolean"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "READ",
+                "MODIFY"
+              ]
+            }
+          }
+        }
+      },
       "FileStructureDTO": {
         "type": "object",
         "properties": {
@@ -3157,6 +3213,16 @@
           },
           "favourite": {
             "type": "boolean"
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "READ",
+                "MODIFY"
+              ]
+            }
           },
           "children": {
             "type": "array",

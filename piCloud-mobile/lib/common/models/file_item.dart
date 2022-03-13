@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:app/common/models/file_explorer_item_type.dart';
+import 'package:app/common/models/file_permission.dart';
 
 class FileItem {
   FileItem({
@@ -11,6 +12,7 @@ class FileItem {
     required this.thumbnail,
     required this.id,
     required this.isFavorite,
+    required this.permissions,
   });
 
   final String? id;
@@ -20,6 +22,7 @@ class FileItem {
   final Uint8List? thumbnail;
   final DateTime lastModifiedOn;
   final bool? isFavorite;
+  final Set<FilePermission> permissions;
 
   bool hasThumbnail() => thumbnail != null;
 }

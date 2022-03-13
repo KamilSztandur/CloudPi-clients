@@ -1,5 +1,6 @@
 import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/common/models/file_item.dart';
+import 'package:app/common/models/file_permission.dart';
 import 'package:app/common/widgets/files_view/files_view.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:auto_route/auto_route.dart';
@@ -11,12 +12,14 @@ class FileExplorerView extends StatelessWidget {
     Key? key,
     required this.path,
     required this.files,
+    required this.shared,
     required this.onSelectionChanged,
     required this.onActionFinalized,
   }) : super(key: key);
 
   final String path;
   final List<FileItem> files;
+  final bool shared;
   final ValueChanged<Selection> onSelectionChanged;
   final VoidCallback onActionFinalized;
 
@@ -33,6 +36,8 @@ class FileExplorerView extends StatelessWidget {
             context,
             file.title,
             file.id,
+            file.permissions,
+            shared,
           );
         }
       },
@@ -48,12 +53,16 @@ class FileExplorerView extends StatelessWidget {
     BuildContext context,
     String resourceName,
     String? pubId,
+    Set<FilePermission> permissions,
+    bool shared,
   ) =>
       AutoRouter.of(context).push(
         MediaReaderRoute(
           path: path,
           resourceName: resourceName,
           resourcePubId: pubId,
+          permissions: permissions,
+          shared: shared,
           onActionFinalized: onActionFinalized,
         ),
       );

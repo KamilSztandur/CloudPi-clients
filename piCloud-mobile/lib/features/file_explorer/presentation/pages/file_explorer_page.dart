@@ -18,9 +18,11 @@ class FileExplorerPage extends StatefulWidget {
   const FileExplorerPage({
     Key? key,
     required this.path,
+    this.shared = false,
   }) : super(key: key);
 
   final String path;
+  final bool shared;
 
   @override
   _FileExplorerPageState createState() => _FileExplorerPageState();
@@ -74,6 +76,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
       return FileExplorerView(
         path: widget.path,
         files: state.files,
+        shared: widget.shared,
         onSelectionChanged: (selection) => setState(() {
           _selection = selection;
         }),
@@ -97,6 +100,7 @@ class _FileExplorerPageState extends State<FileExplorerPage> {
         selection: _selection,
         allItems: state.files,
         currentDirPath: widget.path,
+        shared: widget.shared,
         onActionFinalized: () => _onSelectionActionFinalized(context),
       );
     } else {

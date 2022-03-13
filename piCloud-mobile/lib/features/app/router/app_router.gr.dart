@@ -7,6 +7,7 @@
 import 'package:auto_route/auto_route.dart' as _i11;
 import 'package:flutter/material.dart' as _i12;
 
+import '../../../common/models/file_permission.dart' as _i14;
 import '../../favorites_page/presentation/pages/favorites_page.dart' as _i3;
 import '../../file_explorer/presentation/pages/file_explorer_page.dart' as _i4;
 import '../../login/presentation/pages/login_page.dart' as _i1;
@@ -16,7 +17,7 @@ import '../../settings/presentation/pages/cloud_settings_page.dart' as _i9;
 import '../../settings/presentation/pages/settings_page.dart' as _i8;
 import '../../shared_page/presentation/pages/shared_page.dart' as _i2;
 import '../../user_profile/presentation/pages/user_profile_page.dart' as _i6;
-import '../../user_wizard/data/models/user.dart' as _i14;
+import '../../user_wizard/data/models/user.dart' as _i15;
 import '../../user_wizard/presentation/pages/user_wizard_page.dart' as _i10;
 import 'guards/admin_guard.dart' as _i13;
 
@@ -35,8 +36,11 @@ class AppRouter extends _i11.RootStackRouter {
           routeData: routeData, child: const _i1.LoginPage());
     },
     SharedRoute.name: (routeData) {
+      final args = routeData.argsAs<SharedRouteArgs>(
+          orElse: () => const SharedRouteArgs());
       return _i11.MaterialPageX<void>(
-          routeData: routeData, child: const _i2.SharedPage());
+          routeData: routeData,
+          child: _i2.SharedPage(key: args.key, path: args.path));
     },
     FavoritesRoute.name: (routeData) {
       final args = routeData.argsAs<FavoritesRouteArgs>(
@@ -49,7 +53,8 @@ class AppRouter extends _i11.RootStackRouter {
       final args = routeData.argsAs<FileExplorerRouteArgs>();
       return _i11.MaterialPageX<void>(
           routeData: routeData,
-          child: _i4.FileExplorerPage(key: args.key, path: args.path));
+          child: _i4.FileExplorerPage(
+              key: args.key, path: args.path, shared: args.shared));
     },
     MediaReaderRoute.name: (routeData) {
       final args = routeData.argsAs<MediaReaderRouteArgs>();
@@ -60,6 +65,8 @@ class AppRouter extends _i11.RootStackRouter {
               path: args.path,
               resourceName: args.resourceName,
               resourcePubId: args.resourcePubId,
+              permissions: args.permissions,
+              shared: args.shared,
               onActionFinalized: args.onActionFinalized),
           fullscreenDialog: true);
     },
@@ -125,10 +132,20 @@ class LoginRoute extends _i11.PageRouteInfo<void> {
 }
 
 /// generated route for [_i2.SharedPage]
-class SharedRoute extends _i11.PageRouteInfo<void> {
-  const SharedRoute() : super(name, path: '/shared-page');
+class SharedRoute extends _i11.PageRouteInfo<SharedRouteArgs> {
+  SharedRoute({_i12.Key? key, String? path})
+      : super(name,
+            path: '/shared-page', args: SharedRouteArgs(key: key, path: path));
 
   static const String name = 'SharedRoute';
+}
+
+class SharedRouteArgs {
+  const SharedRouteArgs({this.key, this.path});
+
+  final _i12.Key? key;
+
+  final String? path;
 }
 
 /// generated route for [_i3.FavoritesPage]
@@ -151,20 +168,23 @@ class FavoritesRouteArgs {
 
 /// generated route for [_i4.FileExplorerPage]
 class FileExplorerRoute extends _i11.PageRouteInfo<FileExplorerRouteArgs> {
-  FileExplorerRoute({_i12.Key? key, required String path})
+  FileExplorerRoute({_i12.Key? key, required String path, bool shared = false})
       : super(name,
             path: '/file-explorer-page',
-            args: FileExplorerRouteArgs(key: key, path: path));
+            args: FileExplorerRouteArgs(key: key, path: path, shared: shared));
 
   static const String name = 'FileExplorerRoute';
 }
 
 class FileExplorerRouteArgs {
-  const FileExplorerRouteArgs({this.key, required this.path});
+  const FileExplorerRouteArgs(
+      {this.key, required this.path, this.shared = false});
 
   final _i12.Key? key;
 
   final String path;
+
+  final bool shared;
 }
 
 /// generated route for [_i5.MediaReaderPage]
@@ -174,6 +194,8 @@ class MediaReaderRoute extends _i11.PageRouteInfo<MediaReaderRouteArgs> {
       required String path,
       required String resourceName,
       required String? resourcePubId,
+      required Set<_i14.FilePermission> permissions,
+      required bool shared,
       required void Function() onActionFinalized})
       : super(name,
             path: '/media-reader-page',
@@ -182,6 +204,8 @@ class MediaReaderRoute extends _i11.PageRouteInfo<MediaReaderRouteArgs> {
                 path: path,
                 resourceName: resourceName,
                 resourcePubId: resourcePubId,
+                permissions: permissions,
+                shared: shared,
                 onActionFinalized: onActionFinalized));
 
   static const String name = 'MediaReaderRoute';
@@ -193,6 +217,8 @@ class MediaReaderRouteArgs {
       required this.path,
       required this.resourceName,
       required this.resourcePubId,
+      required this.permissions,
+      required this.shared,
       required this.onActionFinalized});
 
   final _i12.Key? key;
@@ -202,6 +228,10 @@ class MediaReaderRouteArgs {
   final String resourceName;
 
   final String? resourcePubId;
+
+  final Set<_i14.FilePermission> permissions;
+
+  final bool shared;
 
   final void Function() onActionFinalized;
 }
@@ -258,7 +288,7 @@ class CloudSettingsRoute extends _i11.PageRouteInfo<void> {
 
 /// generated route for [_i10.UserWizardPage]
 class UserWizardRoute extends _i11.PageRouteInfo<UserWizardRouteArgs> {
-  UserWizardRoute({_i12.Key? key, _i14.User? user, void Function()? onAddUser})
+  UserWizardRoute({_i12.Key? key, _i15.User? user, void Function()? onAddUser})
       : super(name,
             path: '/user-wizard-page',
             args: UserWizardRouteArgs(
@@ -272,7 +302,7 @@ class UserWizardRouteArgs {
 
   final _i12.Key? key;
 
-  final _i14.User? user;
+  final _i15.User? user;
 
   final void Function()? onAddUser;
 }

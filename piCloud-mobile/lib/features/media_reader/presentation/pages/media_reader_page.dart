@@ -1,11 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:app/common/auth/auth_manager.dart';
+import 'package:app/common/models/file_permission.dart';
 import 'package:app/common/widgets/error_view.dart';
 import 'package:app/features/app/widgets/app_bar/preview_app_bar.dart';
 import 'package:app/features/favorites_page/data/favorites_manager.dart';
 import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/rename_file.dart';
+import 'package:app/features/file_explorer/presentation/widgets/add_media/status_popups/show_share_popup.dart';
 import 'package:app/features/loading_baner/presentation/loading_panel.dart';
 import 'package:app/features/media_reader/bloc/media_reader_bloc.dart';
 import 'package:app/features/media_reader/data/media_reader_service.dart';
@@ -13,6 +15,7 @@ import 'package:app/features/media_reader/data/media_reader_supported_types.dart
 import 'package:app/features/media_reader/presentation/widgets/image_preview.dart';
 import 'package:app/features/media_reader/presentation/widgets/no_preview_available.dart';
 import 'package:app/features/media_reader/presentation/widgets/txt_preview.dart';
+import 'package:app/features/shared_page/data/shared_manager.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,11 +26,15 @@ class MediaReaderPage extends StatefulWidget {
     required this.path,
     required this.resourceName,
     required this.resourcePubId,
+    required this.permissions,
+    required this.shared,
     required this.onActionFinalized,
   }) : super(key: key);
 
   final String path, resourceName;
   final String? resourcePubId;
+  final Set<FilePermission> permissions;
+  final bool shared;
   final VoidCallback onActionFinalized;
 
   @override
@@ -50,14 +57,18 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
 
   @override
   Widget build(BuildContext context) {
+    final canModify = widget.permissions.contains(FilePermission.modify);
+
     return Scaffold(
       appBar: PreviewAppBar(
         resourceName: widget.resourceName,
-        onShareRequested: _onShareRequested,
-        onDeleteRequested: _onDeleteRequested,
+        onShareRequested:
+            !widget.shared ? () => _onShareRequested(context) : null,
+        onDeleteRequested: canModify ? _onDeleteRequested : null,
         onDownloadRequested: _onDownloadRequested,
-        onRenameRequested: _onRenameRequested,
-        onToggleFavoriteRequested: _onToggleFavoriteRequested,
+        onRenameRequested: canModify ? _onRenameRequested : null,
+        onToggleFavoriteRequested:
+            !widget.shared ? _onToggleFavoriteRequested : null,
       ),
       body: Center(
         child: BlocProvider.value(
@@ -181,8 +192,26 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
     );
   }
 
-  void _onShareRequested() {
-    //TODO
+  Future<void> _onShareRequested(BuildContext context) async {
+    final sharePopupResult = await showSharePopup(context);
+
+    if (sharePopupResult != null) {
+      final result = await context.read<SharedManager>().shareFiles(
+        pubIds: [widget.resourcePubId!],
+        userName: sharePopupResult.username,
+        allowModification: sharePopupResult.allowModification,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          content: Text(
+            result ? 'Shared successfully' : 'Failed to share',
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+      );
+    }
   }
 
   void _mediaReaderBlocListener(BuildContext ctx, MediaReaderState state) =>

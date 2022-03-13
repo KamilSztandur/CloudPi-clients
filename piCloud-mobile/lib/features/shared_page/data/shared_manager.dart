@@ -3,15 +3,15 @@ import 'dart:typed_data';
 
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
+import 'package:app/common/extensions/shared_file_info_dto_permissions.dart';
 import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/common/models/file_item.dart';
-import 'package:app/common/models/file_permission.dart';
 import 'package:app/contracts/api.swagger.dart';
 import 'package:app/contracts/client_index.dart';
 import 'package:http/http.dart';
 
-class FavoritesManager {
-  const FavoritesManager(
+class SharedManager {
+  const SharedManager(
     this._api,
     this._authManager,
   );
@@ -19,12 +19,32 @@ class FavoritesManager {
   final Api _api;
   final AuthManager _authManager;
 
-  Future<void> toggleFavorite(Iterable<String> fileIds) {
-    return Future.wait(
-      fileIds.map(
-        (id) => _api.favouriteFileIdPatch(fileId: id),
-      ),
-    );
+  Future<bool> shareFiles({
+    required List<String> pubIds,
+    required String userName,
+    required bool allowModification,
+  }) async {
+    try {
+      final results = await Future.wait(
+        pubIds.map(
+          (pubId) => _api.filePermissionPermissionsPost(
+            body: PostAddPermissionRequest(
+              filePubId: pubId,
+              ownerUsername: userName,
+              permissions: [
+                PostAddPermissionRequestPermissions.read,
+                if (allowModification)
+                  PostAddPermissionRequestPermissions.modify,
+              ],
+            ),
+          ),
+        ),
+      );
+
+      return !results.any((result) => !result.isSuccessful);
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<List<FileItem>?> getCurrentDirectoryItems() async {
@@ -40,9 +60,9 @@ class FavoritesManager {
   Future<List<FileItem>?> _getRawList() async {
     final fileExplorerItems = <FileItem>[];
 
-    final result = await _api.favouriteAllGet();
+    final result = await _api.filesystemFilesSharedToUserGet();
 
-    for (final dto in result.body ?? <FileInfoDTO>[]) {
+    for (final dto in result.body ?? <SharedFileInfoDTO>[]) {
       final id = dto.pubId;
       final title = dto.name!;
       final lastModifiedOn = DateTime.parse(dto.modifiedAt!.toString());
@@ -61,14 +81,14 @@ class FavoritesManager {
           size: size,
           thumbnail: thumbnail,
           isFavorite: dto.isFavourite ?? false,
-          permissions: FilePermission.values.toSet(),
+          permissions: dto.permissions!.toFilePermissionSet(),
         ),
       );
     }
     return fileExplorerItems;
   }
 
-  Future<Uint8List?> _getImagePreview(FileInfoDTO dto) async {
+  Future<Uint8List?> _getImagePreview(SharedFileInfoDTO dto) async {
     final headers = await _getHeaders()
       ..addAll({'Content-Type': 'application/json'});
 
@@ -113,21 +133,21 @@ class FavoritesManager {
     return {'Authorization': 'Bearer ${await _authManager.getAccessToken()}'};
   }
 
-  FileExplorerItemType _mapBodyTextToType(FileInfoDTOType? type) {
+  FileExplorerItemType _mapBodyTextToType(SharedFileInfoDTOType? type) {
     switch (type) {
-      case FileInfoDTOType.directory:
+      case SharedFileInfoDTOType.directory:
         return FileExplorerItemType.directory;
-      case FileInfoDTOType.image:
+      case SharedFileInfoDTOType.image:
         return FileExplorerItemType.image;
-      case FileInfoDTOType.video:
+      case SharedFileInfoDTOType.video:
         return FileExplorerItemType.directory;
-      case FileInfoDTOType.textFile:
+      case SharedFileInfoDTOType.textFile:
         return FileExplorerItemType.text;
-      case FileInfoDTOType.music:
+      case SharedFileInfoDTOType.music:
         return FileExplorerItemType.music;
-      case FileInfoDTOType.compressed:
+      case SharedFileInfoDTOType.compressed:
         return FileExplorerItemType.file;
-      case FileInfoDTOType.pdf:
+      case SharedFileInfoDTOType.pdf:
         return FileExplorerItemType.pdf;
       default:
         return FileExplorerItemType.file;

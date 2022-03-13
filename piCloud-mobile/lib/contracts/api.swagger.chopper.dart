@@ -274,10 +274,10 @@ class _$Api extends Api {
   }
 
   @override
-  Future<Response<List<FileInfoDTO>>> filesystemFilesSharedToUserGet() {
+  Future<Response<List<SharedFileInfoDTO>>> filesystemFilesSharedToUserGet() {
     final $url = '/filesystem/files-shared-to-user';
     final $request = Request('GET', $url, client.baseUrl);
-    return client.send<List<FileInfoDTO>, FileInfoDTO>($request);
+    return client.send<List<SharedFileInfoDTO>, SharedFileInfoDTO>($request);
   }
 
   @override

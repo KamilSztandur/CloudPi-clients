@@ -274,6 +274,40 @@ Map<String, dynamic> _$FilesystemInfoDTOToJson(FilesystemInfoDTO instance) =>
       'freeSpace': instance.freeSpace,
     };
 
+SharedFileInfoDTO _$SharedFileInfoDTOFromJson(Map<String, dynamic> json) =>
+    SharedFileInfoDTO(
+      pubId: json['pubId'] as String?,
+      name: json['name'] as String?,
+      path: json['path'] as String?,
+      hasThumbnail: json['hasThumbnail'] as bool?,
+      type: sharedFileInfoDTOTypeFromJson(json['type'] as String?),
+      size: json['size'] as int?,
+      modifiedAt: json['modifiedAt'] == null
+          ? null
+          : DateTime.parse(json['modifiedAt'] as String),
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      isFavourite: json['isFavourite'] as bool?,
+      permissions: sharedFileInfoDTOPermissionsListFromJson(
+          json['permissions'] as List?),
+    );
+
+Map<String, dynamic> _$SharedFileInfoDTOToJson(SharedFileInfoDTO instance) =>
+    <String, dynamic>{
+      'pubId': instance.pubId,
+      'name': instance.name,
+      'path': instance.path,
+      'hasThumbnail': instance.hasThumbnail,
+      'type': sharedFileInfoDTOTypeToJson(instance.type),
+      'size': instance.size,
+      'modifiedAt': instance.modifiedAt?.toIso8601String(),
+      'createdAt': instance.createdAt?.toIso8601String(),
+      'isFavourite': instance.isFavourite,
+      'permissions':
+          sharedFileInfoDTOPermissionsListToJson(instance.permissions),
+    };
+
 FileStructureDTO _$FileStructureDTOFromJson(Map<String, dynamic> json) =>
     FileStructureDTO(
       path: json['path'] as String?,
@@ -299,6 +333,8 @@ FilesystemObjectDTO _$FilesystemObjectDTOFromJson(Map<String, dynamic> json) =>
       version: json['version'] as int?,
       type: filesystemObjectDTOTypeFromJson(json['type'] as String?),
       favourite: json['favourite'] as bool?,
+      permissions: filesystemObjectDTOPermissionsListFromJson(
+          json['permissions'] as List?),
       children: (json['children'] as List<dynamic>?)
               ?.map((e) =>
                   FilesystemObjectDTO.fromJson(e as Map<String, dynamic>))
@@ -316,6 +352,8 @@ Map<String, dynamic> _$FilesystemObjectDTOToJson(
       'version': instance.version,
       'type': filesystemObjectDTOTypeToJson(instance.type),
       'favourite': instance.favourite,
+      'permissions':
+          filesystemObjectDTOPermissionsListToJson(instance.permissions),
       'children': instance.children?.map((e) => e.toJson()).toList(),
     };
 

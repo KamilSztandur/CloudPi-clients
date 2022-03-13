@@ -9,6 +9,7 @@ import 'package:app/features/favorites_page/data/favorites_manager.dart';
 import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/media_reader/data/media_reader_service.dart';
 import 'package:app/features/search_page/data/search_engine.dart';
+import 'package:app/features/shared_page/data/shared_manager.dart';
 import 'package:chopper/chopper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,6 +55,12 @@ Future<void> main() async {
         ),
         Provider(
           create: (context) => FavoritesManager(
+            context.read(),
+            context.read(),
+          ),
+        ),
+        Provider(
+          create: (context) => SharedManager(
             context.read(),
             context.read(),
           ),
