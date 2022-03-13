@@ -31,7 +31,7 @@ class PhotoTakenPopup {
             child: ElevatedButton(
               onPressed: () => AutoRouter.of(context).pop(),
               style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).primaryColorDark,
+                primary: Theme.of(context).primaryColor,
               ),
               child: const Text(
                 'Close',

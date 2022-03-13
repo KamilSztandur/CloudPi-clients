@@ -18,6 +18,10 @@ class FetchingDataFileExplorerState extends FileExplorerState {
 }
 
 class FetchedDataFileExplorerState extends FileExplorerState {
+  const FetchedDataFileExplorerState(this.files);
+
+  final List<FileItem> files;
+
   @override
   List<Object> get props => [];
 }

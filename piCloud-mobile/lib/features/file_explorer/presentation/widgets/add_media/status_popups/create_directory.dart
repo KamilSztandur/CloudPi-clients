@@ -1,15 +1,19 @@
+import 'package:app/features/file_explorer/data/directory_manager.dart';
 import 'package:app/features/file_explorer/data/new_media_wizard.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CreateDirectoryPopup {
   CreateDirectoryPopup({
     required this.namePicked,
     required this.context,
+    required this.path,
   });
 
   final Function(String) namePicked;
   final BuildContext context;
+  final String path;
   final TextEditingController _controller = TextEditingController();
   String? _warningMessage;
 
@@ -53,7 +57,9 @@ class CreateDirectoryPopup {
         'Create new directory',
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: Theme.of(context).primaryColorDark,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).primaryColorLight
+              : Theme.of(context).primaryColorDark,
           fontWeight: FontWeight.bold,
         ),
       );
@@ -65,7 +71,9 @@ class CreateDirectoryPopup {
           Text(
             'Name',
             style: TextStyle(
-              color: Theme.of(context).primaryColorDark,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).primaryColorLight
+                  : Theme.of(context).primaryColorDark,
               fontSize: 15,
             ),
           ),
@@ -123,12 +131,12 @@ class CreateDirectoryPopup {
         ),
       );
 
-  void _onCreatePressed(void Function(void Function()) setState) {
-    final wizard = NewMediaWizard();
+  Future<void> _onCreatePressed(void Function(void Function()) setState) async {
+    final wizard = NewMediaWizard(context.read<DirectoryManager>());
     final name = _controller.text;
 
-    if (wizard.isNameLegal(name)) {
-      if (wizard.isDirectoryNameTaken(name)) {
+    if (wizard.isDirectoryNameLegal(name)) {
+      if (await wizard.isNameTaken(path, name)) {
         setState(
           () {
             _warningMessage = 'Directory with this name already exists.';

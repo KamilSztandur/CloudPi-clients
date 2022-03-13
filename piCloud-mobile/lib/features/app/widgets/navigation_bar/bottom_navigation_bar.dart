@@ -14,11 +14,6 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
   final List<PICloudBottomNavigationBarItem> items =
       <PICloudBottomNavigationBarItem>[
     PICloudBottomNavigationBarItem(
-      icon: const Icon(Icons.home_outlined),
-      label: 'Home',
-      route: const HomeRoute(),
-    ),
-    PICloudBottomNavigationBarItem(
       icon: const Icon(Icons.folder_outlined),
       label: 'Files',
       route: FileExplorerRoute(path: '/'),
@@ -26,17 +21,17 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
     PICloudBottomNavigationBarItem(
       icon: const Icon(Icons.folder_shared_outlined),
       label: 'Shared',
-      route: const SharedRoute(),
-    ),
-    PICloudBottomNavigationBarItem(
-      icon: const Icon(Icons.dashboard_outlined),
-      label: 'Libraries',
-      route: const LibrariesRoute(),
+      route: SharedRoute(),
     ),
     PICloudBottomNavigationBarItem(
       icon: const Icon(Icons.star_outline),
-      label: 'Favourites',
-      route: const FavouritesRoute(),
+      label: 'Favorites',
+      route: FavoritesRoute(),
+    ),
+    PICloudBottomNavigationBarItem(
+      icon: const Icon(Icons.search_outlined),
+      label: 'Search',
+      route: SearchRoute(),
     ),
   ];
 
@@ -46,7 +41,7 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
+            color: Colors.black.withOpacity(0.15),
             spreadRadius: 5,
             blurRadius: 7,
             offset: const Offset(0, -1),
@@ -56,12 +51,11 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
       child: BottomNavigationBar(
         currentIndex: _getCurrentlySelectedItem(),
         type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedIconTheme: IconThemeData(color: Theme.of(context).primaryColor),
-        unselectedIconTheme: const IconThemeData(color: Colors.black),
+        unselectedIconTheme: IconThemeData(
+          color: Theme.of(context).iconTheme.color,
+        ),
         selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.black,
+        selectedItemColor: Theme.of(context).primaryColor,
         showUnselectedLabels: true,
         onTap: _onItemTapped,
         items: items,
@@ -70,17 +64,19 @@ class _PICloudBottomNavigationBar extends State<PICloudBottomNavigationBar> {
   }
 
   int _getCurrentlySelectedItem() {
-    final currentRoute =
-        AutoRouter.of(context).current.route.toRoute().routeName;
-
     final n = items.length;
-    for (var i = 0; i < n; i++) {
-      if (items[i].route.routeName == currentRoute) {
-        return i;
+
+    for (final route in AutoRouter.of(context).stack.reversed) {
+      final name = route.routeData.name;
+
+      for (var i = 0; i < n; i++) {
+        if (items[i].route.routeName == name) {
+          return i;
+        }
       }
     }
 
-    return -1;
+    return 0;
   }
 
   void _onItemTapped(int index) => AutoRouter.of(context).replaceAll(

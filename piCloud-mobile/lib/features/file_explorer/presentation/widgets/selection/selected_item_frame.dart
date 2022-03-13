@@ -1,13 +1,12 @@
-import 'package:app/features/file_explorer/presentation/widgets/file_explorer_item/file_explorer_item.dart';
 import 'package:flutter/material.dart';
 
 class SelectedItemFrame extends StatelessWidget {
   const SelectedItemFrame({
     Key? key,
-    required this.item,
+    required this.child,
   }) : super(key: key);
 
-  final FileExplorerItem item;
+  final Widget child;
   // ignore: unused_field
   final double _selectedIconOffset = 5;
 
@@ -16,16 +15,14 @@ class SelectedItemFrame extends StatelessWidget {
     return Stack(
       children: [
         Center(child: _SelectedFileBackground()),
-        Center(child: item)
-        /*  TODO: Fix for mobile - unknown error widget appears.
-      Positioned(
-        top: _selectedIconOffset,
-        right: _selectedIconOffset,
-        child: _SelectedFileIcon(
-          size: 25.0,
+        Center(child: child),
+        Positioned(
+          top: _selectedIconOffset,
+          right: _selectedIconOffset,
+          child: const _SelectedFileIcon(
+            size: 25,
+          ),
         ),
-      ),
-      */
       ],
     );
   }
@@ -43,7 +40,6 @@ class _SelectedFileBackground extends StatelessWidget {
   }
 }
 
-// ignore: unused_element
 class _SelectedFileIcon extends StatelessWidget {
   const _SelectedFileIcon({
     Key? key,
@@ -58,23 +54,31 @@ class _SelectedFileIcon extends StatelessWidget {
       width: size,
       height: size,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         shape: BoxShape.circle,
         border: Border.all(
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).primaryColorLight
+              : Theme.of(context).primaryColorDark,
           width: 1.5,
         ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(3),
-        child: Expanded(
-          child: FittedBox(
-            fit: BoxFit.fill,
-            child: Icon(
-              Icons.check,
-              color: Theme.of(context).primaryColor,
+        child: Column(
+          children: [
+            Expanded(
+              child: FittedBox(
+                fit: BoxFit.fill,
+                child: Icon(
+                  Icons.check,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Theme.of(context).primaryColorLight
+                      : Theme.of(context).primaryColorDark,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );

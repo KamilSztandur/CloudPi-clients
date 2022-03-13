@@ -6,13 +6,14 @@ class CreateDirectoryButton extends SpeedDialChild {
   CreateDirectoryButton({
     required this.onSubmitted,
     required this.context,
+    required this.path,
   }) : super(
           child: const Icon(
             Icons.create_new_folder,
             size: 35,
           ),
           foregroundColor: Colors.white,
-          backgroundColor: Colors.blue,
+          backgroundColor: Theme.of(context).primaryColor,
           labelWidget: const Padding(
             padding: EdgeInsets.all(10),
             child: Text(
@@ -29,9 +30,11 @@ class CreateDirectoryButton extends SpeedDialChild {
           onTap: () => CreateDirectoryPopup(
             namePicked: onSubmitted,
             context: context,
+            path: path,
           ).show(),
         );
 
   final void Function(String) onSubmitted;
   final BuildContext context;
+  final String path;
 }

@@ -1,4 +1,4 @@
-import 'package:app/features/file_explorer/data/models/file_item.dart';
+import 'package:app/common/models/file_item.dart';
 import 'package:flutter/material.dart';
 
 class FileExplorerItemDateLabel extends StatelessWidget {
@@ -17,7 +17,7 @@ class FileExplorerItemDateLabel extends StatelessWidget {
       _getDateLabelText(),
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
-      style: TextStyle(color: Colors.grey.shade700),
+      style: TextStyle(color: Theme.of(context).hintColor),
     );
   }
 

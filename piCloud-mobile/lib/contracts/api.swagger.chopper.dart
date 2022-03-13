@@ -17,27 +17,109 @@ class _$Api extends Api {
   final definitionType = Api;
 
   @override
-  Future<Response<dynamic>> _filesFilePut(
-      {required String? fileType,
-      required String? filepath,
-      required String? file}) {
-    final $url = '/files/file';
-    final $params = <String, dynamic>{
-      'fileType': fileType,
-      'filepath': filepath,
-      'file': file
-    };
-    final $request = Request('PUT', $url, client.baseUrl, parameters: $params);
+  Future<Response<dynamic>> userPasswordPut(
+      {required PutUserPasswordRequest? body}) {
+    final $url = '/user/password';
+    final $body = body;
+    final $request = Request('PUT', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> _filesFilePost(
-      {required String? fileType,
-      required String? file,
-      required String? body}) {
-    final $url = '/files/file';
-    final $params = <String, dynamic>{'fileType': fileType, 'file': file};
+  Future<Response<dynamic>> userPasswordPatch(
+      {required PatchPasswordRequest? body}) {
+    final $url = '/user/password';
+    final $body = body;
+    final $request = Request('PATCH', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<FileInfoDTO>> filesystemDirectoryPut(
+      {required String? directoryPath}) {
+    final $url = '/filesystem/directory';
+    final $params = <String, dynamic>{'directoryPath': directoryPath};
+    final $request = Request('PUT', $url, client.baseUrl, parameters: $params);
+    return client.send<FileInfoDTO, FileInfoDTO>($request);
+  }
+
+  @override
+  Future<Response<String>> userProfileImageGet({required String? username}) {
+    final $url = '/user/profile-image';
+    final $params = <String, dynamic>{'username': username};
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<String, String>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> userProfileImagePost(
+      {required UserProfileImagePost$RequestBody? body}) {
+    final $url = '/user/profile-image';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> userProfileImageUsernamePost(
+      {required String? username,
+      required UserProfileImageUsernamePost$RequestBody? body}) {
+    final $url = '/user/profile-image/${username}';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> userNewPost({required PostUserRequest? body}) {
+    final $url = '/user/new';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> rolesPost({required PostRoleRequest? body}) {
+    final $url = '/roles/';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> rolesDelete({required DeleteRoleRequest? body}) {
+    final $url = '/roles/';
+    final $body = body;
+    final $request = Request('DELETE', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> refreshRefreshTokenPost() {
+    final $url = '/refresh/refresh-token';
+    final $request = Request('POST', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> refreshAuthTokenPost() {
+    final $url = '/refresh/auth-token';
+    final $request = Request('POST', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> logoutPost() {
+    final $url = '/logout';
+    final $request = Request('POST', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> loginPost(
+      {bool? dontLogout, required LoginRequest? body}) {
+    final $url = '/login';
+    final $params = <String, dynamic>{'dontLogout': dontLogout};
     final $body = body;
     final $request =
         Request('POST', $url, client.baseUrl, body: $body, parameters: $params);
@@ -45,142 +127,179 @@ class _$Api extends Api {
   }
 
   @override
-  Future<Response<dynamic>> userManagementPost(
-      {required PostUserRequest? body}) {
-    final $url = '/user-management/';
-    final $body = body;
-    final $request = Request('POST', $url, client.baseUrl, body: $body);
-    return client.send<dynamic, dynamic>($request);
+  Future<Response<FilesystemInfoDTO>> filesystemUsernameGet(
+      {required String? username}) {
+    final $url = '/filesystem/${username}';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<FilesystemInfoDTO, FilesystemInfoDTO>($request);
   }
 
   @override
-  Future<Response<dynamic>> refreshRefreshPost() {
-    final $url = '/refresh/refresh';
-    final $request = Request('POST', $url, client.baseUrl);
-    return client.send<dynamic, dynamic>($request);
-  }
-
-  @override
-  Future<Response<dynamic>> refreshAuthPost() {
-    final $url = '/refresh/auth';
-    final $request = Request('POST', $url, client.baseUrl);
-    return client.send<dynamic, dynamic>($request);
-  }
-
-  @override
-  Future<Response<dynamic>> loginPost({required LoginRequest? body}) {
-    final $url = '/login';
-    final $body = body;
-    final $request = Request('POST', $url, client.baseUrl, body: $body);
-    return client.send<dynamic, dynamic>($request);
-  }
-
-  @override
-  Future<Response<dynamic>> filesystemUsersDrivesUsernamePost(
-      {required int? newAssignedSpace}) {
-    final $url = '/filesystem/users-drives/{username}';
+  Future<Response<dynamic>> filesystemUsernamePost(
+      {required String? username, required int? newAssignedSpace}) {
+    final $url = '/filesystem/${username}';
     final $params = <String, dynamic>{'newAssignedSpace': newAssignedSpace};
     final $request = Request('POST', $url, client.baseUrl, parameters: $params);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> filesImageImageNamePost(
-      {required String? imageName, required List<String>? image}) {
-    final $url = '/files/image/{imageName}';
-    final $params = <String, dynamic>{'imageName': imageName, 'image': image};
-    final $request = Request('POST', $url, client.baseUrl, parameters: $params);
+  Future<Response<List<FileInfoDTO>>> filesystemSearchPost(
+      {required FileQueryDTO? body}) {
+    final $url = '/filesystem/search';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<List<FileInfoDTO>, FileInfoDTO>($request);
+  }
+
+  @override
+  Future<Response<FileInfoDTO>> filesystemGetByPathPost(
+      {required GetFileByPathRequest? body}) {
+    final $url = '/filesystem/get-by-path';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<FileInfoDTO, FileInfoDTO>($request);
+  }
+
+  @override
+  Future<Response<FileInfoDTO>> filesImagePost(
+      {required FilesImagePost$RequestBody? body}) {
+    final $url = '/files/image';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<FileInfoDTO, FileInfoDTO>($request);
+  }
+
+  @override
+  Future<Response<FileInfoDTO>> _filesFilePost(
+      {String? fileType,
+      required String? filepath,
+      required FilesFilePost$RequestBody? body}) {
+    final $url = '/files/file';
+    final $params = <String, dynamic>{
+      'fileType': fileType,
+      'filepath': filepath
+    };
+    final $body = body;
+    final $request =
+        Request('POST', $url, client.baseUrl, body: $body, parameters: $params);
+    return client.send<FileInfoDTO, FileInfoDTO>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> filesFileDelete() {
+    final $url = '/files/file';
+    final $request = Request('DELETE', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> filesDirectoryPost({required String? body}) {
-    final $url = '/files/directory';
+  Future<Response<dynamic>> filePermissionPermissionsPost(
+      {required PostAddPermissionRequest? body}) {
+    final $url = '/file-permission/permissions';
     final $body = body;
     final $request = Request('POST', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> discsDiscIdUnmountPost({required int? discId}) {
-    final $url = '/discs/{discId}/unmount';
-    final $params = <String, dynamic>{'discId': discId};
-    final $request = Request('POST', $url, client.baseUrl, parameters: $params);
+  Future<Response<dynamic>> filePermissionPermissionsDelete(
+      {required DeletePermissionsRequest? body}) {
+    final $url = '/file-permission/permissions';
+    final $body = body;
+    final $request = Request('DELETE', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> discsDiscIdMountPost({required int? discId}) {
-    final $url = '/discs/{discId}/mount';
-    final $params = <String, dynamic>{'discId': discId};
-    final $request = Request('POST', $url, client.baseUrl, parameters: $params);
-    return client.send<dynamic, dynamic>($request);
+  Future<Response<DriveDTO>> driveNewPost({required PostDriveRequest? body}) {
+    final $url = '/drive/new';
+    final $body = body;
+    final $request = Request('POST', $url, client.baseUrl, body: $body);
+    return client.send<DriveDTO, DriveDTO>($request);
   }
 
   @override
-  Future<Response<dynamic>> authoritiesUserIdPost() {
-    final $url = '/authorities/{userId}';
-    final $request = Request('POST', $url, client.baseUrl);
-    return client.send<dynamic, dynamic>($request);
-  }
-
-  @override
-  Future<Response<GetUserWithDetailsResponse>> userManagementUsernameGet(
-      {required String? username}) {
-    final $url = '/user-management/${username}';
-    final $request = Request('GET', $url, client.baseUrl);
-    return client
-        .send<GetUserWithDetailsResponse, GetUserWithDetailsResponse>($request);
-  }
-
-  @override
-  Future<Response<dynamic>> userManagementUsernameDelete(
-      {required String? username}) {
-    final $url = '/user-management/${username}';
+  Future<Response<dynamic>> userUsernameDelete({required String? username}) {
+    final $url = '/user/${username}';
     final $request = Request('DELETE', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> userManagementUsernamePatch(
-      {required String? username, required UpdateUserDetailsRequest? body}) {
-    final $url = '/user-management/{username}';
-    final $params = <String, dynamic>{'username': username};
+  Future<Response<dynamic>> userUsernamePatch(
+      {required String? username, required PatchUserRequest? body}) {
+    final $url = '/user/${username}';
     final $body = body;
-    final $request = Request('PATCH', $url, client.baseUrl,
-        body: $body, parameters: $params);
+    final $request = Request('PATCH', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<List<GetUserResponse>>> userManagementGetAllGet() {
-    final $url = '/user-management/get-all';
-    final $request = Request('GET', $url, client.baseUrl);
-    return client.send<List<GetUserResponse>, GetUserResponse>($request);
+  Future<Response<dynamic>> filesystemMovePatch(
+      {required MoveFileRequest? body}) {
+    final $url = '/filesystem/move';
+    final $body = body;
+    final $request = Request('PATCH', $url, client.baseUrl, body: $body);
+    return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<List<GetUserWithDetailsResponse>>>
-      userManagementGetAllWithDetailsGet() {
-    final $url = '/user-management/get-all/with-details';
-    final $request = Request('GET', $url, client.baseUrl);
-    return client.send<List<GetUserWithDetailsResponse>,
-        GetUserWithDetailsResponse>($request);
+  Future<Response<dynamic>> favouriteFileIdPatch({required String? fileId}) {
+    final $url = '/favourite/${fileId}';
+    final $request = Request('PATCH', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<List<GetUserDriveInfo>>> filesystemUsersDrivesGet() {
-    final $url = '/filesystem/users-drives';
+  Future<Response<UserDetailsDTO>> userUsernameDetailsGet(
+      {required String? username}) {
+    final $url = '/user/${username}/details';
     final $request = Request('GET', $url, client.baseUrl);
-    return client.send<List<GetUserDriveInfo>, GetUserDriveInfo>($request);
+    return client.send<UserDetailsDTO, UserDetailsDTO>($request);
   }
 
   @override
-  Future<Response<FileStructureDTO>> filesystemUserUsernameGet(
-      {required String? username,
-      int? structureLevels,
-      String? fileStructureRoot}) {
-    final $url = '/filesystem/user/${username}';
+  Future<Response<List<UserIdDTO>>> userGet() {
+    final $url = '/user/';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<List<UserIdDTO>, UserIdDTO>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> rolesUsernameGet({required String? username}) {
+    final $url = '/roles/${username}';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<dynamic, dynamic>($request);
+  }
+
+  @override
+  Future<Response<List<SharedFileInfoDTO>>> filesystemFilesSharedToUserGet() {
+    final $url = '/filesystem/files-shared-to-user';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<List<SharedFileInfoDTO>, SharedFileInfoDTO>($request);
+  }
+
+  @override
+  Future<Response<List<FileInfoDTO>>> filesystemFilesSharedByUserGet() {
+    final $url = '/filesystem/files-shared-by-user';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<List<FileInfoDTO>, FileInfoDTO>($request);
+  }
+
+  @override
+  Future<Response<FileInfoDTO>> filesystemFileFileIdGet(
+      {required String? fileId, bool? withPermissions}) {
+    final $url = '/filesystem/file/${fileId}';
+    final $params = <String, dynamic>{'with-permissions': withPermissions};
+    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    return client.send<FileInfoDTO, FileInfoDTO>($request);
+  }
+
+  @override
+  Future<Response<FileStructureDTO>> filesystemFileStructureGet(
+      {int? structureLevels, required String? fileStructureRoot}) {
+    final $url = '/filesystem/file-structure';
     final $params = <String, dynamic>{
       'structureLevels': structureLevels,
       'fileStructureRoot': fileStructureRoot
@@ -190,31 +309,12 @@ class _$Api extends Api {
   }
 
   @override
-  Future<Response<FileDto>> filesystemInfoFileIdGet(
-      {required int? fileId, required bool? withPermissions}) {
-    final $url = '/filesystem/info/${fileId}';
-    final $request = Request('GET', $url, client.baseUrl);
-    return client.send<FileDto, FileDto>($request);
-  }
-
-  @override
-  Future<Response<GetFilePermissionsResponse>> filesFileIdGet() {
-    final $url = '/files/{fileId}';
-    final $request = Request('GET', $url, client.baseUrl);
-    return client
-        .send<GetFilePermissionsResponse, GetFilePermissionsResponse>($request);
-  }
-
-  @override
   Future<Response<dynamic>> filesImagePreviewGet(
-      {required int? previewResolution,
-      required String? imageFormat,
-      required List<String>? imageNames}) {
+      {int? previewResolution, required List<String>? imageIds}) {
     final $url = '/files/image-preview';
     final $params = <String, dynamic>{
       'previewResolution': previewResolution,
-      'imageFormat': imageFormat,
-      'imageNames': imageNames
+      'imageIds': imageIds
     };
     final $request = Request('GET', $url, client.baseUrl, parameters: $params);
     return client.send<dynamic, dynamic>($request);
@@ -222,101 +322,76 @@ class _$Api extends Api {
 
   @override
   Future<Response<String>> filesFileFileIdGet({required String? fileId}) {
-    final $url = '/files/file/{fileId}';
-    final $params = <String, dynamic>{'fileId': fileId};
-    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    final $url = '/files/file/${fileId}';
+    final $request = Request('GET', $url, client.baseUrl);
     return client.send<String, String>($request);
   }
 
   @override
-  Future<Response<dynamic>> filesFileFileIdDelete({required String? body}) {
-    final $url = '/files/file/{fileId}';
-    final $body = body;
-    final $request = Request('DELETE', $url, client.baseUrl, body: $body);
+  Future<Response<dynamic>> filesFileFileIdDelete({required String? fileId}) {
+    final $url = '/files/file/${fileId}';
+    final $request = Request('DELETE', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
   Future<Response<String>> filesDirectoryDirectoryIdGet(
       {required String? directoryId}) {
-    final $url = '/files/directory/{directoryId}';
-    final $params = <String, dynamic>{'directoryId': directoryId};
-    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
+    final $url = '/files/directory/${directoryId}';
+    final $request = Request('GET', $url, client.baseUrl);
     return client.send<String, String>($request);
   }
 
   @override
-  Future<Response<dynamic>> filesDirectoryDirectoryIdDelete(
-      {required String? body}) {
-    final $url = '/files/directory/{directoryId}';
-    final $body = body;
-    final $request = Request('DELETE', $url, client.baseUrl, body: $body);
-    return client.send<dynamic, dynamic>($request);
-  }
-
-  @override
-  Future<Response<List<GetFilePermissionsResponse>>> filesGet(
-      {required List<int>? fileId}) {
-    final $url = '/files/';
-    final $params = <String, dynamic>{'fileId': fileId};
-    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
-    return client.send<List<GetFilePermissionsResponse>,
-        GetFilePermissionsResponse>($request);
-  }
-
-  @override
-  Future<Response<List<DiscInfo>>> discsGet() {
-    final $url = '/discs';
+  Future<Response<FilePermissionsDTO>> filePermissionPermissionsFilePubIdGet(
+      {required String? filePubId}) {
+    final $url = '/file-permission/permissions/${filePubId}';
     final $request = Request('GET', $url, client.baseUrl);
-    return client.send<List<DiscInfo>, DiscInfo>($request);
+    return client.send<FilePermissionsDTO, FilePermissionsDTO>($request);
   }
 
   @override
-  Future<Response<DiscDetails>> discsDiscIdGet({required int? discId}) {
-    final $url = '/discs/{discId}';
-    final $params = <String, dynamic>{'discId': discId};
-    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
-    return client.send<DiscDetails, DiscDetails>($request);
-  }
-
-  @override
-  Future<Response<List<DiscInfo>>> discsDriveDriveIdGet(
-      {required String? driveId}) {
-    final $url = '/discs/drive/{driveId}';
-    final $params = <String, dynamic>{'driveId': driveId};
-    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
-    return client.send<List<DiscInfo>, DiscInfo>($request);
-  }
-
-  @override
-  Future<Response<GetAuthoritiesInfoResponse>>
-      authoritiesUsernameCanBeGivenGet() {
-    final $url = '/authorities/{username}/canBeGiven';
+  Future<Response<UserFilePermissionsDTO>>
+      filePermissionMyPermissionFilePubIdGet({required String? filePubId}) {
+    final $url = '/file-permission/my-permission/${filePubId}';
     final $request = Request('GET', $url, client.baseUrl);
     return client
-        .send<GetAuthoritiesInfoResponse, GetAuthoritiesInfoResponse>($request);
+        .send<UserFilePermissionsDTO, UserFilePermissionsDTO>($request);
   }
 
   @override
-  Future<Response<dynamic>> authoritiesLoginGet({required String? username}) {
-    final $url = '/authorities/{login}';
-    final $params = <String, dynamic>{'username': username};
-    final $request = Request('GET', $url, client.baseUrl, parameters: $params);
-    return client.send<dynamic, dynamic>($request);
+  Future<Response<List<FileInfoDTO>>> favouriteAllGet() {
+    final $url = '/favourite/all';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<List<FileInfoDTO>, FileInfoDTO>($request);
   }
 
   @override
-  Future<Response<dynamic>> userManagementUsernameDeleteNowDelete(
-      {required String? username}) {
-    final $url = '/user-management/${username}/delete-now';
+  Future<Response<List<DriveDTO>>> driveGet() {
+    final $url = '/drive';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<List<DriveDTO>, DriveDTO>($request);
+  }
+
+  @override
+  Future<Response<List<DiscDTO>>> driveDiscsGet() {
+    final $url = '/drive/discs';
+    final $request = Request('GET', $url, client.baseUrl);
+    return client.send<List<DiscDTO>, DiscDTO>($request);
+  }
+
+  @override
+  Future<Response<dynamic>> filesystemDirectoryDirectoryIdDelete(
+      {required String? directoryId}) {
+    final $url = '/filesystem/directory/${directoryId}';
     final $request = Request('DELETE', $url, client.baseUrl);
     return client.send<dynamic, dynamic>($request);
   }
 
   @override
-  Future<Response<dynamic>> filesDirectoryDirectoryIdForceDelete(
-      {required String? body}) {
-    final $url = '/files/directory/{directoryId}/force';
+  Future<Response<dynamic>> filePermissionPermissionsAllDelete(
+      {required DeleteAllPermissionsRequest? body}) {
+    final $url = '/file-permission/permissions/all';
     final $body = body;
     final $request = Request('DELETE', $url, client.baseUrl, body: $body);
     return client.send<dynamic, dynamic>($request);

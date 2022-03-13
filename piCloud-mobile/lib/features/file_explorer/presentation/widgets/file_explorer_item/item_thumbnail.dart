@@ -1,6 +1,5 @@
-import 'package:app/features/cached_image/presentation/cached_image.dart';
-import 'package:app/features/file_explorer/data/models/file_explorer_item_type.dart';
-import 'package:app/features/file_explorer/data/models/file_item.dart';
+import 'package:app/common/models/file_explorer_item_type.dart';
+import 'package:app/common/models/file_item.dart';
 import 'package:flutter/material.dart';
 
 class FileExplorerThumbnail extends StatefulWidget {
@@ -36,6 +35,9 @@ class _FileExplorerThumbnailState extends State<FileExplorerThumbnail> {
       case FileExplorerItemType.pdf:
         return const AssetImage('assets/thumbnails/pdf.png');
 
+      case FileExplorerItemType.compressed:
+        return const AssetImage('assets/thumbnails/compressed.png');
+
       default:
         return const AssetImage('assets/thumbnails/file.png');
     }
@@ -44,7 +46,7 @@ class _FileExplorerThumbnailState extends State<FileExplorerThumbnail> {
   @override
   Widget build(BuildContext context) {
     if (widget.file.hasThumbnail()) {
-      return BackendCachedImage(url: widget.file.thumbnailURL!);
+      return Image.memory(widget.file.thumbnail!);
     } else {
       return Image(
         fit: BoxFit.scaleDown,

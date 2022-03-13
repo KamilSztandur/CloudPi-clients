@@ -6,341 +6,500 @@ part of 'api.swagger.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+ErrorBody _$ErrorBodyFromJson(Map<String, dynamic> json) => ErrorBody(
+      errorCode: json['errorCode'] as String?,
+    );
+
+Map<String, dynamic> _$ErrorBodyToJson(ErrorBody instance) => <String, dynamic>{
+      'errorCode': instance.errorCode,
+    };
+
+PutUserPasswordRequest _$PutUserPasswordRequestFromJson(
+        Map<String, dynamic> json) =>
+    PutUserPasswordRequest(
+      username: json['username'] as String?,
+      newPassword: json['newPassword'] as String?,
+    );
+
+Map<String, dynamic> _$PutUserPasswordRequestToJson(
+        PutUserPasswordRequest instance) =>
+    <String, dynamic>{
+      'username': instance.username,
+      'newPassword': instance.newPassword,
+    };
+
+FileInfoDTO _$FileInfoDTOFromJson(Map<String, dynamic> json) => FileInfoDTO(
+      pubId: json['pubId'] as String?,
+      name: json['name'] as String?,
+      path: json['path'] as String?,
+      hasThumbnail: json['hasThumbnail'] as bool?,
+      type: fileInfoDTOTypeFromJson(json['type'] as String?),
+      size: json['size'] as int?,
+      modifiedAt: json['modifiedAt'] == null
+          ? null
+          : DateTime.parse(json['modifiedAt'] as String),
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      isFavourite: json['isFavourite'] as bool?,
+    );
+
+Map<String, dynamic> _$FileInfoDTOToJson(FileInfoDTO instance) =>
+    <String, dynamic>{
+      'pubId': instance.pubId,
+      'name': instance.name,
+      'path': instance.path,
+      'hasThumbnail': instance.hasThumbnail,
+      'type': fileInfoDTOTypeToJson(instance.type),
+      'size': instance.size,
+      'modifiedAt': instance.modifiedAt?.toIso8601String(),
+      'createdAt': instance.createdAt?.toIso8601String(),
+      'isFavourite': instance.isFavourite,
+    };
+
 PostUserRequest _$PostUserRequestFromJson(Map<String, dynamic> json) =>
     PostUserRequest(
-      login: json['login'] as String?,
       username: json['username'] as String?,
-      password: json['password'] as String?,
-      accountType:
-          postUserRequestAccountTypeFromJson(json['accountType'] as String?),
+      nickname: json['nickname'] as String?,
       email: json['email'] as String?,
+      password: json['password'] as String?,
     );
 
 Map<String, dynamic> _$PostUserRequestToJson(PostUserRequest instance) =>
     <String, dynamic>{
-      'login': instance.login,
       'username': instance.username,
-      'password': instance.password,
-      'accountType': postUserRequestAccountTypeToJson(instance.accountType),
+      'nickname': instance.nickname,
       'email': instance.email,
+      'password': instance.password,
+    };
+
+PostRoleRequest _$PostRoleRequestFromJson(Map<String, dynamic> json) =>
+    PostRoleRequest(
+      roles: postRoleRequestRolesListFromJson(json['roles'] as List?),
+      username: json['username'] as String?,
+    );
+
+Map<String, dynamic> _$PostRoleRequestToJson(PostRoleRequest instance) =>
+    <String, dynamic>{
+      'roles': postRoleRequestRolesListToJson(instance.roles),
+      'username': instance.username,
     };
 
 LoginRequest _$LoginRequestFromJson(Map<String, dynamic> json) => LoginRequest(
-      login: json['login'] as String?,
+      username: json['username'] as String?,
       password: json['password'] as String?,
     );
 
 Map<String, dynamic> _$LoginRequestToJson(LoginRequest instance) =>
     <String, dynamic>{
-      'login': instance.login,
+      'username': instance.username,
       'password': instance.password,
     };
 
-UpdateUserDetailsRequest _$UpdateUserDetailsRequestFromJson(
-        Map<String, dynamic> json) =>
-    UpdateUserDetailsRequest(
-      username: json['username'] as String?,
-      email: json['email'] as String?,
-      pathToProfilePicture: json['pathToProfilePicture'] as String?,
+FileQueryDTO _$FileQueryDTOFromJson(Map<String, dynamic> json) => FileQueryDTO(
+      name: json['name'] as String?,
+      path: json['path'] as String?,
+      types: fileQueryDTOTypesListFromJson(json['types'] as List?),
+      created: json['created'] == null
+          ? null
+          : TimePeriod.fromJson(json['created'] as Map<String, dynamic>),
+      lastModified: json['lastModified'] == null
+          ? null
+          : TimePeriod.fromJson(json['lastModified'] as Map<String, dynamic>),
     );
 
-Map<String, dynamic> _$UpdateUserDetailsRequestToJson(
-        UpdateUserDetailsRequest instance) =>
+Map<String, dynamic> _$FileQueryDTOToJson(FileQueryDTO instance) =>
     <String, dynamic>{
-      'username': instance.username,
-      'email': instance.email,
-      'pathToProfilePicture': instance.pathToProfilePicture,
+      'name': instance.name,
+      'path': instance.path,
+      'types': fileQueryDTOTypesListToJson(instance.types),
+      'created': instance.created?.toJson(),
+      'lastModified': instance.lastModified?.toJson(),
     };
 
-GetUserWithDetailsResponse _$GetUserWithDetailsResponseFromJson(
+TimePeriod _$TimePeriodFromJson(Map<String, dynamic> json) => TimePeriod(
+      from:
+          json['from'] == null ? null : DateTime.parse(json['from'] as String),
+      to: json['to'] == null ? null : DateTime.parse(json['to'] as String),
+    );
+
+Map<String, dynamic> _$TimePeriodToJson(TimePeriod instance) =>
+    <String, dynamic>{
+      'from': instance.from?.toIso8601String(),
+      'to': instance.to?.toIso8601String(),
+    };
+
+GetFileByPathRequest _$GetFileByPathRequestFromJson(
         Map<String, dynamic> json) =>
-    GetUserWithDetailsResponse(
-      username: json['username'] as String?,
-      email: json['email'] as String?,
-      isLocked: json['isLocked'] as bool?,
-      accountType: getUserWithDetailsResponseAccountTypeFromJson(
-          json['accountType'] as String?),
-      usersPermissions: (json['usersPermissions'] as List<dynamic>?)
+    GetFileByPathRequest(
+      filePaths: (json['filePaths'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           [],
-      usersRoles: (json['usersRoles'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          [],
     );
 
-Map<String, dynamic> _$GetUserWithDetailsResponseToJson(
-        GetUserWithDetailsResponse instance) =>
+Map<String, dynamic> _$GetFileByPathRequestToJson(
+        GetFileByPathRequest instance) =>
     <String, dynamic>{
-      'username': instance.username,
-      'email': instance.email,
-      'isLocked': instance.isLocked,
-      'accountType':
-          getUserWithDetailsResponseAccountTypeToJson(instance.accountType),
-      'usersPermissions': instance.usersPermissions,
-      'usersRoles': instance.usersRoles,
+      'filePaths': instance.filePaths,
     };
 
-GetUserResponse _$GetUserResponseFromJson(Map<String, dynamic> json) =>
-    GetUserResponse(
-      username: json['username'] as String?,
-      pathToProfilePicture: json['pathToProfilePicture'] as String?,
-      accountType:
-          getUserResponseAccountTypeFromJson(json['accountType'] as String?),
+PostAddPermissionRequest _$PostAddPermissionRequestFromJson(
+        Map<String, dynamic> json) =>
+    PostAddPermissionRequest(
+      filePubId: json['filePubId'] as String?,
+      ownerUsername: json['ownerUsername'] as String?,
+      permissions: postAddPermissionRequestPermissionsListFromJson(
+          json['permissions'] as List?),
     );
 
-Map<String, dynamic> _$GetUserResponseToJson(GetUserResponse instance) =>
+Map<String, dynamic> _$PostAddPermissionRequestToJson(
+        PostAddPermissionRequest instance) =>
     <String, dynamic>{
-      'username': instance.username,
-      'pathToProfilePicture': instance.pathToProfilePicture,
-      'accountType': getUserResponseAccountTypeToJson(instance.accountType),
+      'filePubId': instance.filePubId,
+      'ownerUsername': instance.ownerUsername,
+      'permissions':
+          postAddPermissionRequestPermissionsListToJson(instance.permissions),
     };
 
-GetUserDriveInfo _$GetUserDriveInfoFromJson(Map<String, dynamic> json) =>
-    GetUserDriveInfo(
-      username: json['username'] as String?,
+PostDriveRequest _$PostDriveRequestFromJson(Map<String, dynamic> json) =>
+    PostDriveRequest(
+      path: json['path'] as String?,
+      size: json['size'] as int?,
+    );
+
+Map<String, dynamic> _$PostDriveRequestToJson(PostDriveRequest instance) =>
+    <String, dynamic>{
+      'path': instance.path,
+      'size': instance.size,
+    };
+
+DriveDTO _$DriveDTOFromJson(Map<String, dynamic> json) => DriveDTO(
+      pubId: json['pubId'] as String?,
+      path: json['path'] as String?,
       assignedSpace: json['assignedSpace'] as int?,
-      usedSpace: json['usedSpace'] as int?,
+      freeSpace: json['freeSpace'] as int?,
     );
 
-Map<String, dynamic> _$GetUserDriveInfoToJson(GetUserDriveInfo instance) =>
+Map<String, dynamic> _$DriveDTOToJson(DriveDTO instance) => <String, dynamic>{
+      'pubId': instance.pubId,
+      'path': instance.path,
+      'assignedSpace': instance.assignedSpace,
+      'freeSpace': instance.freeSpace,
+    };
+
+PatchUserRequest _$PatchUserRequestFromJson(Map<String, dynamic> json) =>
+    PatchUserRequest(
+      nickname: json['nickname'] as String?,
+      email: json['email'] as String?,
+    );
+
+Map<String, dynamic> _$PatchUserRequestToJson(PatchUserRequest instance) =>
+    <String, dynamic>{
+      'nickname': instance.nickname,
+      'email': instance.email,
+    };
+
+PatchPasswordRequest _$PatchPasswordRequestFromJson(
+        Map<String, dynamic> json) =>
+    PatchPasswordRequest(
+      currentPassword: json['currentPassword'] as String?,
+      newPassword: json['newPassword'] as String?,
+    );
+
+Map<String, dynamic> _$PatchPasswordRequestToJson(
+        PatchPasswordRequest instance) =>
+    <String, dynamic>{
+      'currentPassword': instance.currentPassword,
+      'newPassword': instance.newPassword,
+    };
+
+MoveFileRequest _$MoveFileRequestFromJson(Map<String, dynamic> json) =>
+    MoveFileRequest(
+      filePubId: json['filePubId'] as String?,
+      newPath: json['newPath'] as String?,
+    );
+
+Map<String, dynamic> _$MoveFileRequestToJson(MoveFileRequest instance) =>
+    <String, dynamic>{
+      'filePubId': instance.filePubId,
+      'newPath': instance.newPath,
+    };
+
+UserDetailsDTO _$UserDetailsDTOFromJson(Map<String, dynamic> json) =>
+    UserDetailsDTO(
+      username: json['username'] as String?,
+      email: json['email'] as String?,
+      hasProfileImage: json['hasProfileImage'] as bool?,
+      nickname: json['nickname'] as String?,
+      pubId: json['pubId'] as String?,
+      roles: userDetailsDTORolesListFromJson(json['roles'] as List?),
+    );
+
+Map<String, dynamic> _$UserDetailsDTOToJson(UserDetailsDTO instance) =>
     <String, dynamic>{
       'username': instance.username,
-      'assignedSpace': instance.assignedSpace,
-      'usedSpace': instance.usedSpace,
+      'email': instance.email,
+      'hasProfileImage': instance.hasProfileImage,
+      'nickname': instance.nickname,
+      'pubId': instance.pubId,
+      'roles': userDetailsDTORolesListToJson(instance.roles),
     };
 
-DirectoryInfoDto _$DirectoryInfoDtoFromJson(Map<String, dynamic> json) =>
-    DirectoryInfoDto(
-      name: json['name'] as String?,
-      size: json['size'] as int?,
-      modifiedAt: json['modifiedAt'] == null
-          ? null
-          : DateTime.parse(json['modifiedAt'] as String),
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      id: json['id'] as String?,
+UserIdDTO _$UserIdDTOFromJson(Map<String, dynamic> json) => UserIdDTO(
+      username: json['username'] as String?,
+      pubId: json['pubId'] as String?,
+      nickname: json['nickname'] as String?,
+      hasProfileImage: json['hasProfileImage'] as bool?,
     );
 
-Map<String, dynamic> _$DirectoryInfoDtoToJson(DirectoryInfoDto instance) =>
+Map<String, dynamic> _$UserIdDTOToJson(UserIdDTO instance) => <String, dynamic>{
+      'username': instance.username,
+      'pubId': instance.pubId,
+      'nickname': instance.nickname,
+      'hasProfileImage': instance.hasProfileImage,
+    };
+
+FilesystemInfoDTO _$FilesystemInfoDTOFromJson(Map<String, dynamic> json) =>
+    FilesystemInfoDTO(
+      ownerUsername: json['ownerUsername'] as String?,
+      totalSpace: json['totalSpace'] as int?,
+      freeSpace: json['freeSpace'] as int?,
+    );
+
+Map<String, dynamic> _$FilesystemInfoDTOToJson(FilesystemInfoDTO instance) =>
     <String, dynamic>{
-      'name': instance.name,
-      'size': instance.size,
-      'modifiedAt': instance.modifiedAt?.toIso8601String(),
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'id': instance.id,
+      'ownerUsername': instance.ownerUsername,
+      'totalSpace': instance.totalSpace,
+      'freeSpace': instance.freeSpace,
     };
 
-FSDirectoryDTO _$FSDirectoryDTOFromJson(Map<String, dynamic> json) =>
-    FSDirectoryDTO(
-      id: json['id'] as String?,
-      details: json['details'] == null
-          ? null
-          : DirectoryInfoDto.fromJson(json['details'] as Map<String, dynamic>),
-      files: (json['files'] as List<dynamic>?)
-              ?.map((e) => FSFileDTO.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
-      directories: (json['directories'] as List<dynamic>?)
-              ?.map((e) => FSDirectoryDTO.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
-    );
-
-Map<String, dynamic> _$FSDirectoryDTOToJson(FSDirectoryDTO instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'details': instance.details?.toJson(),
-      'files': instance.files?.map((e) => e.toJson()).toList(),
-      'directories': instance.directories?.map((e) => e.toJson()).toList(),
-    };
-
-FSFileDTO _$FSFileDTOFromJson(Map<String, dynamic> json) => FSFileDTO(
-      id: json['id'] as String?,
-      details: json['details'] == null
-          ? null
-          : FileInfoDto.fromJson(json['details'] as Map<String, dynamic>),
-    );
-
-Map<String, dynamic> _$FSFileDTOToJson(FSFileDTO instance) => <String, dynamic>{
-      'id': instance.id,
-      'details': instance.details?.toJson(),
-    };
-
-FileInfoDto _$FileInfoDtoFromJson(Map<String, dynamic> json) => FileInfoDto(
-      id: json['id'] as String?,
+SharedFileInfoDTO _$SharedFileInfoDTOFromJson(Map<String, dynamic> json) =>
+    SharedFileInfoDTO(
+      pubId: json['pubId'] as String?,
       name: json['name'] as String?,
-      size: json['size'] as int?,
-      modifiedAt: json['modifiedAt'] == null
-          ? null
-          : DateTime.parse(json['modifiedAt'] as String),
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      fileType: fileInfoDtoFileTypeFromJson(json['fileType'] as String?),
+      path: json['path'] as String?,
       hasThumbnail: json['hasThumbnail'] as bool?,
+      type: sharedFileInfoDTOTypeFromJson(json['type'] as String?),
+      size: json['size'] as int?,
+      modifiedAt: json['modifiedAt'] == null
+          ? null
+          : DateTime.parse(json['modifiedAt'] as String),
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      isFavourite: json['isFavourite'] as bool?,
+      permissions: sharedFileInfoDTOPermissionsListFromJson(
+          json['permissions'] as List?),
     );
 
-Map<String, dynamic> _$FileInfoDtoToJson(FileInfoDto instance) =>
+Map<String, dynamic> _$SharedFileInfoDTOToJson(SharedFileInfoDTO instance) =>
     <String, dynamic>{
-      'id': instance.id,
+      'pubId': instance.pubId,
       'name': instance.name,
+      'path': instance.path,
+      'hasThumbnail': instance.hasThumbnail,
+      'type': sharedFileInfoDTOTypeToJson(instance.type),
       'size': instance.size,
       'modifiedAt': instance.modifiedAt?.toIso8601String(),
       'createdAt': instance.createdAt?.toIso8601String(),
-      'fileType': fileInfoDtoFileTypeToJson(instance.fileType),
-      'hasThumbnail': instance.hasThumbnail,
+      'isFavourite': instance.isFavourite,
+      'permissions':
+          sharedFileInfoDTOPermissionsListToJson(instance.permissions),
     };
 
 FileStructureDTO _$FileStructureDTOFromJson(Map<String, dynamic> json) =>
     FileStructureDTO(
-      depth: json['depth'] as int?,
-      rootDirectoryPath: json['rootDirectoryPath'] as String?,
-      rootDirectory: json['rootDirectory'] == null
+      path: json['path'] as String?,
+      root: json['root'] == null
           ? null
-          : FSDirectoryDTO.fromJson(
-              json['rootDirectory'] as Map<String, dynamic>),
+          : FilesystemObjectDTO.fromJson(json['root'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$FileStructureDTOToJson(FileStructureDTO instance) =>
     <String, dynamic>{
-      'depth': instance.depth,
-      'rootDirectoryPath': instance.rootDirectoryPath,
-      'rootDirectory': instance.rootDirectory?.toJson(),
+      'path': instance.path,
+      'root': instance.root?.toJson(),
     };
 
-FileDto _$FileDtoFromJson(Map<String, dynamic> json) => FileDto(
-      id: json['id'] as String?,
-      parentId: json['parentId'] as String?,
-      driveId: json['driveId'] as int?,
-      fileName: json['fileName'] as String?,
-      fileType: fileDtoFileTypeFromJson(json['fileType'] as String?),
-      path: json['path'] as String?,
+FilesystemObjectDTO _$FilesystemObjectDTOFromJson(Map<String, dynamic> json) =>
+    FilesystemObjectDTO(
+      pubId: json['pubId'] as String?,
+      name: json['name'] as String?,
       size: json['size'] as int?,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
       modifiedAt: json['modifiedAt'] == null
           ? null
           : DateTime.parse(json['modifiedAt'] as String),
-    );
-
-Map<String, dynamic> _$FileDtoToJson(FileDto instance) => <String, dynamic>{
-      'id': instance.id,
-      'parentId': instance.parentId,
-      'driveId': instance.driveId,
-      'fileName': instance.fileName,
-      'fileType': fileDtoFileTypeToJson(instance.fileType),
-      'path': instance.path,
-      'size': instance.size,
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'modifiedAt': instance.modifiedAt?.toIso8601String(),
-    };
-
-GetFilePermissionsResponse _$GetFilePermissionsResponseFromJson(
-        Map<String, dynamic> json) =>
-    GetFilePermissionsResponse(
-      discObjectId: json['discObjectId'] as int?,
-      permissions: (json['permissions'] as List<dynamic>?)
+      version: json['version'] as int?,
+      type: filesystemObjectDTOTypeFromJson(json['type'] as String?),
+      favourite: json['favourite'] as bool?,
+      permissions: filesystemObjectDTOPermissionsListFromJson(
+          json['permissions'] as List?),
+      children: (json['children'] as List<dynamic>?)
               ?.map((e) =>
-                  UserFilePermissions.fromJson(e as Map<String, dynamic>))
+                  FilesystemObjectDTO.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
     );
 
-Map<String, dynamic> _$GetFilePermissionsResponseToJson(
-        GetFilePermissionsResponse instance) =>
+Map<String, dynamic> _$FilesystemObjectDTOToJson(
+        FilesystemObjectDTO instance) =>
     <String, dynamic>{
-      'discObjectId': instance.discObjectId,
+      'pubId': instance.pubId,
+      'name': instance.name,
+      'size': instance.size,
+      'modifiedAt': instance.modifiedAt?.toIso8601String(),
+      'version': instance.version,
+      'type': filesystemObjectDTOTypeToJson(instance.type),
+      'favourite': instance.favourite,
+      'permissions':
+          filesystemObjectDTOPermissionsListToJson(instance.permissions),
+      'children': instance.children?.map((e) => e.toJson()).toList(),
+    };
+
+FilePermissionsDTO _$FilePermissionsDTOFromJson(Map<String, dynamic> json) =>
+    FilePermissionsDTO(
+      filePubId: json['filePubId'] as String?,
+      permissions: (json['permissions'] as List<dynamic>?)
+              ?.map((e) => PermissionDTO.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+    );
+
+Map<String, dynamic> _$FilePermissionsDTOToJson(FilePermissionsDTO instance) =>
+    <String, dynamic>{
+      'filePubId': instance.filePubId,
       'permissions': instance.permissions?.map((e) => e.toJson()).toList(),
     };
 
-UserFilePermissions _$UserFilePermissionsFromJson(Map<String, dynamic> json) =>
-    UserFilePermissions(
-      username: json['username'] as String?,
-      usersPermissions: userFilePermissionsUsersPermissionsListFromJson(
-          json['usersPermissions'] as List?),
+PermissionDTO _$PermissionDTOFromJson(Map<String, dynamic> json) =>
+    PermissionDTO(
+      ownerUsername: json['ownerUsername'] as String?,
+      permissions:
+          permissionDTOPermissionsListFromJson(json['permissions'] as List?),
     );
 
-Map<String, dynamic> _$UserFilePermissionsToJson(
-        UserFilePermissions instance) =>
+Map<String, dynamic> _$PermissionDTOToJson(PermissionDTO instance) =>
     <String, dynamic>{
-      'username': instance.username,
-      'usersPermissions': userFilePermissionsUsersPermissionsListToJson(
-          instance.usersPermissions),
+      'ownerUsername': instance.ownerUsername,
+      'permissions': permissionDTOPermissionsListToJson(instance.permissions),
     };
 
-DiscInfo _$DiscInfoFromJson(Map<String, dynamic> json) => DiscInfo(
-      discId: json['discId'] as int?,
-      discName: json['discName'] as String?,
-    );
-
-Map<String, dynamic> _$DiscInfoToJson(DiscInfo instance) => <String, dynamic>{
-      'discId': instance.discId,
-      'discName': instance.discName,
-    };
-
-DiscDetails _$DiscDetailsFromJson(Map<String, dynamic> json) => DiscDetails(
-      discId: json['discId'] as int?,
-      discName: json['discName'] as String?,
-      drivesOnDisc: (json['drivesOnDisc'] as List<dynamic>?)
-              ?.map((e) => DriveDTO.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
-    );
-
-Map<String, dynamic> _$DiscDetailsToJson(DiscDetails instance) =>
-    <String, dynamic>{
-      'discId': instance.discId,
-      'discName': instance.discName,
-      'drivesOnDisc': instance.drivesOnDisc?.map((e) => e.toJson()).toList(),
-    };
-
-DriveDTO _$DriveDTOFromJson(Map<String, dynamic> json) => DriveDTO(
-      id: json['id'] as int?,
-      assignedCapacity: json['assignedCapacity'] as int?,
-      usedCapacity: json['usedCapacity'] as int?,
-      discId: json['discId'] as int?,
-    );
-
-Map<String, dynamic> _$DriveDTOToJson(DriveDTO instance) => <String, dynamic>{
-      'id': instance.id,
-      'assignedCapacity': instance.assignedCapacity,
-      'usedCapacity': instance.usedCapacity,
-      'discId': instance.discId,
-    };
-
-GetAuthoritiesInfoResponse _$GetAuthoritiesInfoResponseFromJson(
+UserFilePermissionsDTO _$UserFilePermissionsDTOFromJson(
         Map<String, dynamic> json) =>
-    GetAuthoritiesInfoResponse(
-      permissions: (json['permissions'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          [],
-      roles: (json['roles'] as List<dynamic>?)
-              ?.map((e) => RoleInfo.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [],
+    UserFilePermissionsDTO(
+      types: userFilePermissionsDTOTypesListFromJson(json['types'] as List?),
+      username: json['username'] as String?,
+      filePubId: json['filePubId'] as String?,
     );
 
-Map<String, dynamic> _$GetAuthoritiesInfoResponseToJson(
-        GetAuthoritiesInfoResponse instance) =>
+Map<String, dynamic> _$UserFilePermissionsDTOToJson(
+        UserFilePermissionsDTO instance) =>
     <String, dynamic>{
-      'permissions': instance.permissions,
-      'roles': instance.roles?.map((e) => e.toJson()).toList(),
+      'types': userFilePermissionsDTOTypesListToJson(instance.types),
+      'username': instance.username,
+      'filePubId': instance.filePubId,
     };
 
-RoleInfo _$RoleInfoFromJson(Map<String, dynamic> json) => RoleInfo(
-      roleName: json['roleName'] as String?,
-      aggregatedPermissions: (json['aggregatedPermissions'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList() ??
-          [],
+DiscDTO _$DiscDTOFromJson(Map<String, dynamic> json) => DiscDTO(
+      discName: json['discName'] as String?,
+      discSize: json['discSize'] as int?,
+      discSpaceAvailable: json['discSpaceAvailable'] as int?,
     );
 
-Map<String, dynamic> _$RoleInfoToJson(RoleInfo instance) => <String, dynamic>{
-      'roleName': instance.roleName,
-      'aggregatedPermissions': instance.aggregatedPermissions,
+Map<String, dynamic> _$DiscDTOToJson(DiscDTO instance) => <String, dynamic>{
+      'discName': instance.discName,
+      'discSize': instance.discSize,
+      'discSpaceAvailable': instance.discSpaceAvailable,
+    };
+
+DeleteRoleRequest _$DeleteRoleRequestFromJson(Map<String, dynamic> json) =>
+    DeleteRoleRequest(
+      roles: deleteRoleRequestRolesListFromJson(json['roles'] as List?),
+      username: json['username'] as String?,
+    );
+
+Map<String, dynamic> _$DeleteRoleRequestToJson(DeleteRoleRequest instance) =>
+    <String, dynamic>{
+      'roles': deleteRoleRequestRolesListToJson(instance.roles),
+      'username': instance.username,
+    };
+
+DeletePermissionsRequest _$DeletePermissionsRequestFromJson(
+        Map<String, dynamic> json) =>
+    DeletePermissionsRequest(
+      filePubId: json['filePubId'] as String?,
+      ownerUsername: json['ownerUsername'] as String?,
+      permissions: deletePermissionsRequestPermissionsListFromJson(
+          json['permissions'] as List?),
+    );
+
+Map<String, dynamic> _$DeletePermissionsRequestToJson(
+        DeletePermissionsRequest instance) =>
+    <String, dynamic>{
+      'filePubId': instance.filePubId,
+      'ownerUsername': instance.ownerUsername,
+      'permissions':
+          deletePermissionsRequestPermissionsListToJson(instance.permissions),
+    };
+
+DeleteAllPermissionsRequest _$DeleteAllPermissionsRequestFromJson(
+        Map<String, dynamic> json) =>
+    DeleteAllPermissionsRequest(
+      filePubId: json['filePubId'] as String?,
+    );
+
+Map<String, dynamic> _$DeleteAllPermissionsRequestToJson(
+        DeleteAllPermissionsRequest instance) =>
+    <String, dynamic>{
+      'filePubId': instance.filePubId,
+    };
+
+UserProfileImagePost$RequestBody _$UserProfileImagePost$RequestBodyFromJson(
+        Map<String, dynamic> json) =>
+    UserProfileImagePost$RequestBody(
+      file: json['file'] as String?,
+    );
+
+Map<String, dynamic> _$UserProfileImagePost$RequestBodyToJson(
+        UserProfileImagePost$RequestBody instance) =>
+    <String, dynamic>{
+      'file': instance.file,
+    };
+
+UserProfileImageUsernamePost$RequestBody
+    _$UserProfileImageUsernamePost$RequestBodyFromJson(
+            Map<String, dynamic> json) =>
+        UserProfileImageUsernamePost$RequestBody(
+          file: json['file'] as String?,
+        );
+
+Map<String, dynamic> _$UserProfileImageUsernamePost$RequestBodyToJson(
+        UserProfileImageUsernamePost$RequestBody instance) =>
+    <String, dynamic>{
+      'file': instance.file,
+    };
+
+FilesImagePost$RequestBody _$FilesImagePost$RequestBodyFromJson(
+        Map<String, dynamic> json) =>
+    FilesImagePost$RequestBody(
+      file: json['file'] as String?,
+    );
+
+Map<String, dynamic> _$FilesImagePost$RequestBodyToJson(
+        FilesImagePost$RequestBody instance) =>
+    <String, dynamic>{
+      'file': instance.file,
+    };
+
+FilesFilePost$RequestBody _$FilesFilePost$RequestBodyFromJson(
+        Map<String, dynamic> json) =>
+    FilesFilePost$RequestBody(
+      file: json['file'] as String?,
+    );
+
+Map<String, dynamic> _$FilesFilePost$RequestBodyToJson(
+        FilesFilePost$RequestBody instance) =>
+    <String, dynamic>{
+      'file': instance.file,
     };
