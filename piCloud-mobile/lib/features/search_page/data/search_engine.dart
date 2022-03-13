@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
 import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/common/models/file_item.dart';
+import 'package:app/contracts/api.swagger.dart';
 import 'package:app/features/search_page/data/models/filters_settings_model.dart';
 import 'package:app/features/search_page/data/models/search_query_model.dart';
 import 'package:app/features/search_page/data/models/search_result.dart';
@@ -99,13 +101,25 @@ class SearchEngine {
     for (final item in responseItems) {
       final data = item as Map<String, dynamic>;
 
+      final id = data['pubId'] as String;
+      final title = data['name'] as String;
+      final type = _getFileTypeFromString(data['type'] as String);
+
+      final size = (data['size'] as int).toDouble();
+      final lastModifiedOn = DateTime.parse(data['modifiedAt'] as String);
+      final thumbnail = type == FileExplorerItemType.image
+          ? await _getImagePreview(id)
+          : null;
+
+      print('$title ${thumbnail == null}');
+
       final parsedItem = SearchResult(
-        title: data['name'] as String,
-        lastModifiedOn: DateTime.parse(data['modifiedAt'] as String),
-        type: _getFileTypeFromString(data['type'] as String),
-        size: (data['size'] as int).toDouble(),
-        thumbnail: null,
-        id: data['pubId'] as String,
+        id: id,
+        title: title,
+        type: type,
+        size: size,
+        lastModifiedOn: lastModifiedOn,
+        thumbnail: thumbnail,
       );
 
       items.add(parsedItem);
@@ -135,6 +149,32 @@ class SearchEngine {
     });
 
     return body;
+  }
+
+  Future<Uint8List?> _getImagePreview(String pubId) async {
+    final headers = await _getHeaders();
+
+    final request = Request(
+      'GET',
+      Uri.parse('${Config.apiBaseUrl}/files/image-preview'),
+    )..body = json.encode([pubId]);
+
+    request.headers.addAll(headers);
+
+    final response = await request.send();
+
+    if (response.statusCode == 200) {
+      var encodedThumbnail = await response.stream.bytesToString();
+      encodedThumbnail = encodedThumbnail.substring(
+        2,
+        encodedThumbnail.length - 2,
+      );
+
+      final decodedThumbnail = base64Decode(encodedThumbnail);
+      return decodedThumbnail;
+    } else {
+      return null;
+    }
   }
 
   String _getFormattedDate(DateTime date) {
