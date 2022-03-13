@@ -196,6 +196,7 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
     final sharePopupResult = await showSharePopup(context);
 
     if (sharePopupResult != null) {
+      final username = sharePopupResult.username;
       final result = await context.read<SharedManager>().shareFiles(
         pubIds: [widget.resourcePubId!],
         userName: sharePopupResult.username,
@@ -206,7 +207,9 @@ class _MediaReaderPageState extends State<MediaReaderPage> {
         SnackBar(
           backgroundColor: Theme.of(context).primaryColor,
           content: Text(
-            result ? 'Shared successfully' : 'Failed to share',
+            result
+                ? 'Shared successfully with $username'
+                : 'Failed to share this content with $username. Check if this username is valid.',
             style: const TextStyle(color: Colors.white),
           ),
         ),

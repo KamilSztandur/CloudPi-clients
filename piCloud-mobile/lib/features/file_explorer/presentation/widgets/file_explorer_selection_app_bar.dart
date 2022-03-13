@@ -124,9 +124,10 @@ class FileExplorerSelectionAppBar extends StatelessWidget
     final sharePopupResult = await showSharePopup(context);
 
     if (sharePopupResult != null) {
+      final username = sharePopupResult.username;
       final result = await context.read<SharedManager>().shareFiles(
             pubIds: selectedItems.map((item) => item.id!).toList(),
-            userName: sharePopupResult.username,
+            userName: username,
             allowModification: sharePopupResult.allowModification,
           );
 
@@ -134,7 +135,9 @@ class FileExplorerSelectionAppBar extends StatelessWidget
         SnackBar(
           backgroundColor: Theme.of(context).primaryColor,
           content: Text(
-            result ? 'Shared successfully' : 'Failed to share',
+            result
+                ? 'Shared successfully with $username'
+                : 'Failed to share this content with $username. Check if this username is valid.',
             style: const TextStyle(color: Colors.white),
           ),
         ),
