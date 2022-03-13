@@ -6,7 +6,6 @@ import 'package:app/common/auth/auth_manager.dart';
 import 'package:app/common/core/config.dart';
 import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/common/models/file_item.dart';
-import 'package:app/contracts/api.swagger.dart';
 import 'package:app/features/search_page/data/models/filters_settings_model.dart';
 import 'package:app/features/search_page/data/models/search_query_model.dart';
 import 'package:app/features/search_page/data/models/search_result.dart';
@@ -110,8 +109,6 @@ class SearchEngine {
       final thumbnail = type == FileExplorerItemType.image
           ? await _getImagePreview(id)
           : null;
-
-      print('$title ${thumbnail == null}');
 
       final parsedItem = SearchResult(
         id: id,

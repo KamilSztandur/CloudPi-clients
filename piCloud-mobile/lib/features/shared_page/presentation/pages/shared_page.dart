@@ -1,6 +1,5 @@
 import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/common/models/file_item.dart';
-import 'package:app/common/models/file_permission.dart';
 import 'package:app/common/widgets/error_view.dart';
 import 'package:app/common/widgets/files_view/files_view.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
@@ -111,7 +110,7 @@ class _SharedPageState extends State<SharedPage> {
   void _previewMedia(BuildContext context, FileItem item) =>
       AutoRouter.of(context).push(
         MediaReaderRoute(
-          path: widget.path ?? '/', // TODO
+          path: widget.path ?? '/', //TODO Handle nullable path
           item: item,
           permissions: item.permissions,
           shared: true,

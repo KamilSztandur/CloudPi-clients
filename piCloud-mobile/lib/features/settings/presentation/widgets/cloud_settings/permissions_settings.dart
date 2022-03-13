@@ -14,7 +14,6 @@ class PermissionsSettingsPanel extends StatefulWidget {
 class _PermissionsSettingsPanelState extends State<PermissionsSettingsPanel> {
   @override
   Widget build(BuildContext context) {
-    //TODO
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 30,

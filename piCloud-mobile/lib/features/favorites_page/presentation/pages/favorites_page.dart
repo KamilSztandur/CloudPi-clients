@@ -110,7 +110,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
   void _previewMedia(BuildContext context, FileItem item) =>
       AutoRouter.of(context).push(
         MediaReaderRoute(
-          path: widget.path ?? '/', // TODO
+          path: widget.path ?? '/', //TODO Handle nullable path
           item: item,
           permissions: FilePermission.values.toSet(),
           shared: false,

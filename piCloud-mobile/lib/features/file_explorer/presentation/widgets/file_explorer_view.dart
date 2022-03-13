@@ -1,6 +1,5 @@
 import 'package:app/common/models/file_explorer_item_type.dart';
 import 'package:app/common/models/file_item.dart';
-import 'package:app/common/models/file_permission.dart';
 import 'package:app/common/widgets/files_view/files_view.dart';
 import 'package:app/features/app/router/app_router.gr.dart';
 import 'package:auto_route/auto_route.dart';

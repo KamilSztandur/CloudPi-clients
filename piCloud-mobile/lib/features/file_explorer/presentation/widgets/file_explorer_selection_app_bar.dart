@@ -264,7 +264,9 @@ class FileExplorerSelectionAppBar extends StatelessWidget
   }
 
   List<FileItem> _getSelectedItems(
-      Selection selection, List<FileItem> allItems) {
+    Selection selection,
+    List<FileItem> allItems,
+  ) {
     return selection.selectedIndexes.map((index) => allItems[index]).toList();
   }
 }

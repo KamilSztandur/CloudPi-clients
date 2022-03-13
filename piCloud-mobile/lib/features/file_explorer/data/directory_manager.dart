@@ -207,8 +207,6 @@ class DirectoryManager {
           ? await _getImagePreview(dto)
           : null;
 
-      print('$title $type');
-
       fileExplorerItems.add(
         FileItem(
           id: id,
@@ -268,7 +266,6 @@ class DirectoryManager {
 
   String _getFileTypeBasedOnFile(File file) {
     final result = lookupMimeType(_getFilenameFromPath(file.path));
-    print(result);
 
     if (result != null) {
       if (result.toLowerCase().contains('image')) {
